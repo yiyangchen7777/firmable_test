@@ -160,7 +160,59 @@ def extract_rows(rows: list[dict], cfg: MappingConfig, extractor_version: str, i
     return observations
 
 
-def run_extract(source_id: str, limit: int = 1000) -> Path:
+def collect_seed_abns(exclude_source: str) -> set[str]:
+    """All ABN values already observed from OTHER sources (for seeded sampling)."""
+    seeds: set[str] = set()
+    obs_dir = OUTPUTS / "observations"
+    if not obs_dir.exists():
+        return seeds
+    for path in obs_dir.glob("*.jsonl"):
+        if path.stem == exclude_source:
+            continue
+        for line in path.read_text().splitlines():
+            obs = json.loads(line)
+            for claim in obs["claims"]:
+                if claim["field"] == "entity.abn":
+                    seeds.add(claim["value"])
+    return seeds
+
+
+def seeded_rows(data_path: Path, cfg: MappingConfig, limit: int, seeds: set[str]) -> list[dict]:
+    """Sample a big file so cross-source overlap actually lands in the sample.
+
+    Random 1000-row samples of a 3.4M-row file would share ~0 businesses with
+    the other sources (measured during source selection), so: keep the first
+    limit/2 rows as an unbiased fill, then scan the whole file keeping rows
+    whose ABN appears in another source, until the sample is full. The bias is
+    deliberate and documented: precision is measured either way; coverage is
+    never claimed.
+    """
+    abn_columns = []
+    for entry in cfg.fields:
+        if entry.canonical == "entity.abn":
+            abn_columns.append(entry.source)
+    fill_target = limit // 2
+    sample: list[dict] = []
+    matches = 0
+    for row in readers.iter_rows(data_path, cfg.reader.model_dump()):
+        if len(sample) < fill_target:
+            sample.append(row)
+            continue
+        digits = ""
+        for column in abn_columns:
+            digits = "".join(ch for ch in row.get(column, "") if ch.isdigit())
+            if digits:
+                break
+        if digits in seeds:
+            sample.append(row)
+            matches += 1
+            if len(sample) >= limit:
+                break
+    print(f"seeded sampling: {fill_target} head rows + {matches} seed-matching rows")
+    return sample
+
+
+def run_extract(source_id: str, limit: int = 1000, seeded: bool = False) -> Path:
     """CLI entry: load config, read the source, write observations + a run log."""
     config_path = CONFIGS / f"{source_id}.yaml"
     cfg = load_config(config_path)
@@ -168,7 +220,10 @@ def run_extract(source_id: str, limit: int = 1000) -> Path:
 
     raw_path = readers.download(cfg.resource_url, cfg.source_id)
     data_path = readers.unzip_if_needed(raw_path)
-    rows = readers.read_rows(data_path, cfg.reader.model_dump(), limit)
+    if seeded:
+        rows = seeded_rows(data_path, cfg, limit, collect_seed_abns(source_id))
+    else:
+        rows = readers.read_rows(data_path, cfg.reader.model_dump(), limit)
 
     # one timestamp for the whole run keeps the output deterministic
     ingested_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -196,6 +251,7 @@ def run_extract(source_id: str, limit: int = 1000) -> Path:
         "input_path": str(data_path),
         "input_bytes": data_path.stat().st_size,
         "row_limit": limit,
+        "seeded_sampling": seeded,
         "rows_read": len(rows),
         "observations_written": len(observations),
         "claim_counts": claim_counts,

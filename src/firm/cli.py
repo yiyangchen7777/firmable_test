@@ -18,6 +18,11 @@ def main() -> None:
 
     p_extract = sub.add_parser("extract", help="Part 2: run the engine over a source")
     p_extract.add_argument("source_id", help="source id (config must exist)")
+    p_extract.add_argument("--limit", type=int, default=1000, help="rows to sample (default 1000)")
+    p_extract.add_argument(
+        "--seeded", action="store_true",
+        help="big files: half head rows, half rows whose ABN appears in another source",
+    )
 
     sub.add_parser("resolve", help="Part 3: link records across sources")
 
@@ -37,7 +42,7 @@ def main() -> None:
     elif args.command == "extract":
         from .engine import run_extract
 
-        run_extract(args.source_id)
+        run_extract(args.source_id, limit=args.limit, seeded=args.seeded)
     elif args.command == "resolve":
         from .resolve import run_resolve
 

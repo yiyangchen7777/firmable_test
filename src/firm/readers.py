@@ -128,12 +128,23 @@ def read_rows(path: Path, reader_cfg: dict, limit: int) -> list[dict]:
     {"format": "csv", "encoding": "utf-8", "delimiter": ",", "header_row": 0}
     or {"format": "xlsx", "sheet": "Income tax details", "header_row": 1}.
     """
+    records = []
+    for record in iter_rows(path, reader_cfg):
+        records.append(record)
+        if len(records) >= limit:
+            break  # stop early: a 250MB file is never fully read
+    return records
+
+
+def iter_rows(path: Path, reader_cfg: dict):
+    """Yield records one by one (used to scan big files without loading them)."""
     fmt = reader_cfg["format"]
     if fmt in ("csv", "tsv"):
-        return _read_delimited(path, reader_cfg, limit)
-    if fmt == "xlsx":
-        return _read_xlsx(path, reader_cfg, limit)
-    raise RuntimeError(f"unknown format in reader config: {fmt}")
+        yield from _iter_delimited(path, reader_cfg)
+    elif fmt == "xlsx":
+        yield from _iter_xlsx(path, reader_cfg)
+    else:
+        raise RuntimeError(f"unknown format in reader config: {fmt}")
 
 
 def _row_to_record(header: list[str], cells: list) -> dict:
@@ -150,28 +161,24 @@ def _row_to_record(header: list[str], cells: list) -> dict:
     return record
 
 
-def _read_delimited(path: Path, cfg: dict, limit: int) -> list[dict]:
+def _iter_delimited(path: Path, cfg: dict):
     encoding = cfg.get("encoding", "utf-8-sig")
     header_row = cfg.get("header_row", 0)
-    records = []
     with path.open(encoding=encoding, errors="replace", newline="") as fh:
         reader = csv.reader(fh, delimiter=cfg["delimiter"])
         for _ in range(header_row):  # skip junk lines above the header
             next(reader)
         header = clean_header(next(reader))
         for cells in reader:
-            records.append(_row_to_record(header, cells))
-            if len(records) >= limit:
-                break  # stop early: a 250MB file is never fully read
-    return records
+            yield _row_to_record(header, cells)
 
 
-def _read_xlsx(path: Path, cfg: dict, limit: int) -> list[dict]:
+def _iter_xlsx(path: Path, cfg: dict):
     header_row = cfg.get("header_row", 0)
     wb = openpyxl.load_workbook(path, read_only=True)  # read_only streams rows
     if cfg["sheet"] not in wb.sheetnames:
+        wb.close()
         raise RuntimeError(f"sheet {cfg['sheet']!r} not found; sheets: {wb.sheetnames}")
-    records = []
     header: list[str] | None = None
     for i, row in enumerate(wb[cfg["sheet"]].iter_rows(values_only=True)):
         if i < header_row:
@@ -179,8 +186,5 @@ def _read_xlsx(path: Path, cfg: dict, limit: int) -> list[dict]:
         if header is None:
             header = clean_header(list(row))
             continue
-        records.append(_row_to_record(header, list(row)))
-        if len(records) >= limit:
-            break
+        yield _row_to_record(header, list(row))
     wb.close()
-    return records
