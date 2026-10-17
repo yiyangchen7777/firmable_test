@@ -2,7 +2,7 @@
 
 ## Cost — actuals from `outputs/ledger.jsonl`, not estimates
 
-- Runtime API total: **USD $2.83** (59 calls, 519k prompt / 180k completion tokens,
+- Runtime API total: **USD $2.91** (62 calls, 533k prompt / 184k completion tokens,
   `anthropic/claude-sonnet-5.5` via a personal OpenRouter key; every call logged with
   step, source, tokens, billed cost).
 - **One-time inference per source**: steady state **$0.13–0.55** (table below). The
@@ -36,7 +36,8 @@
   | business-names (mislabelled tsv) | 10 | 1 | 6 | 47k | 1.3 min | $0.20 |
   | discount-directory (no ids) | 10 | 1 | 9 | 95k | 3.0 min | $0.43 |
   | ipgod2022 (hard source) | 13 | 3 | 15 | 119k | 3.6 min | $0.51 |
-  | **afs-licensee (unseen demo)** | **7** | **0** | **3** | **59k** | **0.7 min** | **$0.18** |
+  | afs-licensee (unseen; same-publisher sibling, weak evidence) | 7 | 0 | 3 | 59k | 0.7 min | $0.18 |
+  | **r&d-tax-incentive (unseen, non-ASIC, final code)** | **7** | **0** | **3** | **18k** | **0.5 min** | **$0.07** |
 
 - **A run fails without losing the job** in layers: transport retries per call; one
   JSON-repair retry per model step; inspect retried once with its parse error; ≤3

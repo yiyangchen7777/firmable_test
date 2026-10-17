@@ -53,7 +53,7 @@ uv run firm onboard <dataset-id> --decide "approve"          # or "reject: <why>
 | `outputs/history/`, `outputs/crosswalk.json` | the matcher-0.1 → 0.2 upgrade: archived links, cluster crosswalk |
 | `review/part3_handcheck.csv`, `part3_queue_sample.csv` | 50 links + 20 refusals hand-checked: **62% precision at matcher-0.1; the 19 FPs removed by 0.2 with all 31 true links kept** |
 | `outputs/profiles.jsonl`, `outputs/drop-source-*.json` | Part 4: 50 profiles (per-field confidence, provenance, conflicts with support counts) + drop-one-source report |
-| `outputs/ledger.jsonl` | every model call: step, tokens, cost. Total **$2.83** |
+| `outputs/ledger.jsonl` | every model call: step, tokens, cost. Total **$2.91** |
 | `WRITEUP.md`, `docs/DESIGN.md`, `docs/WRITEUP_NOTES.md` | the write-up, the pre-implementation design, raw findings |
 | `TIMELOG.md` | how the 6-hour budget was actually spent, segment by segment |
 

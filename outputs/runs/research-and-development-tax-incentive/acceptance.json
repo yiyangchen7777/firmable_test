@@ -1,0 +1,43 @@
+{
+  "checks": [
+    {
+      "check": "identifier checksum (entity.abn)",
+      "threshold": ">= 95%",
+      "result": "100.0% (147 ok / 0 failed)",
+      "pass": true
+    },
+    {
+      "check": "identifier checksum (entity.acn)",
+      "threshold": ">= 95%",
+      "result": "100.0% (3 ok / 0 failed)",
+      "pass": true
+    },
+    {
+      "check": "null drift (entity.legal_name \u2190 Company name)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "conditional pair coverage (ABN/ACN \u2192 entity.abn + entity.acn)",
+      "threshold": ">= 95% of non-null",
+      "result": "100.0%",
+      "pass": true
+    },
+    {
+      "check": "record_id effectively unique (full sample)",
+      "threshold": "<= 0.5% duplicates",
+      "result": "0 duplicates in 150 rows (0.00%)",
+      "pass": true
+    },
+    {
+      "check": "minimum useful (a name or an identifier mapped)",
+      "threshold": "required",
+      "result": "yes",
+      "pass": true
+    }
+  ],
+  "failing_examples": [],
+  "all_pass": true,
+  "useful": true
+}

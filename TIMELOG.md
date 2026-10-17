@@ -48,4 +48,4 @@ Priority if squeezed: Part 2 (agentic + generalises) steals from Part 4, never t
 
 **Accounting corrections (honesty over tidiness).** Segment 13's commits actually span 22:36–23:16, overlapping segment 12's tail and segment 14 — two assistant sessions worked in parallel, so summed segment effort (~5h25m) exceeds unique wall-clock. Additionally, ~40 min (estimate) of pre-clock CKAN reconnaissance on 2026-10-16 informed the triage queries and source candidates and belongs in an honest total.
 
-**Honest total: effectively at the 6-hour budget** (unique wall-clock 18:15–23:55 AEDT on 10-17, plus the estimated 10-16 reconnaissance). Runtime API spend: $2.83 of the $10 cap (+ one pending demo run ≈ $0.3).
+**Honest total: effectively at the 6-hour budget** (unique wall-clock 18:15–23:55 AEDT on 10-17, plus the estimated 10-16 reconnaissance). Runtime API spend: $2.91 of the $10 cap.

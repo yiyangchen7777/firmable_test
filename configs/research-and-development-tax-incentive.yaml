@@ -1,0 +1,83 @@
+# Mapping config written by the schema-inference agent (not by hand).
+# dataset: research-and-development-tax-incentive | revisions used: 0/3
+# status at review: PASSING
+# approved by a human reviewer at 2026-10-17T12:33:13+00:00
+source_reliability:
+  value: 0.9
+  rationale: The ATO is the national tax regulator publishing R&D tax incentive entity
+    data from its own administrative records under an open CC-BY licence, so names
+    and ABNs are authoritative.
+reliability_overrides: {}
+record_id:
+  strategy: column
+  columns:
+  - ABN/ACN
+observed_at:
+  strategy: dataset_modified
+  basis: proxy
+  column: Income Year
+  format: null
+  value: '2026-09-22'
+fields:
+- canonical: entity.legal_name
+  source: Company name
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.9
+  evidence: Column 'Company name' holds values like 'AESON POWER PTY LTD', 'AINSWORTH
+    GAME TECHNOLOGY LIMITED' and 'A.C.N. 123 310 190 PTY LTD'. These are registered
+    company names including the legal suffix (PTY LTD/LIMITED), so they are the legal
+    name rather than a trading name. The ABN/ACN column settles that the entity is
+    a registered body.
+  conditional: false
+- canonical: entity.abn
+  source: ABN/ACN
+  transforms:
+  - strip_float_suffix
+  - digits_only
+  - keep_if_length: 11
+  - abn_normalize
+  confidence: 0.9
+  evidence: Column 'ABN/ACN' has samples such as '94631781121', '41667787500' and
+    '37068516665'. The profile says all 200 values are 11 digits, so they are ABNs
+    and not ACNs. For example, '37123310190' ends in the ACN 123310190 that appears
+    in the name 'A.C.N. 123 310 190 PTY LTD', which is consistent with an ABN. The
+    column is mixed-capable by name, so the length gate is applied, with a paired
+    ACN mapping for 9-digit values.
+  conditional: true
+- canonical: entity.acn
+  source: ABN/ACN
+  transforms:
+  - strip_float_suffix
+  - digits_only
+  - keep_if_length: 9
+  - acn_normalize
+  confidence: 0.85
+  evidence: Column 'ABN/ACN' is labelled as possibly holding ACNs. No 9-digit values
+    appear in the profile (all are 11-digit, e.g. '94631781121'), so this gated mapping
+    yields no claim on the sampled rows. It is kept as the paired mapping in case
+    9-digit ACNs appear in the full data.
+  conditional: true
+unmapped:
+- source: Total R&D expenditure (notional deductions less feedstock adjustments) $
+  reason: Financial measure (e.g. 102320, 17712107) reported for the income year;
+    no ontology field for expenditure amounts.
+- source: Total amended R&D expenditure (notional deductions less feedstock adjustments)
+    $
+  reason: Financial measure (e.g. 130205, 0), 97.5% null; no ontology field for amended
+    expenditure.
+- source: Income Year
+  reason: Single constant value '2023-24' naming the reporting financial year. It
+    is not a per-record extract date and not a registration date, so it fits neither
+    observed_at nor any ontology field.
+source_id: research-and-development-tax-incentive
+dataset_id: research-and-development-tax-incentive
+resource_url: https://data.gov.au/data/dataset/7c356598-b048-4c1e-862f-c936041e3d81/resource/5f7d5cac-cfa8-4500-8468-1c396f3a08d1/download/report-of-information-about-research-and-development-tax-incentive-entities-2023-24.xlsx
+licence: cc-by-2.5
+reader:
+  format: xlsx
+  delimiter: null
+  encoding: utf-8-sig
+  header_row: 0
+  sheet: 2023-24 Report

@@ -1,0 +1,17 @@
+{
+  "dataset_id": "research-and-development-tax-incentive",
+  "steps": [
+    "fetch_meta",
+    "inspect",
+    "profile",
+    "propose",
+    "validate",
+    "review",
+    "emit"
+  ],
+  "revisions": 0,
+  "status_at_review": "PASSING",
+  "approval_note": "",
+  "acceptance_all_pass": true,
+  "config_path": "/Users/yc/Desktop/firmable_test/configs/research-and-development-tax-incentive.yaml"
+}
