@@ -2,6 +2,7 @@
   "source": "ipgod2022",
   "review_events": [
     {
+      "at": "2026-10-17T09:55:24.154271+00:00",
       "decision": "approve",
       "rejection_comment": "",
       "approval_note": "the 1.71% duplicate record_ids are literal full-row duplicates in the source; the engine suffixes and flags them deterministically, and no column or composite is unique, so row_hash is correct. Noted for the record: agent/submitter rows carry the law firm's own name/ABN, which are legitimate observations about that firm; party_role cannot be mapped or filtered under the current config mechanism (WRITEUP item), and Part 3 must treat legal_name from this source at its 0.65 confidence, including trading-style names and pseudonymised individuals (iNNNNNN).",

@@ -2,6 +2,7 @@
   "source": "business-discount-directory",
   "review_events": [
     {
+      "at": "2026-10-17T09:54:22.405732+00:00",
       "decision": "reject",
       "rejection_comment": "(1) map Outlet Name to entity.trading_name as well - the ontology allows multiple trading names, one observation each, and outlet-level names are this source's main value for downstream name matching; (2) address.full evidence must state the values are often shopping-centre names rather than street addresses, and its confidence should drop to about 0.6; (3) the double-scheme website values (http://https://) and the 'Pty Ltd' names inside Trading Name are source dirt carried faithfully - leave them as they are.",
       "approval_note": "",
@@ -9,6 +10,7 @@
       "revisions_used": 0
     },
     {
+      "at": "2026-10-17T10:00:56.718663+00:00",
       "decision": "approve",
       "rejection_comment": "",
       "approval_note": "",

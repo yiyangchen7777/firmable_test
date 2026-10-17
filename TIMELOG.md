@@ -44,4 +44,8 @@ Priority if squeezed: Part 2 (agentic + generalises) steals from Part 4, never t
 
 | 14 | 2026-10-17 23:05 | 23:20 | 15 | Final polish | Second-session findings: thresholds stated in the write-up body (the brief's "tell us the threshold you used"), rerun-determinism note in the README, write-up trimmed back inside the two-page budget; brief audit added canonical_entity_key to every link row |
 
-**Total working time: ~5h00m of the 6h budget** (18:15–22:35 continuous + 23:00–23:20 AEDT). Runtime API spend: $2.83 of the $10 cap.
+| 15 | 2026-10-17 23:30 | 23:55 | 25 | Final-review corrections | Hostile process review verified 4 claims: the "approval note predicted the FPs" wording was an overstatement — corrected in the write-up (the note flagged the source's weak identity columns; the mechanism was caught by the hand-check, not foreseen); crosswalk regenerated against the shipped run_id; decisions.json rebuilt with checkpoint timestamps + the corporate-transparency v1 approval reconstructed from git (its thread was reset by --fresh); per-entity Wilson caveat; version-label disclosure; a second, harder unseen demo (non-ASIC) launched at the final code HEAD |
+
+**Accounting corrections (honesty over tidiness).** Segment 13's commits actually span 22:36–23:16, overlapping segment 12's tail and segment 14 — two assistant sessions worked in parallel, so summed segment effort (~5h25m) exceeds unique wall-clock. Additionally, ~40 min (estimate) of pre-clock CKAN reconnaissance on 2026-10-16 informed the triage queries and source candidates and belongs in an honest total.
+
+**Honest total: effectively at the 6-hour budget** (unique wall-clock 18:15–23:55 AEDT on 10-17, plus the estimated 10-16 reconnaissance). Runtime API spend: $2.83 of the $10 cap (+ one pending demo run ≈ $0.3).

@@ -49,6 +49,7 @@ def main() -> None:
             if decision and marker != previous:
                 events.append(
                     {
+                        "at": getattr(snap, "created_at", None),
                         "decision": decision,
                         "rejection_comment": comment if decision == "reject" else "",
                         "approval_note": note if decision == "approve" else "",

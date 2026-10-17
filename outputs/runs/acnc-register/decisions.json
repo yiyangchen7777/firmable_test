@@ -2,6 +2,7 @@
   "source": "acnc-register",
   "review_events": [
     {
+      "at": "2026-10-17T09:51:58.783896+00:00",
       "decision": "reject",
       "rejection_comment": "entity.date_registered <- Registration_Date is the date ACNC granted charity status, not the entity's own registration: the source's separate Date_Organisation_Established column shows it distinguishes the two, and pre-2012 organisations are all clamped to ACNC's Dec-2012 launch (systematic bias, not fixable by mapping). Do not remap to Date_Organisation_Established either: 'established' is not 'registered' and it holds 01/01/1900 placeholders. Unmap entity.date_registered and list both date columns with these reasons. Also normalize address.country to 'AU' with map_enum. Person names in Other_Organisation_Names and PO Box addresses are source dirt, acceptable.",
       "approval_note": "",
@@ -9,6 +10,7 @@
       "revisions_used": 0
     },
     {
+      "at": "2026-10-17T10:00:55.206061+00:00",
       "decision": "approve",
       "rejection_comment": "",
       "approval_note": "",

@@ -86,15 +86,20 @@ the `canonical_entity_key` it currently derives to; observations are immutable;
 clusters are versioned snapshots. **Thresholds used:** ABN equality (both checksums
 valid) 0.98; ACN equality 0.95; exact normalised name + same state 0.75; fuzzy
 similarity 85–100 is queued, never linked. Hand-checking 50 links measured **62%
-precision at matcher-0.1** — all 19 false positives one pattern (foreign parents
-carrying a local ABN), *predicted in the reviewer's recorded approval note for that
-source*. matcher-0.2 adds a country gate from country claims the observations already
-carried. Procedure: archive v1 → re-run → crosswalk (341 entities intact, 0 split, 13
+precision at matcher-0.1** — all 19 false positives one pattern: foreign parents
+carrying a local ABN. The reviewer's approval note for that source had flagged its
+identity columns as weak (legal_name capped at 0.65; agent-row ABNs noted) but
+**neither agent nor reviewer anticipated the foreign-parent mechanism — the hand-check
+caught it**. Earlier commit messages say "predicted"; this sentence is the correction.
+matcher-0.2 adds a country gate from country claims the observations already carried. Procedure: archive v1 → re-run → crosswalk (341 entities intact, 0 split, 13
 shrunk or dissolved) → re-measure on the same labels: **19/19 FPs removed, 31/31 true
 links kept** (in-sample), then a **fresh entity-stratified sample of 30 shipped links:
-30/30 correct — Wilson 95% lower bound 88.7%**. Honesty notes: across runs this build
+30/30 correct — Wilson 95% lower bound 88.7%** (one link drawn per entity, so this is
+per-entity precision; a large cluster contributes one draw, not its 45 links). Honesty notes: across runs this build
 regenerates files and keeps versions as archives (`outputs/history/`) — retraction
-records are designed, not exercised; ABN-seeded sampling enriches exactly the
+records are designed, not exercised; version labels (`matcher-0.2`, `engine-0.1`) were
+hand-bumped during the exercise and lag some code changes — production would stamp the
+code SHA and prompt hash instead; ABN-seeded sampling enriches exactly the
 foreign-parent region, so 62% describes the seeded overlap, not the corpus. Recorded
 in advance, which made this possible: per-link version + evidence + thresholds,
 immutable observations including fields we didn't know we needed (country), versioned

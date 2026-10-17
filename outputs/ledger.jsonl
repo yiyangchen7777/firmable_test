@@ -57,3 +57,6 @@
 {"step": "inspect", "source": "asic-afs-licensee", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 32904, "completion_tokens": 184, "cost_usd": 0.067648, "duration_s": 3.34, "ts": "2026-10-17T10:11:47+00:00"}
 {"step": "propose", "source": "asic-afs-licensee", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 12226, "completion_tokens": 2938, "cost_usd": 0.053832, "duration_s": 18.8, "ts": "2026-10-17T10:12:06+00:00"}
 {"step": "spotcheck", "source": "asic-afs-licensee", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 7715, "completion_tokens": 3951, "cost_usd": 0.05494, "duration_s": 21.09, "ts": "2026-10-17T10:12:27+00:00"}
+{"step": "inspect", "source": "research-and-development-tax-incentive", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 1743, "completion_tokens": 180, "cost_usd": 0.005286, "duration_s": 2.61, "ts": "2026-10-17T12:31:15+00:00"}
+{"step": "propose", "source": "research-and-development-tax-incentive", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 7560, "completion_tokens": 1365, "cost_usd": 0.02877, "duration_s": 9.48, "ts": "2026-10-17T12:31:24+00:00"}
+{"step": "spotcheck", "source": "research-and-development-tax-incentive", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 4388, "completion_tokens": 2855, "cost_usd": 0.037326, "duration_s": 17.12, "ts": "2026-10-17T12:31:41+00:00"}

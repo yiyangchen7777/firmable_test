@@ -59,10 +59,12 @@ uv run firm onboard <dataset-id> --decide "approve"          # or "reject: <why>
 
 ## Decisions worth knowing before reading the code
 
-- **Proof of agency.** `asic-afs-licensee` was onboarded after development froze, as an
-  unseen seventh dataset: first proposal PASSING, 0 revisions, 0 human edits, $0.18.
-  The demo deliberately stops at config emission — its observations are kept out of
-  Part 3 so the measured link numbers stay frozen.
+- **Proof of agency.** Two unseen-dataset demos, honestly graded: `asic-afs-licensee`
+  (first proposal PASSING, 0 revisions, $0.18) is weak evidence — it is a
+  same-publisher sibling of a source already onboarded; `research-and-development-tax-incentive`
+  (ATO) was onboarded at the final HEAD of the code as a harder check. Both stop at
+  config emission so the measured Part 3 numbers stay frozen. ("Reviewer" in these
+  docs always means the human; AI checkers are called review agents.)
 - **Sampling bias, disclosed.** Random 1,000-row samples of the two large files would
   share ~0 businesses with the other sources (measured). Sampling is therefore seeded:
   half head rows, half rows whose ABN appears in another source (or whose name matches
