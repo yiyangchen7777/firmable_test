@@ -29,3 +29,7 @@ Priority if squeezed: Part 2 (agentic + generalises) steals from Part 4, never t
 | # | Start (AEDT) | End | Minutes | Node | Notes |
 |---|---|---|---|---|---|
 | 1 | 2026-10-17 18:15 | 18:55 | 40 | 0 Design | Design discussion + DESIGN.md, with AI assistant (Claude Code). Includes a 2-subagent debate on the Part 3 link model |
+| 2 | 2026-10-17 18:55 | 18:58 | 3 | 1a Skeleton | uv project, CLI stubs, OpenRouter client + cost ledger, smoke call |
+| 3 | 2026-10-17 18:58 | 19:02 | 4 | 1b Triage | 840-dataset pool, shortlist of 50, hand-check sheet generated |
+| 4 | 2026-10-17 19:02 | 19:09 | 7 | Design rev + 2a | External review feedback folded into DESIGN.md; readers.py (2 design proposals reconciled); source picks verified incl. overlap probe; readability refactor |
+| 5 | 2026-10-17 19:09 | 19:18 | 9 | 2b Engine | transforms (14), validators (checksums verified independently), config schema, engine; 27 tests passing |
