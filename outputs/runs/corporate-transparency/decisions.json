@@ -2,15 +2,6 @@
   "source": "corporate-transparency",
   "review_events": [
     {
-      "at": "2026-10-17T09:27:38+00:00",
-      "decision": "approve",
-      "rejection_comment": "",
-      "approval_note": "",
-      "status_at_decision": "PASSING",
-      "revisions_used": 0,
-      "reconstructed": "this first approval predates the --fresh re-run that reset the thread; reconstructed from git history (commit 46def21). The run was later reopened on an AI audit finding (record_id lacked the year) and re-approved as the v2 config."
-    },
-    {
       "at": "2026-10-17T09:55:42.765044+00:00",
       "decision": "reject",
       "rejection_comment": "change record_id to the composite ['Name','Income year'] so a future year's data in the same source cannot collide with this year's records. Keep everything else exactly as it is.",
