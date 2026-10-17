@@ -1,0 +1,1 @@
+{"step": "smoke-test", "source": "-", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 21, "completion_tokens": 4, "cost_usd": 8.2e-05, "duration_s": 1.41, "attempt": 0, "ts": "2026-10-17T07:58:10+00:00"}
