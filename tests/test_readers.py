@@ -10,6 +10,13 @@ def test_clean_header_blanks_and_duplicates():
     assert clean_header(cells) == ["Name", "col_1", "Name_2", "col_3", "State"]
 
 
+def test_clean_header_dedup_never_collides_with_a_real_column():
+    # A, A, A_2: the suffix given to the duplicate A must not collide with the
+    # real column already named A_2 (a collision silently drops a column)
+    header = clean_header(["A", "A", "A_2"])
+    assert len(set(header)) == 3, header
+
+
 def test_read_delimited_with_junk_preamble_and_ragged_rows(tmp_path: Path):
     f = tmp_path / "sample.csv"
     f.write_text(

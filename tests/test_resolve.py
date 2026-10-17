@@ -94,6 +94,21 @@ def test_queue_never_duplicates_an_accepted_pair():
     assert queue == []
 
 
+def test_id_link_never_bridges_clusters_with_conflicting_abns():
+    # two records share an ACN but carry different (checksum-valid) ABNs: an
+    # identifier conflict to surface, not an automatic merge — a wrong link is
+    # worse than no link, whatever the tier
+    records = {r["key"]: r for r in [
+        rec("a::1", "a", abn="51824753556", acn="004085616"),
+        rec("b::1", "b", abn="53004085616", acn="004085616"),
+    ]}
+    links, _ = propose_links(records)
+    assert any(l["evidence"].startswith("acn_exact") for l in links), "precondition: acn link proposed"
+    accepted, conflicts, clusters = derive_clusters(records, links)
+    assert clusters == []
+    assert any("conflicting ABNs" in c["reason"] for c in conflicts)
+
+
 def test_union_find_basics():
     uf = UnionFind()
     uf.union("x", "y")

@@ -3,7 +3,9 @@
 fetch_meta → inspect → profile → propose → validate ─┬─ review ─┬─ emit
                                           ▲          │          ├─ revise (reject)
                                           └─ revise ◄┘          └─ abandon
-(validate → revise when checks fail or semantics look wrong, max 3 rounds)
+(validate → revise when checks fail or semantics look wrong, max 3 rounds;
+ emit → back to review when the unseen acceptance rows fail and the approval
+ carried no written exception — the config is withheld, not published)
 
 Every node's completion is checkpointed to sqlite: a crash resumes from the
 last finished node, and paid model calls are additionally cached on disk.
@@ -70,6 +72,12 @@ def after_review(state: dict) -> str:
     return state["decision"]  # "approve" → emit, "reject" → revise, "abandon"
 
 
+def after_emit(state: dict) -> str:
+    # emit withholds the config when the acceptance set fails and the approval
+    # carried no written exception; the run then goes back to the human
+    return "end" if state.get("emitted") else "review"
+
+
 def build_graph():
     graph = StateGraph(AgentState)
     graph.add_node("fetch_meta", nodes.fetch_meta)
@@ -90,7 +98,7 @@ def build_graph():
     graph.add_conditional_edges("validate", after_validate, {"review": "review", "revise": "revise"})
     graph.add_edge("revise", "validate")
     graph.add_conditional_edges("review", after_review, {"approve": "emit", "reject": "revise", "abandon": "abandon"})
-    graph.add_edge("emit", END)
+    graph.add_conditional_edges("emit", after_emit, {"end": END, "review": "review"})
     graph.add_edge("abandon", END)
     return graph
 

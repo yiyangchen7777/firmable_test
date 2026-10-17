@@ -106,7 +106,7 @@ def head_xlsx(path: Path, n_rows: int = 15) -> dict[str, list[list[str]]]:
 def clean_header(cells: list) -> list[str]:
     """Strip header names, call blank columns col_N, suffix duplicates with _2, _3…"""
     header = []
-    seen: dict[str, int] = {}  # name → how many times used so far
+    used: set[str] = set()
     for i, cell in enumerate(cells):
         if cell is None:
             name = ""
@@ -114,11 +114,14 @@ def clean_header(cells: list) -> list[str]:
             name = str(cell).strip()
         if name == "":
             name = f"col_{i}"
-        if name in seen:
-            seen[name] += 1
-            name = f"{name}_{seen[name]}"
-        else:
-            seen[name] = 1
+        # keep bumping until the name is genuinely unused — a plain "_2" could
+        # collide with a real column already named "A_2", silently dropping it
+        base = name
+        n = 1
+        while name in used:
+            n += 1
+            name = f"{base}_{n}"
+        used.add(name)
         header.append(name)
     return header
 

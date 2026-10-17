@@ -18,6 +18,7 @@ from ..config import CONFIGS, RUNS
 from ..engine import check_claim_value, extract_rows
 from ..llm import complete
 from ..mapping_config import MappingConfig, check_config
+from ..transforms import TransformError, apply_transforms
 from . import prompts
 
 MAX_REVISIONS = 3
@@ -730,8 +731,6 @@ def emit(state: dict) -> dict:
         acceptance = build_validation_report(obs, accept_rows, cfg_obj, duplicate_ids)
         (run_dir / "acceptance.json").write_text(json.dumps(acceptance, indent=2))
 
-    CONFIGS.mkdir(parents=True, exist_ok=True)
-    config_path = CONFIGS / f"{source_id}.yaml"
     header = (
         f"# Mapping config written by the schema-inference agent (not by hand).\n"
         f"# dataset: {cfg['dataset_id']} | revisions used: {state['revisions']}/3\n"
@@ -740,7 +739,7 @@ def emit(state: dict) -> dict:
     )
     if state.get("approval_note"):
         header += f"# reviewer's note: {state['approval_note']}\n"
-    config_path.write_text(header + yaml.safe_dump(cfg, sort_keys=False, allow_unicode=True))
+    config_text = header + yaml.safe_dump(cfg, sort_keys=False, allow_unicode=True)
 
     log = {
         "dataset_id": cfg["dataset_id"],
@@ -749,15 +748,37 @@ def emit(state: dict) -> dict:
         "status_at_review": state["status"],
         "approval_note": state.get("approval_note", ""),
         "acceptance_all_pass": acceptance["all_pass"] if acceptance else None,
-        "config_path": str(config_path),
     }
+
+    # The acceptance rows are the one check the reviewer never saw. If they
+    # fail, publishing anyway would make the acceptance set decorative — so the
+    # config is withheld and the run goes back to review. Publishing despite
+    # the failure needs the same written exception as any non-green approval.
+    if acceptance and not acceptance["all_pass"] and not state.get("approval_note"):
+        candidate_path = run_dir / "config.candidate.yaml"
+        candidate_path.write_text(
+            "# NOT PUBLISHED: the acceptance set failed a check; awaiting a re-decision.\n"
+            + config_text
+        )
+        log["config_path"] = str(candidate_path)
+        log["withheld"] = "acceptance failed and the approval carried no written exception"
+        (run_dir / "agent_log.json").write_text(json.dumps(log, indent=2))
+        print(f"acceptance ({len(accept_rows)} unseen rows): all_pass=False — config NOT published")
+        print(f"candidate kept at {candidate_path}; read {run_dir / 'acceptance.json'}, then")
+        print('re-decide:  --decide "approve: <why this failure is acceptable>"  or  --decide "reject: <what to fix>"')
+        return {"emitted": "", "steps": state["steps"] + ["emit"]}
+
+    CONFIGS.mkdir(parents=True, exist_ok=True)
+    config_path = CONFIGS / f"{source_id}.yaml"
+    config_path.write_text(config_text)
+    log["config_path"] = str(config_path)
     (run_dir / "agent_log.json").write_text(json.dumps(log, indent=2))
     print(f"config emitted: {config_path}")
     if acceptance:
         print(f"acceptance ({len(accept_rows)} unseen rows): all_pass={acceptance['all_pass']}")
         if not acceptance["all_pass"]:
-            print("WARNING: the config was approved but the untouched acceptance set "
-                  "FAILED a check — read runs/.../acceptance.json before using this config.")
+            print("note: published despite the failed acceptance because the approval "
+                  "carried a written exception — read runs/.../acceptance.json.")
     return {"emitted": str(config_path), "steps": state["steps"] + ["emit"]}
 
 

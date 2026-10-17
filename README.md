@@ -16,7 +16,7 @@ only for `onboard` (the agent); every other command is deterministic and free.
 ```bash
 uv sync                                   # ~1 min
 echo 'OPENROUTER_API_KEY=sk-or-...' > .env   # only needed for `onboard`
-uv run pytest -q                          # 35 tests, <1 s
+uv run pytest -q                          # 50 tests, <1 s
 
 uv run firm triage                        # Part 1: pool 840 → shortlist 50 (network: ~10 CKAN queries, ~1 min)
 uv run firm extract asic-credit-licensee --limit 4400   # Part 2: engine (downloads ~7MB)
@@ -75,7 +75,10 @@ uv run firm onboard <dataset-id> --decide "approve"          # or "reject: <why>
 - **Human review is the product.** `review.md` per run is the canonical review
   document; `scripts/review_page.py` renders it as a local HTML page for the reviewer
   (not committed). Decisions are CLI resumes against sqlite checkpoints; rejecting feeds the
-  comment to the agent's revise node; humans never edit configs. Five of seven
+  comment to the agent's revise node; humans never edit configs. A failed final
+  acceptance (the 150 unseen rows) withholds the config and returns the run to
+  review — publishing anyway needs the same written exception as any non-green
+  approval. Five of seven
   onboarding runs were rejected once; the verbatim decision trail per source is in
   `outputs/runs/<source>/decisions.json`.
 

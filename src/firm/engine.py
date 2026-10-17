@@ -94,23 +94,34 @@ def extract_rows(rows: list[dict], cfg: MappingConfig, extractor_version: str, i
             raise RuntimeError(f"config references missing columns: {missing}")
 
     observations = []
-    id_counts: dict[str, int] = {}
+    used_ids: set[str] = set()
     for row in rows:
         flags: list[dict] = []
         record_id = make_record_id(row, cfg, flags)
 
-        # duplicate ids get a deterministic suffix; rows are never dropped
-        seen = id_counts.get(record_id, 0) + 1
-        id_counts[record_id] = seen
-        if seen > 1:
+        # duplicate ids get a deterministic suffix; rows are never dropped.
+        # The loop keeps bumping until the id is genuinely unused — a plain
+        # "#2" could collide with a row whose REAL id is already "K#2".
+        final_id = record_id
+        n = 1
+        while final_id in used_ids:
+            n += 1
+            final_id = f"{record_id}#{n}"
+        if final_id != record_id:
             flags.append({"field": "source_record_id", "flag": "duplicate_record_id", "raw": record_id})
-            record_id = f"{record_id}#{seen}"
+        used_ids.add(final_id)
+        record_id = final_id
 
         observed_at = make_observed_at(row, cfg, flags)
 
         claims = []
         for entry in cfg.fields:
             raw = row.get(entry.source, "")
+            # the readers stringify every cell, but this function is public:
+            # a non-string cell must become a flag, never a claim
+            if not isinstance(raw, str):
+                flags.append({"field": entry.canonical, "flag": "cell_not_text", "raw": str(raw)})
+                continue
             try:
                 value = apply_transforms(raw, entry.transforms)
             except TransformError as err:

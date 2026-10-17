@@ -34,7 +34,10 @@ in the repo (runs/, review/, ledger, git history).
 - Conditional pair coverage 98%→95%: ~4% of the mixed ABN/ACN column is source
   junk ("0", 7-8 digit fragments); abstaining is correct, abstentions listed.
 - record_id uniqueness zero→rate ≤0.5%: literal full-row duplicates exist in
-  real sources (ipgod 1.71%); the engine suffixes (#N) + flags them.
+  real sources (ipgod: 9 duplicate ids in the 1,000-row extract = 0.9%, per
+  extract_log.json; the review-time "1.71%" in the approval note came from a
+  since-fixed denominator bug and is kept verbatim as a historical record);
+  the engine suffixes (#N) + flags them.
 - Semantic-only flags route to the human (PASSING WITH FLAGS) instead of the
   revise loop: a flag the closed catalogue cannot fix (street text inside a
   locality cell) would loop the model pointlessly.

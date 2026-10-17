@@ -224,11 +224,13 @@ def derive_clusters(records: dict[str, dict], links: list[dict]) -> tuple[list[d
             accepted.append(link)
             continue
         abns_a, abns_b = abns_of(root_a), abns_of(root_b)
-        if link["tier"] == "name" and abns_a and abns_b and not (abns_a & abns_b):
-            # a name link must not weld two clusters anchored to different ABNs
+        if abns_a and abns_b and not (abns_a & abns_b):
+            # NO link may weld two clusters anchored to different ABNs — not a
+            # name match, and not a shared ACN either (a reused or mistyped
+            # secondary identifier must surface as a conflict, not a merge)
             conflicts.append(
                 {"record_a": link["record_a"], "record_b": link["record_b"],
-                 "reason": "name link would bridge clusters with conflicting ABNs; refused",
+                 "reason": f"{link['tier']} link would bridge clusters with conflicting ABNs; refused",
                  "evidence": f"{link['evidence']} | abns {sorted(abns_a)[:3]} vs {sorted(abns_b)[:3]}"}
             )
             continue
@@ -288,10 +290,20 @@ def run_resolve(drop_source: str | None = None, handcheck_seed: int = 99) -> dic
     suffix = f".without-{drop_source}" if drop_source else ""
     out = OUTPUTS
 
+    # the brief's link tuple includes the canonical entity key: stamp each link
+    # with the entity its records land in under THIS run (a per-run label —
+    # the cluster snapshot is the cache it comes from)
+    entity_of: dict[str, str] = {}
+    for cluster in clusters:
+        for member in cluster["members"]:
+            entity_of[member] = cluster["entity_id"]
     with (out / f"links{suffix}.jsonl").open("w") as fh:
         for link in accepted:
-            fh.write(json.dumps(link | {"run_id": run_id, "matcher_version": MATCHER_VERSION,
-                                        "created_at": created_at}, sort_keys=True) + "\n")
+            fh.write(json.dumps(link | {
+                "canonical_entity_key": entity_of.get(link["record_a"], link["record_a"]),
+                "run_id": run_id, "matcher_version": MATCHER_VERSION,
+                "created_at": created_at,
+            }, sort_keys=True) + "\n")
     with (out / f"unlinked{suffix}.jsonl").open("w") as fh:
         for item in queue + conflicts:
             fh.write(json.dumps(item | {"run_id": run_id}, sort_keys=True) + "\n")

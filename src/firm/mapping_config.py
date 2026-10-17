@@ -10,7 +10,7 @@ from typing import Literal
 import yaml
 from pydantic import BaseModel, ConfigDict
 
-from . import ontology
+from . import ontology, validators
 from .transforms import ALLOWED_TRANSFORMS
 
 
@@ -85,9 +85,19 @@ def check_config(cfg: MappingConfig) -> list[str]:
     problems = []
     known_fields = ontology.canonical_fields()
 
+    # every number the model wrote is a probability — enforced here, not asked
+    # for in the prompt
+    if not 0.0 <= cfg.source_reliability.value <= 1.0:
+        problems.append(f"source_reliability.value must be 0..1, got {cfg.source_reliability.value}")
+    for field, value in cfg.reliability_overrides.items():
+        if not 0.0 <= value <= 1.0:
+            problems.append(f"reliability_overrides[{field}] must be 0..1, got {value}")
+
     for entry in cfg.fields:
         if entry.canonical not in known_fields:
             problems.append(f"unknown canonical field: {entry.canonical}")
+        if not 0.0 <= entry.confidence <= 1.0:
+            problems.append(f"confidence must be 0..1, got {entry.confidence} (field {entry.canonical})")
         for step in entry.transforms:
             if isinstance(step, str):
                 name = step
@@ -106,6 +116,8 @@ def check_config(cfg: MappingConfig) -> list[str]:
 
     if cfg.observed_at.strategy == "dataset_modified" and cfg.observed_at.value is None:
         problems.append("observed_at.value required when strategy=dataset_modified")
+    if cfg.observed_at.value is not None and not validators.valid_date(cfg.observed_at.value):
+        problems.append(f"observed_at.value must be an ISO date (YYYY-MM-DD), got {cfg.observed_at.value!r}")
     if cfg.observed_at.strategy == "column" and cfg.observed_at.column is None:
         problems.append("observed_at.column required when strategy=column")
 

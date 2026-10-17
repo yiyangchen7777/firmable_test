@@ -119,3 +119,28 @@ def test_state_normalised_and_empty_absent():
 
 def test_determinism():
     assert run() == run()
+
+
+def test_record_id_suffix_never_collides_with_a_real_id():
+    # raw ids K, K, K#2: the suffix given to the second K must not collide
+    # with the row whose real id is already K#2
+    cfg = MappingConfig(**{**FIXTURE_CONFIG, "record_id": {"strategy": "column", "columns": ["LIC_NUM"]}})
+    rows = [
+        {"LIC_NUM": "K", "START_DT": "", "NAME": "One", "ABN_ACN": "", "STATE": "", "FEE": ""},
+        {"LIC_NUM": "K", "START_DT": "", "NAME": "Two", "ABN_ACN": "", "STATE": "", "FEE": ""},
+        {"LIC_NUM": "K#2", "START_DT": "", "NAME": "Three", "ABN_ACN": "", "STATE": "", "FEE": ""},
+    ]
+    obs = extract_rows(rows, cfg, "cfg-test", "1970-01-01T00:00:00+00:00")
+    ids = [o["source_record_id"] for o in obs]
+    assert len(set(ids)) == 3, ids
+
+
+def test_non_text_cell_is_flagged_never_claimed():
+    # the readers stringify every cell, but extract_rows is a public function:
+    # a non-string cell (here a bool) must become a flag, not a claim
+    cfg = MappingConfig(**FIXTURE_CONFIG)
+    rows = [{"LIC_NUM": "L9", "START_DT": "2020-01-01", "NAME": True,
+             "ABN_ACN": "", "STATE": "", "FEE": ""}]
+    obs = extract_rows(rows, cfg, "cfg-test", "1970-01-01T00:00:00+00:00")
+    assert claims_of(obs[0], "entity.legal_name") == []
+    assert any(f["flag"] == "cell_not_text" for f in obs[0]["quality_flags"])
