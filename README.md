@@ -26,7 +26,9 @@ uv run firm profile --drop-source corporate-transparency  # fragility experiment
 ```
 
 The committed `outputs/` are the real run's artefacts; the commands above reproduce
-them. (`extract` on the two big sources downloads 69–248MB; all downloads cache under
+them. Re-running rewrites the output files under a fresh `run_id` and timestamps, so
+expect a large byte-level git diff whose *numbers* match the committed ones (781 links,
+839 refusals, 344 clusters, 50 profiles). (`extract` on the two big sources downloads 69–248MB; all downloads cache under
 `data/raw/`.)
 
 To watch the agent onboard a source it has never seen (costs ~$0.20, stops for your
