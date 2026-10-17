@@ -73,8 +73,8 @@ uv run firm onboard <dataset-id> --decide "approve"          # or "reject: <why>
   YAML; configs reference a closed catalogue of named transforms and cannot contain
   code. Checksums and enum/date/uniqueness gates run engine-side on every claim.
 - **Human review is the product.** `review.md` per run is the canonical review
-  document (English); `review.html` is the reviewer's localized rendering of the same
-  data. Decisions are CLI resumes against sqlite checkpoints; rejecting feeds the
+  document; `scripts/review_page.py` renders it as a local HTML page for the reviewer
+  (not committed). Decisions are CLI resumes against sqlite checkpoints; rejecting feeds the
   comment to the agent's revise node; humans never edit configs. Five of seven
   onboarding runs were rejected once; the verbatim decision trail per source is in
   `outputs/runs/<source>/decisions.json`.

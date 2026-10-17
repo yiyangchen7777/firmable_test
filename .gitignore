@@ -4,3 +4,7 @@ __pycache__/
 data/raw/
 data/llm_cache/
 outputs/agent_checkpoints.sqlite
+# reviewer's localized (Chinese) renderings — local tools, not deliverables
+outputs/writeup_zh.html
+outputs/runs/*/review.html
+review/*.html
