@@ -5,10 +5,9 @@
 - Runtime API total: **USD $2.83** (59 calls, 519k prompt / 180k completion tokens,
   `anthropic/claude-sonnet-5.5` via a personal OpenRouter key). Every call logged with
   step, source, tokens and the billed cost.
-- **One-time inference per source**: steady state **$0.13–0.55**; the unseen seventh
-  dataset cost **$0.18** (3 calls, 0 revisions). The first source cost $0.83 because
-  validator calibration changed prompts and re-billed; a disk response cache makes
-  unchanged steps free, so a crash never pays twice.
+- **One-time inference per source**: steady state **$0.13–0.55** (per-source table
+  under Agent design). The first source cost $0.83 because validator calibration
+  changed prompts and re-billed; a disk response cache makes unchanged steps free.
 - **Per-record cost: $0** — extraction is the deterministic engine. Two oversized
   sources seeded-sampled at 1,000 rows, one 66k-row source head-sampled at 1,000, the
   rest in full → 19,542 observations.
@@ -19,7 +18,28 @@
 
 - Fixed 9-node LangGraph: fetch → inspect(model) → profile(code) → propose(model) →
   validate(code + model semantic spot-check) → revise(model, ≤3) → review(human) →
-  emit. Sqlite checkpoints per node; crash resumes at the last node.
+  emit. State carried between nodes (and checkpointed to sqlite after each): the
+  reader decision, the 200/350/150 row split, column profiles, the config draft, the
+  validation report with failing examples, the revision count, the human's comment.
+- **Onboarding one source, measured** (steps = graph nodes executed incl. the human
+  gate; wall-clock = model time from the ledger; downloads and the deterministic
+  engine excluded):
+
+  | source | steps | revisions | LLM calls | tokens | model time | cost |
+  |---|---|---|---|---|---|---|
+  | credit-licensee (first, incl. calibration) | 10 | 1 | 14 | 199k | 5.2 min | $0.83 |
+  | corporate-transparency (xlsx) | 10 | 1 | 5 | 29k | 0.9 min | $0.13 |
+  | acnc-register (69 cols) | 10 | 1 | 6 | 147k | 3.1 min | $0.55 |
+  | business-names (mislabelled tsv) | 10 | 1 | 6 | 47k | 1.3 min | $0.20 |
+  | discount-directory (no ids) | 10 | 1 | 9 | 95k | 3.0 min | $0.43 |
+  | ipgod2022 (hard source) | 13 | 3 | 15 | 119k | 3.6 min | $0.51 |
+  | **afs-licensee (unseen demo)** | **7** | **0** | **3** | **59k** | **0.7 min** | **$0.18** |
+
+- **Where a run fails without losing the job**, in layers: transport retries inside
+  each call; one JSON-repair retry per model step; one inspect retry fed the parse
+  error; ≤3 validate→revise rounds fed the failing examples; a crash resumes from the
+  last checkpointed node; and a disk cache keyed on the prompt means a resumed run
+  never re-pays a completed call.
 - **Models propose, code gates, a human approves.** ABN/ACN checksums, enums, dates,
   null drift (per column entry) and record-id uniqueness run engine-side — no config
   bypasses them. Rows split 200 model-visible / 350 revise-loop / 150 acceptance (run
@@ -34,7 +54,7 @@
 - **One worked round-trip of five:** the first credit-licensee proposal mapped
   `CRED_LIC_STATUS` (`APPR`) to `entity.status`. Reviewer: *"APPR describes the licence
   approval, not the company's existence — unmap it with that reason."* The revise node
-  moved the column to unmapped carrying that reason; nobody touched the YAML.
+  obeyed; nobody touched the YAML.
 - **Weakest step, and how we know:** propose's semantic layer. Four of six first
   proposals mapped a *registration's* status or date onto the *entity* (licence,
   business name, charity registration, IP right) — parse rates ~100% every time; only
@@ -91,12 +111,11 @@ snapshots, a labelled sample. Rollback = derive from the archived v1 links.
 
 ## Profile assembly (Part 4)
 
-50 profiles from randomly sampled multi-source entities (seed in code, no
-cherry-picking). Per field: winner + support count, the two confidence factors shown
-separately (heuristics, bounded in meaning by the measured precision), provenance, and
-every losing value with the rule that beat it; majority counts distinct sources before
-rows; `trading_name` is multi-valued; absent fields are absent keys. Each profile
-carries `cluster_support` (weakest link under it). **Drop-one-source:** removing the
+50 profiles from randomly sampled multi-source entities (seed in code). Per field:
+winner + support count, both confidence factors shown separately (heuristics, bounded
+by the measured precision), provenance, every losing value with the rule that beat it;
+majority counts distinct sources before rows; `trading_name` is multi-valued; absent
+fields are absent keys; each profile carries `cluster_support` (weakest link under it). **Drop-one-source:** removing the
 tax-transparency anchor splits or dissolves **31/50** entities, 19 survive, 1 changes a
 field value — a single point of failure, with the caveat that seeded sampling made it
 the hub of the sampled graph.
