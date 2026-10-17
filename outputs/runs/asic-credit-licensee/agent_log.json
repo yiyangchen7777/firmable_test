@@ -1,0 +1,19 @@
+{
+  "dataset_id": "asic-credit-licensee",
+  "steps": [
+    "fetch_meta",
+    "inspect",
+    "profile",
+    "propose",
+    "validate",
+    "review",
+    "revise",
+    "validate",
+    "review",
+    "emit"
+  ],
+  "revisions": 1,
+  "status_at_review": "PASSING WITH FLAGS",
+  "acceptance_all_pass": true,
+  "config_path": "/Users/yc/Desktop/firmable_test/configs/asic-credit-licensee.yaml"
+}

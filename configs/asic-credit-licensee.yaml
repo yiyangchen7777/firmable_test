@@ -1,0 +1,148 @@
+# Mapping config written by the schema-inference agent (not by hand).
+# dataset: asic-credit-licensee | revisions used: 1/3
+# approved by a human reviewer at 2026-10-17T09:23:26+00:00
+source_reliability:
+  value: 0.9
+  rationale: ASIC is the national regulator and this is its own credit licence register,
+    published under CC-BY, so licensee identity, licence and address claims are first-hand.
+reliability_overrides:
+  entity.trading_name: 0.75
+record_id:
+  strategy: column
+  columns:
+  - CRED_LIC_NUM
+observed_at:
+  strategy: dataset_modified
+  basis: proxy
+  column: null
+  format: null
+  value: '2026-10-15'
+fields:
+- canonical: entity.legal_name
+  source: CRED_LIC_NAME
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.92
+  evidence: CRED_LIC_NAME holds values such as 'SAVINGS PTY LTD', 'MACQUARIE BANK
+    LIMITED' and 'BURL, DAMIEN'. These are the registered names of the licensee (companies,
+    and individuals in surname-first form), 200 distinct over 200 rows. CRED_LIC_BN
+    is the separate business-name column and holds the trading names, so this column
+    is the legal name.
+  conditional: false
+- canonical: entity.abn
+  source: CRED_LIC_ABN_ACN
+  transforms:
+  - strip_float_suffix
+  - digits_only
+  - keep_if_length: 11
+  - abn_normalize
+  confidence: 0.9
+  evidence: CRED_LIC_ABN_ACN is a mixed identifier column. 11-digit values such as
+    '22105729100' and '48124489318' are ABNs, while 9-digit values such as '108398750'
+    are ACNs. The 11-digit gate keeps ABNs only; other lengths such as the placeholder
+    '0' abstain.
+  conditional: true
+- canonical: entity.acn
+  source: CRED_LIC_ABN_ACN
+  transforms:
+  - strip_float_suffix
+  - digits_only
+  - keep_if_length: 9
+  - acn_normalize
+  confidence: 0.9
+  evidence: CRED_LIC_ABN_ACN holds 9-digit values such as '108398750' (FMW MORTGAGE
+    SERVICES PTY LTD), which are ACNs. The 9-digit gate keeps only these and abstains
+    on 11-digit ABNs, so the two mappings are complementary.
+  conditional: true
+- canonical: entity.trading_name
+  source: CRED_LIC_BN
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.85
+  evidence: CRED_LIC_BN ('BN' = business name) holds values such as 'FINANCEMYWAY'
+    (licensee FMW MORTGAGE SERVICES PTY LTD) and 'TOP GEAR FINANCE' (licensee BURL,
+    DAMIEN). These are names the licensee trades under, distinct from the legal name
+    in CRED_LIC_NAME. It is 63% null because many licensees have no business name.
+    No separator is observed in the samples, so no split is applied.
+  conditional: false
+- canonical: address.locality
+  source: CRED_LIC_LOCALITY
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.85
+  evidence: CRED_LIC_LOCALITY holds suburb/town names such as 'ERSKINE', 'UNDERWOOD'
+    and 'MELBOURNE'. They are consistent with the paired state and postcode columns
+    (ERSKINE/WA/6210), so this is the licensee's address locality. A spot-check found
+    occasional street text in a cell ('KINGSWAY CARINGBAH'); the human reviewer accepted
+    this contamination, so the mapping is unchanged.
+  conditional: false
+- canonical: address.state
+  source: CRED_LIC_STATE
+  transforms:
+  - trim
+  - empty_to_null
+  - state_normalize
+  confidence: 0.95
+  evidence: CRED_LIC_STATE has 6 distinct abbreviations (WA, QLD, VIC, NSW, SA, TAS).
+    They match the localities (ERSKINE is in WA, SYDNEY in NSW), so this is the address
+    state.
+  conditional: false
+- canonical: address.postcode
+  source: CRED_LIC_PCODE
+  transforms:
+  - trim
+  - empty_to_null
+  - strip_float_suffix
+  - postcode_normalize
+  confidence: 0.93
+  evidence: CRED_LIC_PCODE holds 4-digit values such as '6210', '4119' and '3000'.
+    They are consistent with the locality and state (MELBOURNE/VIC/3000), so this
+    is the address postcode. postcode_normalize protects against lost leading zeros.
+  conditional: false
+unmapped:
+- source: REGISTER_NAME
+  reason: Constant 'Credit Licence' for every row (1 distinct value); names the register,
+    not an entity attribute.
+- source: CRED_LIC_NUM
+  reason: 'Licence number: used as record_id (the source''s own record key, 200 distinct
+    over 200 rows). It is a record identifier, not an entity identifier, and has no
+    ontology field.'
+- source: CRED_LIC_START_DT
+  reason: dd/mm/yyyy licence start date (e.g. '04/11/2010'). It is when the licence
+    was granted, not entity.date_registered (the company's registration date), and
+    is not a record observation date; valid_from material only.
+- source: CRED_LIC_END_DT
+  reason: 100% null in the profile; there is nothing to map.
+- source: CRED_LIC_AFSL_NUM
+  reason: Australian Financial Services Licence number ('0' when none, otherwise often
+    equal to the credit licence number). It is a licence identifier with no ontology
+    field, not an ABN/ACN.
+- source: CRED_LIC_STATUS_HISTORY
+  reason: 99.5% null free text about past suspensions (e.g. 'Suspended at the request
+    of Licensee/Registrant 18/07/2018 1'); no ontology field.
+- source: CRED_LIC_LAT
+  reason: Geocoded latitude; the ontology has no coordinate field.
+- source: CRED_LIC_LNG
+  reason: Geocoded longitude; the ontology has no coordinate field.
+- source: CRED_LIC_EDRS
+  reason: External dispute resolution scheme memberships (AFCA, COSL, FOS; '~'-separated);
+    a relationship to other bodies with no ontology field.
+- source: CRED_LIC_AUTHORISATIONS
+  reason: Free-text description of licence authorisations; no ontology field.
+- source: CRED_LIC_STATUS
+  reason: Values such as 'APPR' describe the approval status of the credit licence,
+    not the company's existence or registration status, so it does not map to entity.status.
+    Unmapped per human reviewer.
+source_id: asic-credit-licensee
+dataset_id: asic-credit-licensee
+resource_url: https://data.gov.au/data/dataset/fa0b0d71-b8b8-4af8-bc59-0b000ce0d5e4/resource/35953a01-a9a8-4609-8566-c9fa7de465d3/download/credit_lic_202610.csv
+licence: cc-by
+reader:
+  format: csv
+  delimiter: ','
+  encoding: utf-8-sig
+  header_row: 0
+  sheet: null

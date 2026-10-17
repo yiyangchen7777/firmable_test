@@ -11,3 +11,5 @@
 {"step": "spotcheck", "source": "asic-credit-licensee", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 9046, "completion_tokens": 3016, "cost_usd": 0.048252, "duration_s": 16.08, "ts": "2026-10-17T08:45:02+00:00"}
 {"step": "propose", "source": "asic-credit-licensee", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 14648, "completion_tokens": 4322, "cost_usd": 0.072516, "duration_s": 27.69, "ts": "2026-10-17T08:47:25+00:00"}
 {"step": "spotcheck", "source": "asic-credit-licensee", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 9120, "completion_tokens": 4612, "cost_usd": 0.06436, "duration_s": 25.11, "ts": "2026-10-17T08:47:50+00:00"}
+{"step": "revise", "source": "asic-credit-licensee", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 6812, "completion_tokens": 3586, "cost_usd": 0.049484, "duration_s": 18.68, "ts": "2026-10-17T09:07:19+00:00"}
+{"step": "spotcheck", "source": "asic-credit-licensee", "model": "anthropic/claude-sonnet-5.5", "prompt_tokens": 8706, "completion_tokens": 3897, "cost_usd": 0.056382, "duration_s": 23.03, "ts": "2026-10-17T09:07:42+00:00"}

@@ -1,0 +1,330 @@
+<title>映射审核 · asic-credit-licensee</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: single reading column, status-led; data tables full width */
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --fg: #1d2129; --muted: #6b7280;
+  --line: #e3e4e0; --accent: #1f6f54;
+  --ok-bg: #e4f2ea; --ok-fg: #19613f; --warn-bg: #fdf0d7; --warn-fg: #8a5a0a;
+  --bad-bg: #fbe5e3; --bad-fg: #a02c21; --code-bg: #f0f0ed;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97;
+  --ok-bg: #173527; --ok-fg: #7fd7ab; --warn-bg: #3a2d10; --warn-fg: #ecbf63;
+  --bad-bg: #40201d; --bad-fg: #f1988e; --code-bg: #272b31; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97;
+  --ok-bg: #173527; --ok-fg: #7fd7ab; --warn-bg: #3a2d10; --warn-fg: #ecbf63;
+  --bad-bg: #40201d; --bad-fg: #f1988e; --code-bg: #272b31; color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--fg);
+  font: 15px/1.6 -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+main { max-width: 980px; margin: 0 auto; display: grid; gap: 28px; }
+h1 { font-size: 1.45rem; margin: 0; text-wrap: balance; }
+h2 { font-size: 1.05rem; margin: 0 0 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+h4, h5 { margin: 0 0 6px; }
+section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; letter-spacing: 0.02em; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tablewrap { overflow-x: auto; }
+code { background: var(--code-bg); border-radius: 4px; padding: 1px 5px; font-size: 0.85em; }
+pre { background: var(--code-bg); border-radius: 6px; padding: 10px 12px; overflow-x: auto; font-size: 0.8rem; line-height: 1.5; margin: 0; }
+.pill { border-radius: 99px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+.pill.ok, .ok { background: var(--ok-bg); color: var(--ok-fg); }
+.pill.warn, .warn { background: var(--warn-bg); color: var(--warn-fg); }
+.pill.bad, .bad { background: var(--bad-bg); color: var(--bad-fg); }
+.status { display: inline-block; border-radius: 6px; padding: 4px 14px; font-weight: 700; }
+.chip { background: var(--code-bg); border-radius: 99px; padding: 1px 8px; font-size: 0.75rem; }
+.muted { color: var(--muted); }
+.evidence { min-width: 260px; }
+.metagrid { display: grid; grid-template-columns: 9em 1fr; gap: 4px 14px; font-size: 0.9rem; }
+.metagrid dt { color: var(--muted); } .metagrid dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.guide ol { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pair > div { min-width: 0; }
+@media (max-width: 720px) { .pair { grid-template-columns: 1fr; } }
+.example { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+.example:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+.decision pre { user-select: all; }
+details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
+</style>
+<main>
+<header>
+  <h1>映射审核 · asic-credit-licensee</h1>
+  <p><span class="status warn">PASSING WITH FLAGS</span>
+     <span class="muted">修订 1/3 · 流程步数 8 · 审核材料同步存于 review.md</span></p>
+</header>
+
+<section class="guide">
+  <h2>怎么审（约 5 分钟）</h2>
+  <ol>
+    <li><strong>看硬指标</strong>（<a href="#checks">校验结果</a>）：有没有 ❌。校验位、枚举、唯一性是代码算的，不会说谎。</li>
+    <li><strong>看语义疑点</strong>（<a href="#flags">语义抽检</a>）：这是最需要人的部分——模型挑出「解析没错但含义可能错」的字段，你判断同不同意。</li>
+    <li><strong>抽看对照样例</strong>（<a href="#examples">原始 vs 输出</a>）：随手挑两条，问自己「左边这列的意思，真的是右边那个字段吗？」</li>
+    <li><strong>扫一眼未映射清单</strong>（<a href="#unmapped">unmapped</a>）：理由是否诚实，有没有本该映射却被偷懒放弃的列。</li>
+  </ol>
+  <p class="muted">你只有三个动作：approve / reject + 意见 / abandon。你不能直接改配置文件——人一改，配置就成了「手写的」，作业的核心主张（agent 独立完成映射）就不成立了。</p>
+</section>
+
+<section>
+  <h2>来源与关键决定</h2>
+  <dl class="metagrid">
+    <dt>数据集</dt><dd>ASIC – Credit Licensee Dataset（asic-credit-licensee）</dd>
+    <dt>发布方 / 许可</dt><dd>Australian Securities and Investments Commission (ASIC) / cc-by</dd>
+    <dt>读取方式</dt><dd><code>{&quot;format&quot;: &quot;csv&quot;, &quot;delimiter&quot;: &quot;,&quot;, &quot;encoding&quot;: &quot;utf-8-sig&quot;, &quot;header_row&quot;: 0, &quot;sheet&quot;: null}</code></dd>
+    <dt>source_reliability</dt><dd>0.9 — ASIC is the national regulator and this is its own credit licence register, published under CC-BY, so licensee identity, licence and address claims are first-hand.</dd>
+    <dt>record_id</dt><dd><code>column [&#x27;CRED_LIC_NUM&#x27;]</code> — CRED_LIC_NUM is ASIC&#x27;s own licence key: 200 distinct values over 200 profiled rows and 0% null, so it is unique per record. CRED_LIC_ABN_ACN has only 194 distinct values (shared &#x27;0&#x27; placeholders and repeats), so it would fail uniqueness.</dd>
+    <dt>observed_at</dt><dd><code>dataset_modified</code>（basis: proxy，值 2026-10-15）— No per-record extract or last-updated column exists. CRED_LIC_START_DT is the licence start date (valid_from material, and 2010-2011 dates for a weekly-refreshed register), so it is not an assertion date. Use dataset_modified as a weak proxy with basis &#x27;proxy&#x27;.</dd>
+  </dl>
+</section>
+
+<section id="checks">
+  <h2>校验结果 · 350 行留存数据（循环集；最终验收在批准后跑一次）</h2>
+  <div class="tablewrap"><table>
+    <tr><th>检查</th><th>阈值</th><th>结果</th><th></th></tr>
+    <tr><td>identifier checksum (entity.abn)</td><td class='num'>&gt;= 95%</td><td class='num'>100.0% (318 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>identifier checksum (entity.acn)</td><td class='num'>&gt;= 95%</td><td class='num'>100.0% (19 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>enum legality (address.state)</td><td class='num'>&gt;= 98%</td><td class='num'>100.0% (350 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.legal_name ← CRED_LIC_NAME)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.trading_name ← CRED_LIC_BN)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.locality ← CRED_LIC_LOCALITY)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.state ← CRED_LIC_STATE)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.postcode ← CRED_LIC_PCODE)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>conditional pair coverage (CRED_LIC_ABN_ACN → entity.abn + entity.acn)</td><td class='num'>&gt;= 95% of non-null</td><td class='num'>96.3%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>record_id unique (full sample)</td><td class='num'>0 duplicates</td><td class='num'>0 duplicates</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>minimum useful (a name or an identifier mapped)</td><td class='num'>required</td><td class='num'>yes</td><td><span class="pill ok">通过</span></td></tr>
+  </table></div>
+  <h4 style="margin-top:14px">未通过/弃权的例子</h4>
+  <ul><li><code>entity.abn / entity.acn</code> — identifier_unclassified (no claim emitted)（原始值 <code>0</code>）</li>
+<li><code>entity.abn / entity.acn</code> — identifier_unclassified (no claim emitted)（原始值 <code>94122871</code>）</li>
+<li><code>entity.abn / entity.acn</code> — identifier_unclassified (no claim emitted)（原始值 <code>0</code>）</li>
+<li><code>entity.abn / entity.acn</code> — identifier_unclassified (no claim emitted)（原始值 <code>0</code>）</li>
+<li><code>entity.abn / entity.acn</code> — identifier_unclassified (no claim emitted)（原始值 <code>0</code>）</li></ul>
+</section>
+
+<section id="flags">
+  <h2>语义抽检 · 10 条留存记录：51 ok / 3 suspicious</h2>
+  <div class="tablewrap"><table>
+    <tr><th>record</th><th>字段</th><th>为什么可疑</th></tr>
+    <tr><td><code>383889</code></td><td><code>address.locality</code></td><td>&#x27;KINGSWAY CARINGBAH&#x27; mixes a street name (The Kingsway) with the suburb Caringbah, so a street fragment has leaked into the locality field.</td></tr>
+<tr><td><code>385338</code></td><td><code>entity.legal_name</code></td><td>&#x27;TRUSTEES OF HELYER FAMILY TRUST&#x27; names the trust and its trustees rather than a registered legal entity, so it may be a party-confusion case; the actual licensee could be a trustee company or individuals.</td></tr>
+<tr><td><code>385338</code></td><td><code>entity.acn</code></td><td>A trust is not a company and has no ACN, so this 9-digit value probably belongs to the corporate trustee, not the entity named in legal_name; the ownership mismatch needs review.</td></tr>
+  </table></div>
+  <details><summary>展开 51 条「ok」判定</summary>
+  <div class="tablewrap"><table>
+    <tr><th>record</th><th>字段</th><th>理由</th></tr>
+    <tr><td><code>382348</code></td><td><code>entity.legal_name</code></td><td>CRED_LIC_NAME &#x27;JACKEEN PTY LTD&#x27; is the licensee&#x27;s registered company name, and the BN column is empty.</td></tr>
+<tr><td><code>382348</code></td><td><code>entity.abn</code></td><td>11-digit value in CRED_LIC_ABN_ACN for a company row; the checksum passes and nothing suggests it belongs to another party.</td></tr>
+<tr><td><code>382348</code></td><td><code>address.locality</code></td><td>MAUDSLAND is a suburb consistent with QLD 4210.</td></tr>
+<tr><td><code>382348</code></td><td><code>address.state</code></td><td>QLD matches the locality and postcode.</td></tr>
+<tr><td><code>382348</code></td><td><code>address.postcode</code></td><td>4210 is consistent with Maudsland, QLD.</td></tr>
+<tr><td><code>385273</code></td><td><code>entity.legal_name</code></td><td>Individual licensee in surname-first form; the licensee&#x27;s own name, not the brand.</td></tr>
+<tr><td><code>385273</code></td><td><code>entity.abn</code></td><td>11-digit ABN with a valid checksum, on a row whose licensee is a sole individual, so it plausibly is the licensee&#x27;s own ABN.</td></tr>
+<tr><td><code>385273</code></td><td><code>entity.trading_name</code></td><td>CRED_LIC_BN &#x27;HOME LOAN MENTORS&#x27; is a business name distinct from the personal legal name.</td></tr>
+<tr><td><code>385273</code></td><td><code>address.locality</code></td><td>BALACLAVA is a suburb consistent with VIC 3183.</td></tr>
+<tr><td><code>385273</code></td><td><code>address.state</code></td><td>VIC matches the locality and postcode.</td></tr>
+<tr><td><code>385273</code></td><td><code>address.postcode</code></td><td>3183 is consistent with Balaclava, VIC.</td></tr>
+<tr><td><code>385220</code></td><td><code>entity.legal_name</code></td><td>&#x27;DRA GROUP PTY LTD&#x27; is a registered company name, and the BN column is empty.</td></tr>
+<tr><td><code>385220</code></td><td><code>entity.abn</code></td><td>11-digit ABN on a company row, with nothing indicating a different party.</td></tr>
+<tr><td><code>385220</code></td><td><code>address.locality</code></td><td>MATRAVILLE is a suburb consistent with NSW 2036.</td></tr>
+<tr><td><code>385220</code></td><td><code>address.state</code></td><td>NSW matches the locality.</td></tr>
+<tr><td><code>385220</code></td><td><code>address.postcode</code></td><td>2036 is consistent with Matraville, NSW.</td></tr>
+<tr><td><code>383889</code></td><td><code>entity.legal_name</code></td><td>Individual licensee name in surname-first form, which is the registered name.</td></tr>
+<tr><td><code>383889</code></td><td><code>entity.abn</code></td><td>11-digit ABN on a sole-individual row; plausibly the licensee&#x27;s own.</td></tr>
+<tr><td><code>383889</code></td><td><code>entity.trading_name</code></td><td>&#x27;CROSS TAX &amp; ACC. SERVICES&#x27; is a business name separate from the individual&#x27;s legal name.</td></tr>
+<tr><td><code>383889</code></td><td><code>address.state</code></td><td>NSW is consistent with Caringbah and postcode 2229.</td></tr>
+<tr><td><code>383889</code></td><td><code>address.postcode</code></td><td>2229 is the Caringbah postcode.</td></tr>
+<tr><td><code>376718</code></td><td><code>entity.legal_name</code></td><td>&#x27;BIRCHCORP PTY. LTD.&#x27; is the licensee&#x27;s registered company name.</td></tr>
+<tr><td><code>376718</code></td><td><code>entity.abn</code></td><td>11-digit ABN on a company row; the nonzero AFSL number is a separate unmapped column and does not conflict.</td></tr>
+<tr><td><code>376718</code></td><td><code>address.locality</code></td><td>BAULKHAM HILLS is a suburb consistent with NSW 2153.</td></tr>
+<tr><td><code>376718</code></td><td><code>address.state</code></td><td>NSW matches the locality.</td></tr>
+<tr><td><code>376718</code></td><td><code>address.postcode</code></td><td>2153 is the Baulkham Hills postcode.</td></tr>
+<tr><td><code>384679</code></td><td><code>entity.legal_name</code></td><td>&#x27;REX GORELL FAMILY GROUP PTY LTD&#x27; is a company name with a PTY LTD suffix.</td></tr>
+<tr><td><code>384679</code></td><td><code>entity.abn</code></td><td>11-digit ABN on a company row, with no sign of an agent&#x27;s or parent&#x27;s ABN.</td></tr>
+<tr><td><code>384679</code></td><td><code>address.locality</code></td><td>GEELONG is a city consistent with VIC 3220.</td></tr>
+<tr><td><code>384679</code></td><td><code>address.state</code></td><td>VIC matches Geelong.</td></tr>
+<tr><td><code>384679</code></td><td><code>address.postcode</code></td><td>3220 is the Geelong postcode.</td></tr>
+<tr><td><code>385840</code></td><td><code>entity.legal_name</code></td><td>&#x27;EQUIUS PTY LTD&#x27; is a registered company name, and the BN column is empty.</td></tr>
+<tr><td><code>385840</code></td><td><code>entity.abn</code></td><td>11-digit ABN on a company row.</td></tr>
+<tr><td><code>385840</code></td><td><code>address.locality</code></td><td>CHARLESTOWN is a suburb consistent with NSW 2290.</td></tr>
+<tr><td><code>385840</code></td><td><code>address.state</code></td><td>NSW matches the locality.</td></tr>
+<tr><td><code>385840</code></td><td><code>address.postcode</code></td><td>2290 is consistent with Charlestown, NSW.</td></tr>
+<tr><td><code>364322</code></td><td><code>entity.legal_name</code></td><td>&#x27;CADANSE HOLDINGS PTY LTD&#x27; is the registered company name; the brand sits in BN.</td></tr>
+<tr><td><code>364322</code></td><td><code>entity.abn</code></td><td>11-digit ABN on a company row.</td></tr>
+<tr><td><code>364322</code></td><td><code>entity.trading_name</code></td><td>&#x27;ELITE BROKERAGE SERVICES&#x27; is a trading style distinct from the registered name.</td></tr>
+<tr><td><code>364322</code></td><td><code>address.locality</code></td><td>THORNLIE is a suburb consistent with WA 6108.</td></tr>
+<tr><td><code>364322</code></td><td><code>address.state</code></td><td>WA matches the locality.</td></tr>
+<tr><td><code>364322</code></td><td><code>address.postcode</code></td><td>6108 is the Thornlie postcode.</td></tr>
+<tr><td><code>377517</code></td><td><code>entity.legal_name</code></td><td>&#x27;VAULT MORTGAGE CORPORATION PTY LTD&#x27; is a registered company name.</td></tr>
+<tr><td><code>377517</code></td><td><code>entity.abn</code></td><td>11-digit ABN on a company row.</td></tr>
+<tr><td><code>377517</code></td><td><code>address.locality</code></td><td>DRUMMOYNE is a suburb consistent with NSW 2047.</td></tr>
+<tr><td><code>377517</code></td><td><code>address.state</code></td><td>NSW matches the locality.</td></tr>
+<tr><td><code>377517</code></td><td><code>address.postcode</code></td><td>2047 is the Drummoyne postcode.</td></tr>
+<tr><td><code>385338</code></td><td><code>entity.trading_name</code></td><td>&#x27;MASTERPLAN HOME LOANS&#x27; in the BN column is a trading brand, not a legal name.</td></tr>
+<tr><td><code>385338</code></td><td><code>address.locality</code></td><td>PARKINSON is a suburb consistent with QLD 4115.</td></tr>
+<tr><td><code>385338</code></td><td><code>address.state</code></td><td>QLD matches the locality and postcode.</td></tr>
+<tr><td><code>385338</code></td><td><code>address.postcode</code></td><td>4115 is consistent with Parkinson, QLD.</td></tr>
+  </table></div></details>
+</section>
+
+<section id="mapping">
+  <h2>字段映射 · 7 条（共 17 个源列）</h2>
+  <div class="tablewrap"><table>
+    <tr><th>canonical</th><th>← 源列</th><th>transforms</th><th>conf.</th><th></th><th>语义证据</th></tr>
+    <tr><td><code>entity.legal_name</code></td><td><code>CRED_LIC_NAME</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.92</td><td></td><td class='evidence'>CRED_LIC_NAME holds values such as &#x27;SAVINGS PTY LTD&#x27;, &#x27;MACQUARIE BANK LIMITED&#x27; and &#x27;BURL, DAMIEN&#x27;. These are the registered names of the licensee (companies, and individuals in surname-first form), 200 distinct over 200 rows. CRED_LIC_BN is the separate business-name column and holds the trading names, so this column is the legal name.</td></tr>
+<tr><td><code>entity.abn</code></td><td><code>CRED_LIC_ABN_ACN</code></td><td><code class='small'>[&quot;strip_float_suffix&quot;, &quot;digits_only&quot;, {&quot;keep_if_length&quot;: 11}, &quot;abn_normalize&quot;]</code></td><td class='num'>0.9</td><td><span class="chip">conditional</span></td><td class='evidence'>CRED_LIC_ABN_ACN is a mixed identifier column. 11-digit values such as &#x27;22105729100&#x27; and &#x27;48124489318&#x27; are ABNs, while 9-digit values such as &#x27;108398750&#x27; are ACNs. The 11-digit gate keeps ABNs only; other lengths such as the placeholder &#x27;0&#x27; abstain.</td></tr>
+<tr><td><code>entity.acn</code></td><td><code>CRED_LIC_ABN_ACN</code></td><td><code class='small'>[&quot;strip_float_suffix&quot;, &quot;digits_only&quot;, {&quot;keep_if_length&quot;: 9}, &quot;acn_normalize&quot;]</code></td><td class='num'>0.9</td><td><span class="chip">conditional</span></td><td class='evidence'>CRED_LIC_ABN_ACN holds 9-digit values such as &#x27;108398750&#x27; (FMW MORTGAGE SERVICES PTY LTD), which are ACNs. The 9-digit gate keeps only these and abstains on 11-digit ABNs, so the two mappings are complementary.</td></tr>
+<tr><td><code>entity.trading_name</code></td><td><code>CRED_LIC_BN</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.85</td><td></td><td class='evidence'>CRED_LIC_BN (&#x27;BN&#x27; = business name) holds values such as &#x27;FINANCEMYWAY&#x27; (licensee FMW MORTGAGE SERVICES PTY LTD) and &#x27;TOP GEAR FINANCE&#x27; (licensee BURL, DAMIEN). These are names the licensee trades under, distinct from the legal name in CRED_LIC_NAME. It is 63% null because many licensees have no business name. No separator is observed in the samples, so no split is applied.</td></tr>
+<tr><td><code>address.locality</code></td><td><code>CRED_LIC_LOCALITY</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.85</td><td></td><td class='evidence'>CRED_LIC_LOCALITY holds suburb/town names such as &#x27;ERSKINE&#x27;, &#x27;UNDERWOOD&#x27; and &#x27;MELBOURNE&#x27;. They are consistent with the paired state and postcode columns (ERSKINE/WA/6210), so this is the licensee&#x27;s address locality. A spot-check found occasional street text in a cell (&#x27;KINGSWAY CARINGBAH&#x27;); the human reviewer accepted this contamination, so the mapping is unchanged.</td></tr>
+<tr><td><code>address.state</code></td><td><code>CRED_LIC_STATE</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;state_normalize&quot;]</code></td><td class='num'>0.95</td><td></td><td class='evidence'>CRED_LIC_STATE has 6 distinct abbreviations (WA, QLD, VIC, NSW, SA, TAS). They match the localities (ERSKINE is in WA, SYDNEY in NSW), so this is the address state.</td></tr>
+<tr><td><code>address.postcode</code></td><td><code>CRED_LIC_PCODE</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;strip_float_suffix&quot;, &quot;postcode_normalize&quot;]</code></td><td class='num'>0.93</td><td></td><td class='evidence'>CRED_LIC_PCODE holds 4-digit values such as &#x27;6210&#x27;, &#x27;4119&#x27; and &#x27;3000&#x27;. They are consistent with the locality and state (MELBOURNE/VIC/3000), so this is the address postcode. postcode_normalize protects against lost leading zeros.</td></tr>
+  </table></div>
+</section>
+
+<section id="unmapped">
+  <h2>未映射的列 · 11</h2>
+  <div class="tablewrap"><table>
+    <tr><th>源列</th><th>理由</th></tr>
+    <tr><td><code>REGISTER_NAME</code></td><td>Constant &#x27;Credit Licence&#x27; for every row (1 distinct value); names the register, not an entity attribute.</td></tr>
+<tr><td><code>CRED_LIC_NUM</code></td><td>Licence number: used as record_id (the source&#x27;s own record key, 200 distinct over 200 rows). It is a record identifier, not an entity identifier, and has no ontology field.</td></tr>
+<tr><td><code>CRED_LIC_START_DT</code></td><td>dd/mm/yyyy licence start date (e.g. &#x27;04/11/2010&#x27;). It is when the licence was granted, not entity.date_registered (the company&#x27;s registration date), and is not a record observation date; valid_from material only.</td></tr>
+<tr><td><code>CRED_LIC_END_DT</code></td><td>100% null in the profile; there is nothing to map.</td></tr>
+<tr><td><code>CRED_LIC_AFSL_NUM</code></td><td>Australian Financial Services Licence number (&#x27;0&#x27; when none, otherwise often equal to the credit licence number). It is a licence identifier with no ontology field, not an ABN/ACN.</td></tr>
+<tr><td><code>CRED_LIC_STATUS_HISTORY</code></td><td>99.5% null free text about past suspensions (e.g. &#x27;Suspended at the request of Licensee/Registrant 18/07/2018 1&#x27;); no ontology field.</td></tr>
+<tr><td><code>CRED_LIC_LAT</code></td><td>Geocoded latitude; the ontology has no coordinate field.</td></tr>
+<tr><td><code>CRED_LIC_LNG</code></td><td>Geocoded longitude; the ontology has no coordinate field.</td></tr>
+<tr><td><code>CRED_LIC_EDRS</code></td><td>External dispute resolution scheme memberships (AFCA, COSL, FOS; &#x27;~&#x27;-separated); a relationship to other bodies with no ontology field.</td></tr>
+<tr><td><code>CRED_LIC_AUTHORISATIONS</code></td><td>Free-text description of licence authorisations; no ontology field.</td></tr>
+<tr><td><code>CRED_LIC_STATUS</code></td><td>Values such as &#x27;APPR&#x27; describe the approval status of the credit licence, not the company&#x27;s existence or registration status, so it does not map to entity.status. Unmapped per human reviewer.</td></tr>
+  </table></div>
+</section>
+
+<section id="examples">
+  <h2>对照样例 · 5 条原始行 vs 标准化输出</h2>
+  <p class="muted">读含义，别读通过率：日期是注册日还是牌照日？名字是本人还是代理人？ABN 是这一行主体自己的吗？</p>
+  <div class='example'><h4>样例 1 · record <code>383131</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: Credit Licence
+CRED_LIC_NUM: 383131
+CRED_LIC_NAME: NATIONAL FINANCIAL SERVICES PTY LTD
+CRED_LIC_START_DT: 09/12/2010
+CRED_LIC_END_DT: 
+CRED_LIC_STATUS: APPR
+CRED_LIC_ABN_ACN: 79001827005
+CRED_LIC_AFSL_NUM: 383131
+CRED_LIC_STATUS_HISTORY: 
+CRED_LIC_LOCALITY: KINGSTON
+CRED_LIC_STATE: ACT
+CRED_LIC_PCODE: 2604
+CRED_LIC_LAT: -35.3152303
+CRED_LIC_LNG: 149.1465925
+CRED_LIC_EDRS: AFCA
+CRED_LIC_BN: 
+CRED_LIC_AUTHORISATIONS: This licence authorises the licensee to:~Engage in credit activities o</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;NATIONAL FINANCIAL SERVICES PTY LTD&quot;   (conf 0.92)
+entity.abn = &quot;79001827005&quot;   (conf 0.9)
+address.locality = &quot;KINGSTON&quot;   (conf 0.85)
+address.state = &quot;ACT&quot;   (conf 0.95)
+address.postcode = &quot;2604&quot;   (conf 0.93)</pre></div></div></div>
+<div class='example'><h4>样例 2 · record <code>383024</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: Credit Licence
+CRED_LIC_NUM: 383024
+CRED_LIC_NAME: LOCKLEY, RICHARD ALLAN
+CRED_LIC_START_DT: 19/10/2010
+CRED_LIC_END_DT: 
+CRED_LIC_STATUS: APPR
+CRED_LIC_ABN_ACN: 69703468233
+CRED_LIC_AFSL_NUM: 0
+CRED_LIC_STATUS_HISTORY: 
+CRED_LIC_LOCALITY: CONNOLLY
+CRED_LIC_STATE: WA
+CRED_LIC_PCODE: 6027
+CRED_LIC_LAT: -31.747944
+CRED_LIC_LNG: 115.7497916
+CRED_LIC_EDRS: AFCA
+CRED_LIC_BN: INTEGRITY CAPITAL
+CRED_LIC_AUTHORISATIONS: This licence authorises the licensee to:~Engage in credit activities o</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;LOCKLEY, RICHARD ALLAN&quot;   (conf 0.92)
+entity.abn = &quot;69703468233&quot;   (conf 0.9)
+entity.trading_name = &quot;INTEGRITY CAPITAL&quot;   (conf 0.85)
+address.locality = &quot;CONNOLLY&quot;   (conf 0.85)
+address.state = &quot;WA&quot;   (conf 0.95)
+address.postcode = &quot;6027&quot;   (conf 0.93)</pre></div></div></div>
+<div class='example'><h4>样例 3 · record <code>288421</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: Credit Licence
+CRED_LIC_NUM: 288421
+CRED_LIC_NAME: LIFESTYLE ASSET MANAGEMENT PTY LTD
+CRED_LIC_START_DT: 25/10/2010
+CRED_LIC_END_DT: 
+CRED_LIC_STATUS: APPR
+CRED_LIC_ABN_ACN: 58113067968
+CRED_LIC_AFSL_NUM: 288421
+CRED_LIC_STATUS_HISTORY: 
+CRED_LIC_LOCALITY: BARANGAROO
+CRED_LIC_STATE: NSW
+CRED_LIC_PCODE: 2000
+CRED_LIC_LAT: -33.8614084
+CRED_LIC_LNG: 151.2016877
+CRED_LIC_EDRS: AFCA
+CRED_LIC_BN: 
+CRED_LIC_AUTHORISATIONS: This licence authorises the licensee to:~Engage in credit activities o</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;LIFESTYLE ASSET MANAGEMENT PTY LTD&quot;   (conf 0.92)
+entity.abn = &quot;58113067968&quot;   (conf 0.9)
+address.locality = &quot;BARANGAROO&quot;   (conf 0.85)
+address.state = &quot;NSW&quot;   (conf 0.95)
+address.postcode = &quot;2000&quot;   (conf 0.93)</pre></div></div></div>
+<div class='example'><h4>样例 4 · record <code>314889</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: Credit Licence
+CRED_LIC_NUM: 314889
+CRED_LIC_NAME: 5 WEALTH MANAGEMENT PTY LTD
+CRED_LIC_START_DT: 01/12/2010
+CRED_LIC_END_DT: 
+CRED_LIC_STATUS: APPR
+CRED_LIC_ABN_ACN: 50003640097
+CRED_LIC_AFSL_NUM: 314889
+CRED_LIC_STATUS_HISTORY: 
+CRED_LIC_LOCALITY: RHODES
+CRED_LIC_STATE: NSW
+CRED_LIC_PCODE: 2138
+CRED_LIC_LAT: -33.8290589
+CRED_LIC_LNG: 151.0873578
+CRED_LIC_EDRS: AFCA
+CRED_LIC_BN: 
+CRED_LIC_AUTHORISATIONS: This licence authorises the licensee to:~Engage in credit activities o</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;5 WEALTH MANAGEMENT PTY LTD&quot;   (conf 0.92)
+entity.abn = &quot;50003640097&quot;   (conf 0.9)
+address.locality = &quot;RHODES&quot;   (conf 0.85)
+address.state = &quot;NSW&quot;   (conf 0.95)
+address.postcode = &quot;2138&quot;   (conf 0.93)</pre></div></div></div>
+<div class='example'><h4>样例 5 · record <code>383982</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: Credit Licence
+CRED_LIC_NUM: 383982
+CRED_LIC_NAME: FUTURE HOLIDAY FINANCE PTY LTD
+CRED_LIC_START_DT: 23/12/2010
+CRED_LIC_END_DT: 
+CRED_LIC_STATUS: APPR
+CRED_LIC_ABN_ACN: 61108475298
+CRED_LIC_AFSL_NUM: 0
+CRED_LIC_STATUS_HISTORY: 
+CRED_LIC_LOCALITY: VARSITY LAKES
+CRED_LIC_STATE: QLD
+CRED_LIC_PCODE: 4227
+CRED_LIC_LAT: -28.0971316
+CRED_LIC_LNG: 153.3992325
+CRED_LIC_EDRS: AFCA
+CRED_LIC_BN: 
+CRED_LIC_AUTHORISATIONS: This licence authorises the licensee to:~Engage in credit activities a</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;FUTURE HOLIDAY FINANCE PTY LTD&quot;   (conf 0.92)
+entity.abn = &quot;61108475298&quot;   (conf 0.9)
+address.locality = &quot;VARSITY LAKES&quot;   (conf 0.85)
+address.state = &quot;QLD&quot;   (conf 0.95)
+address.postcode = &quot;4227&quot;   (conf 0.93)</pre></div></div></div>
+</section>
+
+<section class="decision">
+  <h2>你的决定（在终端运行其一）</h2>
+  <pre>uv run firm onboard asic-credit-licensee --decide "approve"</pre>
+  <pre>uv run firm onboard asic-credit-licensee --decide "reject: &lt;哪里不对、应该用哪个列/含义&gt;"</pre>
+  <pre>uv run firm onboard asic-credit-licensee --decide "abandon"</pre>
+  <p class="muted">reject 的意见会原文交给 agent 的 revise 节点，它自己改完会再生成一份新的审核材料。</p>
+</section>
+</main>

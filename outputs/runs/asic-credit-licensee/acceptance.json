@@ -1,0 +1,99 @@
+{
+  "checks": [
+    {
+      "check": "identifier checksum (entity.abn)",
+      "threshold": ">= 95%",
+      "result": "100.0% (133 ok / 0 failed)",
+      "pass": true
+    },
+    {
+      "check": "identifier checksum (entity.acn)",
+      "threshold": ">= 95%",
+      "result": "100.0% (10 ok / 0 failed)",
+      "pass": true
+    },
+    {
+      "check": "enum legality (address.state)",
+      "threshold": ">= 98%",
+      "result": "100.0% (150 ok / 0 failed)",
+      "pass": true
+    },
+    {
+      "check": "null drift (entity.legal_name \u2190 CRED_LIC_NAME)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (entity.trading_name \u2190 CRED_LIC_BN)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (address.locality \u2190 CRED_LIC_LOCALITY)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (address.state \u2190 CRED_LIC_STATE)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (address.postcode \u2190 CRED_LIC_PCODE)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "conditional pair coverage (CRED_LIC_ABN_ACN \u2192 entity.abn + entity.acn)",
+      "threshold": ">= 95% of non-null",
+      "result": "95.3%",
+      "pass": true
+    },
+    {
+      "check": "record_id unique (full sample)",
+      "threshold": "0 duplicates",
+      "result": "0 duplicates",
+      "pass": true
+    },
+    {
+      "check": "minimum useful (a name or an identifier mapped)",
+      "threshold": "required",
+      "result": "yes",
+      "pass": true
+    }
+  ],
+  "failing_examples": [
+    {
+      "field": "entity.abn / entity.acn",
+      "flag": "identifier_unclassified (no claim emitted)",
+      "raw": "63567519"
+    },
+    {
+      "field": "entity.abn / entity.acn",
+      "flag": "identifier_unclassified (no claim emitted)",
+      "raw": "0"
+    },
+    {
+      "field": "entity.abn / entity.acn",
+      "flag": "identifier_unclassified (no claim emitted)",
+      "raw": "8984263"
+    },
+    {
+      "field": "entity.abn / entity.acn",
+      "flag": "identifier_unclassified (no claim emitted)",
+      "raw": "8819458"
+    },
+    {
+      "field": "entity.abn / entity.acn",
+      "flag": "identifier_unclassified (no claim emitted)",
+      "raw": "92633380"
+    }
+  ],
+  "all_pass": true,
+  "useful": true
+}
