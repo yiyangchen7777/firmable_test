@@ -77,8 +77,10 @@ note for that source*. matcher-0.2 adds a country gate using country claims the
 observations already carried. Procedure: archive v1 → re-run → crosswalk (341 entities
 intact, 0 split, 13 shrunk or dissolved — 10 fully, 3 partly: the foreign-parent
 clusters) → re-measure on the **same** labels: **19/19 FPs removed, 31/31 true links
-kept**. That check is in-sample — it proves the gate kills the measured failure mode,
-not that 0.2 is 100% precise; a fresh-sample measurement is the first follow-up.
+kept**. That check is in-sample, so we also drew a **fresh, entity-stratified sample of
+30 shipped links** (one per entity, no previously labelled pairs): **30/30 correct —
+fresh-sample precision 100%, Wilson 95% lower bound 88.7%** (`review/
+part3_fresh_handcheck.csv`, with the ABR testimony used to adjudicate).
 Honesty notes: the link table is append-only within a run, but across runs this build
 regenerates files and keeps versions as archives (`outputs/history/`) — true retraction
 records are designed, not exercised; and ABN-seeded sampling enriches exactly the
@@ -123,8 +125,12 @@ the name tier's value is its queue. We chose links-as-truth because conclusions
 
 ---
 
-*Honesty appendix.* Part 1 FP rate: 35% verified (7/20), 45% counting two unverifiable
-resources against ourselves. Looser-threshold linking (exact name, no state), 16
+*Honesty appendix.* Hand-check protocol, a finding in itself: in both rounds the
+reviewer's initial flags (driven by name dissimilarity) were largely overturned by
+register evidence — Australia's business-name system makes "the names look unrelated" a
+misleading signal for identifier links in *both* directions — so every verdict was
+adjudicated against the ABR / primary registers before being recorded. Part 1 FP rate:
+35% verified (7/20), 45% counting two unverifiable resources against ourselves. Looser-threshold linking (exact name, no state), 16
 non-duplicate refused pairs: 6 confirmed same, 3 unsure, 7 distinct — refusing cost at
 most 9 true links, avoided at least 7 wrong ones. Seeded sampling disclosed in README:
 precision is measured, coverage never claimed.
