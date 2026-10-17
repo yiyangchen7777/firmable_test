@@ -88,8 +88,13 @@ LangGraph `StateGraph`, one thread per source, SqliteSaver checkpoints after eve
 
 **Validation thresholds (constants in code):** ABN/ACN checksum pass ≥ 95% of non-null
 mapped values; enum legality ≥ 98%; date parse ≥ 95%; referenced source columns must
-exist; post-transform null rate ≤ source null rate + 2pp; `source_record_id` unique over
-the full sample. **Minimum-useful rule:** a config that maps neither a name field nor a
+exist; post-transform null rate ≤ source null rate + 2pp; conditional pairs (mixed
+identifier columns) cover ≥ 95% of non-null values, with every abstained value listed
+for review — real sources carry junk identifiers and abstaining on them is correct;
+`source_record_id` unique over the full sample. Hard-check failures loop back to revise
+(≤3 rounds); semantic-only flags yield status PASSING WITH FLAGS and go straight to the
+human, since a flag the closed catalogue cannot fix would loop the model pointlessly.
+**Minimum-useful rule:** a config that maps neither a name field nor a
 business identifier passes nothing — it is flagged NOT USEFUL even if every check above
 passes. "Validates" and "is worth having" are different claims.
 

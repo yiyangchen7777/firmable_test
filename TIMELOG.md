@@ -33,3 +33,5 @@ Priority if squeezed: Part 2 (agentic + generalises) steals from Part 4, never t
 | 3 | 2026-10-17 18:58 | 19:02 | 4 | 1b Triage | 840-dataset pool, shortlist of 50, hand-check sheet generated |
 | 4 | 2026-10-17 19:02 | 19:09 | 7 | Design rev + 2a | External review feedback folded into DESIGN.md; readers.py (2 design proposals reconciled); source picks verified incl. overlap probe; readability refactor |
 | 5 | 2026-10-17 19:09 | 19:18 | 9 | 2b Engine | transforms (14), validators (checksums verified independently), config schema, engine; 27 tests passing |
+| 6 | 2026-10-17 19:18 | 19:29 | 11 | 1c Hand-check | data-level evidence for 20 datasets via script; verdicts reviewed by hand; FP 35% verified / 45% conservative |
+| 7 | 2026-10-17 19:29 | 19:48 | 19 | 2c Agent | prompts (subagent draft), 9-node LangGraph, checkpoint resume, cross-process review gate; first real run caught a licence-status≠entity-status semantic trap; validator calibrated (pair coverage 95%, PASSING WITH FLAGS路由) |

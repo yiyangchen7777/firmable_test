@@ -11,6 +11,10 @@ def main() -> None:
 
     p_onboard = sub.add_parser("onboard", help="Part 2: agent maps one source to the ontology")
     p_onboard.add_argument("dataset_id", help="CKAN dataset id or name")
+    p_onboard.add_argument(
+        "--decide", default=None,
+        help='human review decision: "approve", "reject: <comment>", or "abandon"',
+    )
 
     p_extract = sub.add_parser("extract", help="Part 2: run the engine over a source")
     p_extract.add_argument("source_id", help="source id (config must exist)")
@@ -29,7 +33,7 @@ def main() -> None:
     elif args.command == "onboard":
         from .agent.graph import run_onboard
 
-        run_onboard(args.dataset_id)
+        run_onboard(args.dataset_id, decide=args.decide)
     elif args.command == "extract":
         from .engine import run_extract
 
