@@ -80,7 +80,7 @@ LangGraph `StateGraph`, one thread per source, SqliteSaver checkpoints after eve
 | 2 | inspect | model+code | model sees raw first ~50 lines (or per-sheet heads) and decides reader, delimiter, header row, sheet; code executes that decision; on parse failure the error goes back to the model, one retry |
 | 3 | profile | code | per-column null rate, distinct count, 10 samples, regex hints (ABN-like, postcode-like, date-like). Rows split three ways: 200 visible to the model, 350 held out for the validate/revise loop, 150 reserved as a final acceptance set used exactly once after approval (the loop sees its failures, so loop pass-rates are debugging numbers; reported numbers come from the untouched set) |
 | 4 | propose | model | input: ontology + profile + 20 sample rows + transform catalogue. Output: config JSON (pydantic-checked). Every column must be dispositioned: mapped, or unmapped with a reason. Each mapping must carry semantic evidence: the source column name, sample values, and why they mean that canonical field — not just that they parse. Missing columns → a delta request for just those columns |
-| 5 | validate | code+model | (a) code: run the engine with the proposed config over the 350 held-out rows; produce a validation report with failing examples. (b) model (cheap semantic spot-check): 10 random held-out raw records shown side-by-side with their canonical output; flag mappings that parse but mean the wrong thing (licence issue date mapped to date_registered, applicant name mapped to legal_name). Semantic flags feed revise like any other failure |
+| 5 | validate | code+model | (a) code: run the engine with the proposed config over the 350 held-out rows; produce a validation report with failing examples. (b) model (cheap semantic spot-check): 10 random held-out raw records shown side-by-side with their canonical output; flag mappings that parse but mean the wrong thing (licence issue date mapped to date_registered, applicant name mapped to legal_name). Semantic flags go to the human reviewer (and into any revise round triggered by hard failures) |
 | 6 | (edge) | code | pass → review; fail and revisions < 3 → revise; else → review flagged NOT PASSING |
 | 7 | revise | model | input: previous config + validation report + failing examples. Output: new config + per-field change notes. Unfixable fields move to unmapped with a reason |
 | 8 | review | human | `interrupt()`. Human sees runs/<src>/review.md: mapping table with per-field semantic evidence, validation numbers, unmapped list, and 5 raw records side-by-side with their canonical output (so a human can catch semantic mismatches, not just read pass rates). Actions: approve / reject-with-comment (comment goes back to revise) / abandon. The human never edits the config directly — that would make it hand-authored |
@@ -225,3 +225,18 @@ Part 2 is deterministic and free. OpenRouter key is personal, budget-capped.
   report; honesty over coverage.
 - Time pressure → Part 2 may steal budget from Part 4, never the reverse (assessment
   order: agentic > generalises > mapping > resolution > profiles).
+
+## Post-design calibrations (changelog, in the interest of honesty)
+
+This document was written before implementation; the following thresholds and routing
+rules were calibrated DURING implementation, each in response to measured evidence
+(full history in git):
+
+1. Conditional-pair coverage 98% → 95%: ~4% of a real mixed identifier column is
+   source junk ("0", 7–8 digit fragments); abstaining on it is correct behaviour.
+2. record_id uniqueness zero-duplicates → rate ≤ 0.5%: real files contain literal
+   duplicate rows; the engine suffixes and flags them rather than losing them.
+3. Semantic-only flags route to the human (PASSING WITH FLAGS) instead of the revise
+   loop: a flag the closed catalogue cannot fix would loop the model pointlessly.
+4. matcher-0.2 country gate (all tiers): added after hand-checking measured 62%
+   precision with a single failure pattern (foreign parents carrying a local ABN).

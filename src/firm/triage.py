@@ -127,11 +127,16 @@ def run_triage(sample_seed: int = 42) -> None:
         "\n".join(json.dumps(r) for r in scored) + "\n"
     )
 
-    # Random 20 of the 50 for the human false-positive check.
+    # Random 20 of the 50 for the human false-positive check. Never overwrite
+    # a sheet that may already carry human verdicts (delete it to resample).
     review_dir = ROOT / "review"
     review_dir.mkdir(exist_ok=True)
+    handcheck = review_dir / "part1_handcheck.csv"
+    if handcheck.exists():
+        print(f"shortlist: {out_csv} (50 rows); hand-check sheet kept (has verdicts): {handcheck}")
+        return
     sample = random.Random(sample_seed).sample(top50, 20)
-    with (review_dir / "part1_handcheck.csv").open("w", newline="") as fh:
+    with handcheck.open("w", newline="") as fh:
         writer = csv.DictWriter(
             fh, fieldnames=["dataset_id", "title", "organisation", "confidence", "reason", "contains_business_entities", "note"]
         )

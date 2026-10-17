@@ -15,7 +15,7 @@ from pathlib import Path
 from .. import ontology, readers
 from ..ckan import package_show
 from ..config import CONFIGS, RUNS
-from ..engine import extract_rows
+from ..engine import check_claim_value, extract_rows
 from ..llm import complete
 from ..mapping_config import MappingConfig, check_config
 from . import prompts
@@ -360,8 +360,13 @@ def propose(state: dict) -> dict:
     }
 
 
-def build_validation_report(obs: list[dict], rows: list[dict], cfg: MappingConfig, duplicate_ids: int) -> dict:
+def build_validation_report(
+    obs: list[dict], rows: list[dict], cfg: MappingConfig,
+    duplicate_ids: int, id_check_rows: int | None = None,
+) -> dict:
     n = len(rows)
+    if id_check_rows is None:
+        id_check_rows = n  # duplicates may be counted over a larger row set
     # which rows produced a claim for each canonical field
     rows_with_claim: dict[str, int] = {}
     flags_per_field: dict[str, int] = {}
@@ -402,16 +407,28 @@ def build_validation_report(obs: list[dict], rows: list[dict], cfg: MappingConfi
         if canonical in ontology.date_fields():
             rate_check(canonical, "date parse", 0.95)
 
-    # null drift: a mapping must not lose real values. Conditional entries are
-    # judged jointly per source column (the mixed-identifier pattern).
+    # null drift: a mapping must not lose real values. Measured PER ENTRY (two
+    # columns mapping to the same canonical field are judged separately — an
+    # aggregate would let one broken column hide behind the other). Conditional
+    # entries are judged jointly per source column (the mixed-identifier pattern).
     conditional_columns = set()
     for entry in cfg.fields:
         if entry.conditional:
             conditional_columns.add(entry.source)
         else:
             source_null = sum(1 for r in rows if r.get(entry.source, "").strip() == "") / n
-            post_null = 1 - rows_with_claim.get(entry.canonical, 0) / n
-            drift = post_null - source_null
+            produced = 0
+            for r in rows:
+                try:
+                    value = apply_transforms(r.get(entry.source, ""), entry.transforms)
+                except TransformError:
+                    continue
+                if value is None:
+                    continue
+                one_value = value[0] if isinstance(value, list) else value
+                if check_claim_value(entry.canonical, one_value) is None:
+                    produced += 1
+            drift = (1 - produced / n) - source_null
             checks.append(
                 {"check": f"null drift ({entry.canonical} ← {entry.source})",
                  "threshold": "<= +2pp", "result": f"{drift:+.1%}", "pass": drift <= 0.02}
@@ -448,10 +465,11 @@ def build_validation_report(obs: list[dict], rows: list[dict], cfg: MappingConfi
     # engine suffixes it (#2) and flags it, so a trace survives. The check
     # guards against a bad id choice (many rows per key), not against source
     # dirt — hence a rate, not zero.
-    dup_rate = duplicate_ids / n if n else 0.0
+    dup_rate = duplicate_ids / id_check_rows if id_check_rows else 0.0
     checks.append(
         {"check": "record_id effectively unique (full sample)", "threshold": "<= 0.5% duplicates",
-         "result": f"{duplicate_ids} duplicates ({dup_rate:.2%})", "pass": dup_rate <= 0.005}
+         "result": f"{duplicate_ids} duplicates in {id_check_rows} rows ({dup_rate:.2%})",
+         "pass": dup_rate <= 0.005}
     )
     useful = len(mapped.intersection(NAME_OR_ID_FIELDS)) > 0
     checks.append(
@@ -488,7 +506,10 @@ def validate(state: dict) -> dict:
         for flag in one["quality_flags"]:
             if flag["flag"] == "duplicate_record_id":
                 duplicate_ids += 1
-    report = build_validation_report(obs_loop, loop_rows, cfg, duplicate_ids)
+    report = build_validation_report(
+        obs_loop, loop_rows, cfg, duplicate_ids,
+        id_check_rows=len(state["visible"]) + len(loop_rows),
+    )
 
     # semantic spot-check: 10 held-out records, raw vs canonical, meaning only
     picker = random.Random(7)
@@ -734,6 +755,9 @@ def emit(state: dict) -> dict:
     print(f"config emitted: {config_path}")
     if acceptance:
         print(f"acceptance ({len(accept_rows)} unseen rows): all_pass={acceptance['all_pass']}")
+        if not acceptance["all_pass"]:
+            print("WARNING: the config was approved but the untouched acceptance set "
+                  "FAILED a check — read runs/.../acceptance.json before using this config.")
     return {"emitted": str(config_path), "steps": state["steps"] + ["emit"]}
 
 

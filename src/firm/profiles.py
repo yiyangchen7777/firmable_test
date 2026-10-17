@@ -89,10 +89,23 @@ def gather_candidates(members: list[str], records: dict, field: str, reliab: dic
     return candidates
 
 
+def value_key(value) -> str:
+    """Case/whitespace-insensitive grouping key: 'NEUMANN STEEL PTY LTD' and its
+    lower-case twin are the same value, not a conflict."""
+    return " ".join(str(value).split()).casefold()
+
+
 def pick_winner(candidates: list[dict]) -> tuple[dict, list[dict], str]:
-    """Returns (winner, losers-with-why, how_recency_was_used)."""
-    values = {c["value"] for c in candidates}
-    if len(values) == 1:
+    """Returns (winner, distinct losing values with why, the deciding rule)."""
+    # rows and sources behind each distinct (normalised) value
+    rows_per_value: dict[str, int] = {}
+    sources_per_value: dict[str, set] = {}
+    for c in candidates:
+        key = value_key(c["value"])
+        rows_per_value[key] = rows_per_value.get(key, 0) + 1
+        sources_per_value.setdefault(key, set()).add(c["source"])
+
+    if len(rows_per_value) == 1:
         winner = dict(candidates[0])
         winner["support"] = len(candidates)
         return winner, [], "no conflict"
@@ -100,43 +113,42 @@ def pick_winner(candidates: list[dict]) -> tuple[dict, list[dict], str]:
     # 1) reliability
     best_rel = max(c["source_reliability"] for c in candidates)
     top = [c for c in candidates if c["source_reliability"] == best_rel]
-    recency_note = "reliability decided"
-    if len({c["value"] for c in top}) > 1:
+    decided_by = "reliability"
+    if len({value_key(c["value"]) for c in top}) > 1:
         # 2) recency (weak when any contender's timestamp is a catalogue proxy)
         newest = max(c["observed_at"] for c in top)
         weak = any(c["observed_at_basis"] == "proxy" for c in top)
-        top2 = [c for c in top if c["observed_at"] == newest]
-        recency_note = "recency decided (weak: catalogue dates)" if weak else "recency decided"
-        if len({c["value"] for c in top2}) > 1:
-            # 3) majority across ALL candidates
-            counts: dict[str, int] = {}
-            for c in candidates:
-                counts[c["value"]] = counts.get(c["value"], 0) + 1
-            top2.sort(key=lambda c: (-counts[c["value"]], c["provenance"]))
-            recency_note = "majority decided"
-        top = top2
+        top = [c for c in top if c["observed_at"] == newest]
+        decided_by = "recency (weak: catalogue dates)" if weak else "recency"
+        if len({value_key(c["value"]) for c in top}) > 1:
+            # 3) majority: count DISTINCT SOURCES per value first (ten rows from
+            # one source are one voice), rows only break source ties
+            top.sort(key=lambda c: (
+                -len(sources_per_value[value_key(c["value"])]),
+                -rows_per_value[value_key(c["value"])],
+                c["provenance"],
+            ))
+            decided_by = "majority of sources"
 
-    winner = top[0]
-    counts: dict[str, int] = {}
-    for c in candidates:
-        counts[c["value"]] = counts.get(c["value"], 0) + 1
-    winner = dict(winner)
-    winner["support"] = counts[winner["value"]]  # how many records back this value
+    winner = dict(top[0])
+    winner_key = value_key(winner["value"])
+    winner["support"] = rows_per_value[winner_key]
 
     losers = []
-    seen_values: set[str] = set()
+    seen: set[str] = set()
     for c in candidates:
-        if c["value"] != winner["value"] and c["value"] not in seen_values:
-            seen_values.add(c["value"])
+        key = value_key(c["value"])
+        if key != winner_key and key not in seen:
+            seen.add(key)
             losers.append(
                 {
                     "value": c["value"], "source": c["source"], "provenance": c["provenance"],
-                    "support": counts[c["value"]],
-                    "why_lost": f"lower precedence ({recency_note}); "
-                                f"reliability {c['source_reliability']} vs {winner['source_reliability']}",
+                    "support": rows_per_value[key],
+                    "sources": sorted(sources_per_value[key]),
+                    "why_lost": f"lost on {decided_by}",
                 }
             )
-    return winner, losers, recency_note
+    return winner, losers, decided_by
 
 
 def build_profile(cluster: dict, records: dict, reliab: dict) -> dict:

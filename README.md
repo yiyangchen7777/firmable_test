@@ -59,6 +59,8 @@ uv run firm onboard <dataset-id> --decide "approve"          # or "reject: <why>
 
 - **Proof of agency.** `asic-afs-licensee` was onboarded after development froze, as an
   unseen seventh dataset: first proposal PASSING, 0 revisions, 0 human edits, $0.18.
+  The demo deliberately stops at config emission — its observations are kept out of
+  Part 3 so the measured link numbers stay frozen.
 - **Sampling bias, disclosed.** Random 1,000-row samples of the two large files would
   share ~0 businesses with the other sources (measured). Sampling is therefore seeded:
   half head rows, half rows whose ABN appears in another source (or whose name matches

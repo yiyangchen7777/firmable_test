@@ -65,7 +65,10 @@ def load_records(drop_source: str | None = None) -> dict[str, dict]:
                 elif claim["field"] == "address.state":
                     summary["state"] = claim["value"]
                 elif claim["field"] == "address.country":
-                    summary["country"] = str(claim["value"]).upper()
+                    country = str(claim["value"]).upper()
+                    if country == "AUSTRALIA":  # sources spell it both ways
+                        country = "AU"
+                    summary["country"] = country
             records[key] = summary
     return records
 
@@ -97,11 +100,14 @@ def propose_links(records: dict[str, dict]) -> tuple[list[dict], list[dict]]:
         pair = tuple(sorted([a["key"], b["key"]]))
         if pair in seen_pairs or a["source"] == b["source"]:
             return
-        if tier == "id" and (not is_australian(a) or not is_australian(b)):
+        if not is_australian(a) or not is_australian(b):
+            # all tiers: a non-AU party record must not link into AU entities —
+            # gating only the identifier tier would let the name tier relink
+            # the same pair at lower confidence
             add_to_queue(
                 a, b,
-                "matcher-0.2 country gate: Australian identifier asserted on a "
-                "non-AU party record (agency, not identity); refused",
+                "matcher-0.2 country gate: record belongs to a non-AU party "
+                "(agency or parent, not identity); refused",
                 f"{evidence} | countries {a['country']},{b['country']}",
             )
             return
@@ -265,13 +271,15 @@ def run_resolve(drop_source: str | None = None, handcheck_seed: int = 99) -> dic
     accepted, conflicts, clusters = derive_clusters(records, links)
 
     created_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    input_hash = hashlib.sha256(
+    # a fingerprint of WHICH records went in (keys, not contents) — enough to
+    # tell two runs apart, honestly named
+    input_keys_hash = hashlib.sha256(
         "".join(sorted(records.keys())).encode()
     ).hexdigest()[:12]
-    run_id = f"resolve-{created_at.replace(':', '').replace('-', '')[:15]}-{input_hash}"
+    run_id = f"resolve-{created_at.replace(':', '').replace('-', '')[:15]}-{input_keys_hash}"
     meta = {
         "run_id": run_id, "matcher_version": MATCHER_VERSION, "created_at": created_at,
-        "input_records": len(records), "input_hash": input_hash,
+        "input_records": len(records), "input_keys_hash": input_keys_hash,
         "thresholds": {"abn": ABN_CONFIDENCE, "acn": ACN_CONFIDENCE, "name_exact_state": NAME_CONFIDENCE,
                        "fuzzy_queue_band": list(FUZZY_QUEUE_BAND)},
         "drop_source": drop_source,

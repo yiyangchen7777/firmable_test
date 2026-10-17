@@ -1,9 +1,11 @@
 """Business-name normalisation, shared by the resolver and seeded sampling."""
 
-# trailing legal-form tokens stripped when normalising a name for matching
+# Trailing legal-form tokens stripped when normalising a name for matching.
+# Punctuation is removed before tokenising, so only bare forms can ever match
+# ("P/L" arrives as the tokens "P", "L" — list "PL" instead).
 SUFFIX_TOKENS = {
-    "PTY", "LTD", "LIMITED", "PROPRIETARY", "P/L", "PTY.", "LTD.",
-    "INC", "INC.", "INCORPORATED", "PLC", "NL", "CO", "CO.",
+    "PTY", "LTD", "LIMITED", "PROPRIETARY", "PL",
+    "INC", "INCORPORATED", "PLC", "NL", "CO",
 }
 
 

@@ -33,13 +33,15 @@ def download(url: str, source_id: str) -> Path:
     target = folder / name
     if target.exists() and target.stat().st_size > 0:
         return target
+    partial = target.with_suffix(target.suffix + ".part")
     with httpx.stream(
         "GET", url, headers={"User-Agent": USER_AGENT}, timeout=300, follow_redirects=True
     ) as resp:
         resp.raise_for_status()
-        with target.open("wb") as fh:
+        with partial.open("wb") as fh:
             for chunk in resp.iter_bytes():
                 fh.write(chunk)
+    partial.rename(target)  # atomic: an interrupted download is never cached
     return target
 
 

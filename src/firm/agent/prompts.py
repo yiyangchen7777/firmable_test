@@ -273,8 +273,9 @@ A value can be a verbatim-correct copy of its source cell and still be
 suspicious: the question is whether the SOURCE column means the CANONICAL field.
 
 Mark "suspicious" whenever a careful reviewer would want the mapping
-re-examined; you do not need proof. Suspicious findings send the config back to
-revision — a false "ok" costs more than a false "suspicious"."""
+re-examined; you do not need proof. Suspicious findings are put in front of the
+human reviewer (and feed any revision round that runs for hard failures) — a
+false "ok" costs more than a false "suspicious"."""
 
 SPOTCHECK_USER = r"""MAPPING UNDER TEST — the fields[] of the proposed config:
 {fields_json}

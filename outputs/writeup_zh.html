@@ -1,0 +1,135 @@
+<title>交付文稿中文对照</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: reading column; section cards mirror WRITEUP.md order, README digest after */
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --fg: #1d2129; --muted: #6b7280;
+  --line: #e3e4e0; --accent: #1f6f54; --code-bg: #f0f0ed;
+  --num-bg: #e4f2ea; --num-fg: #19613f;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97; --code-bg: #272b31;
+  --num-bg: #173527; --num-fg: #7fd7ab; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97; --code-bg: #272b31;
+  --num-bg: #173527; --num-fg: #7fd7ab; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg);
+  font: 15.5px/1.75 -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 30px 70px; }
+main { max-width: 860px; margin: 0 auto; display: grid; gap: 24px; }
+h1 { font-size: 1.5rem; margin: 0; text-wrap: balance; }
+h2 { font-size: 1.1rem; margin: 0 0 4px; color: var(--accent); }
+h2 .en { color: var(--muted); font-weight: 400; font-size: 0.85rem; margin-left: 8px; }
+section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 20px 24px; }
+p { margin: 8px 0; }
+ul { margin: 6px 0; padding-left: 1.3em; }
+li { margin: 5px 0; }
+code { background: var(--code-bg); border-radius: 4px; padding: 1px 6px; font-size: 0.85em; }
+.k { background: var(--num-bg); color: var(--num-fg); border-radius: 5px; padding: 0 7px; font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.muted { color: var(--muted); font-size: 0.9rem; }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+.tablewrap { overflow-x: auto; }
+.note { border-left: 3px solid var(--accent); padding-left: 14px; }
+</style>
+<main>
+<header>
+  <h1>交付文稿中文对照</h1>
+  <p class="muted">对照 WRITEUP.md 与 README.md 阅读 · 英文原文为准 · 所有数字可在 repo 的 outputs/ 中复核</p>
+</header>
+
+<section>
+  <h2>成本 <span class="en">Cost</span></h2>
+  <ul>
+    <li>运行时 API 总花费 <span class="k">$2.83</span>（59 次调用，输入 519k / 输出 180k token，模型 <code>claude-sonnet-5.5</code>，个人 OpenRouter key）。每次调用的步骤、token、金额都记录在 <code>outputs/ledger.jsonl</code>——是账本，不是事后估算。</li>
+    <li><strong>接入一个源的一次性推断成本</strong>：稳态 <span class="k">$0.13–0.55</span>。全新的第七个数据集实测 <span class="k">$0.18</span>（3 次调用、0 轮修订）。第一个源花了 $0.83，因为校准验证器时改了 prompt、缓存失效重计费；磁盘缓存保证崩溃重跑不重复付费。</li>
+    <li><strong>每条记录的成本：$0</strong>——提取是确定性引擎，模型成本不随行数增长。两个超大源按 1000 行播种抽样、一个 6.6 万行源取头部 1000 行、其余全量 → 共 <span class="k">19,542</span> 条标准化 observations。</li>
+    <li>刻意不计入：搭建系统用的编程助手（个人订阅）。$10 预算管的是系统运行时的花费，两者分开报告。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Agent 设计 <span class="en">Agent design</span></h2>
+  <ul>
+    <li>固定九节点 LangGraph：抓取 → 查看(模型) → 画像(代码) → 提案(模型) → 校验(代码+模型语义抽检) → 修订(模型，≤3 轮) → 审批(人) → 产出。每个节点结束即存 checkpoint，崩溃从断点续跑。</li>
+    <li>分工铁律：<strong>模型提案、代码把关、人拍板</strong>。ABN/ACN 校验位、枚举、日期、空值漂移、记录键唯一性全在引擎层强制执行——任何配置都绕不过。数据三切分：200 行给模型看 / 350 行修订循环用 / 150 行验收集只在批准后跑一次，报告只引用后者。</li>
+    <li>自我修正：校验→修订的边带着失败样例和语义疑点。审批人看到的材料：每条映射的语义证据（列名+样本+为什么是这个含义）、校验结果对阈值、抽检判定、未映射清单及理由、5 组原始行 vs 标准化输出对照。动作只有批准 / 带意见驳回 / 放弃——<strong>人永远不直接改配置</strong>。七次接入里有五次被审核人驳回过一轮；每次审批事件连同驳回意见原文导出在 <code>outputs/runs/&lt;源&gt;/decisions.json</code>。批准非绿灯状态必须留书面理由（用过一次：源文件自带的重复行）。</li>
+    <li><strong>最弱环节及其证据</strong>：提案节点的语义层。六个源里四个的初版提案把「某登记事项的状态/日期」错配成「企业本身的状态/日期」（牌照状态、商号状态、慈善注册日、IP 权利日期）——每次解析通过率都接近 100%，全靠语义抽检+人工审批抓出来。格式错代码能拦，<strong>含义错需要第二次模型审视和人</strong>，这就是审批环节存在的理由。</li>
+    <li>Agent 的诚实度实证：喂给它一张拿错的表（植物育种权，没有任何企业），它一个字段都不映射——10 列全部如实弃权，自判 NOT USEFUL（证据保留在 <code>outputs/runs/ipgod2022-wrong-resource-pbr/</code>）。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>最难的源 <span class="en">The hard one</span></h2>
+  <p><strong>ipgod2022（IP Australia 设计权当事人表）。</strong>一行 = 一个当事方以某角色（申请人、所有人、<em>代理律所</em>、提交人）出现在一项设计权上；角色列在 ontology 里无处安放；而且源把<strong>本地子公司的 ABN 标在外国母公司的行上</strong>（原始数据 country_code 为 us/ch）。两个问题都不是改映射能解决的——行过滤被刻意排除在封闭转换目录之外。「什么时候写定制代码是对的」的判断标准：<strong>当修复能泛化到所有源、而不是给单一源打补丁时</strong>。所以我们没写解析器，而是升级了匹配器（见下一节），对所有源生效。</p>
+  <p>亚军是折扣名录（完全没有标识符）：在我们的证据门槛下它产生了 <strong>0 条被接受的链接</strong>——它所有的名字匹配都躺在拒绝队列里、带着理由。那就是我们划的线；队列是交付物，不是失败。</p>
+</section>
+
+<section>
+  <h2>从 6 个源到 500 个 <span class="en">Scale</span></h2>
+  <ul>
+    <li><strong>最先断的是人工审批吞吐量</strong>——每源几分钟 × 500 就是一个审核人数周的工作量。解法是按校验状态排队、风险抽样、绿灯批量放行——而不是去掉人。</li>
+    <li>可达性/反爬虫：我们六选一的候选里就有一个「浏览器能开、脚本全被掐」的站点；triage 需要先探活再打分。</li>
+    <li>解析分桶与存储：名字桶超线性膨胀；JSONL 让位给数据库、增量运行、记录级 diff。</li>
+    <li>许可证审查会变成独立工作流（这次运气好全是 CC-BY 系，每条 observation 的信封都记录许可证）。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>模型升级问题——在本作业里真实演练过 <span class="en">Change</span></h2>
+  <p>每条链接记录 matcher_version、run_id、阈值、证据、时间戳；observations 不可变；簇是派生的带版本快照。这让升级可以真做：人工核对 50 条链接测得 <span class="k">matcher-0.1 精确率 62%</span>——19 个错误全是一个模式（外国母公司背着本地 ABN），<strong>而且在该源的审批备注里被提前预言过</strong>。matcher-0.2 加了一道国别闸，用的是 observations 里本来就带着的国别 claim。</p>
+  <p>流程：存档 v1 链接 → 重跑 → crosswalk（<span class="k">341</span> 个实体原封不动、0 分裂、13 个收缩或解体：10 全解体 + 3 收缩，正是那批外国母公司簇）→ 用<strong>同一套</strong>人工标注重新测量：<span class="k">19/19</span> 错误移除、<span class="k">31/31</span> 正确保留。回滚 = 把派生指回 v1 存档。必须提前记录的东西：每链接的匹配器版本+证据+阈值、不可变的 observations（包括当时以为用不上的字段——国别）、带版本的簇快照、一份人工标注样本。</p>
+</section>
+
+<section>
+  <h2>档案组装的数字 <span class="en">Profile assembly</span></h2>
+  <p>50 份档案来自随机抽样的跨源实体（不挑好看的，种子在代码里）。每字段：胜出值+支持数、两个置信因子分开展示、来源记录、每个落选值及其落选规则；trading_name 按 ontology 多值收集；缺的字段键直接不存在。每份档案带 <code>cluster_support</code>（其下最弱链接的置信度）——因为字段置信建立在「链接正确」的前提上。<strong>删一源实验</strong>：删掉税务透明度锚点源重跑，50 个实体 <span class="k">31 个</span>解体或消失、19 个幸存、其中 1 个字段值改变——锚点源是单点故障，直接支撑上面的规模答案。</p>
+</section>
+
+<section>
+  <h2>实体关系建模 <span class="en">Entity relationships</span></h2>
+  <p>存储的真相是成对 <strong>same_as 链接表</strong>（只追加；撤销用追加记录而不是删除）。实体由 union-find 派生；名字链接可以把记录挂进簇、但永远不能把持有不同 ABN 的两个簇焊在一起；模糊相似永不链接——只进队列。parent_of 类关系有意不碰：声明它们的列进 unmapped 并注明理由，扩展方案是带类型的边（same_as 参与聚簇、parent_of 只存不并）。选「链接为真相」正是因为上面的升级问题：结论（簇 ID）重算起来便宜，证据丢了就没了。</p>
+</section>
+
+<section>
+  <h2>再给三周 <span class="en">Next</span></h2>
+  <ul>
+    <li>回归 harness：金标准配置、按 agent/prompt 版本重放、映射准确率追踪——本次缺的评测层。</li>
+    <li>使用中量到的引擎缺口：信封 valid_from/valid_to（商号注册期、报税年度）、行过滤配置（ipgod 角色）、多列拼接（ACNC 地址行）。</li>
+    <li>带批量队列的审批 UI；用积累的人工标注校准置信度（现在它们是声明的启发值，并如实标注为启发值）。</li>
+    <li>把 ABR 作为链接期的校验预言机——这次人工核对里它秒级裁决了每一桩争议。</li>
+    <li>存储与增量刷新：observations/链接入库、按源做记录级 diff、许可证追踪。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>诚实附录 <span class="en">Honesty appendix</span></h2>
+  <ul>
+    <li>Part 1 误判率：核实口径 <span class="k">35%</span>（7/20），把两个无法验证的资源算作误判的保守口径 <span class="k">45%</span>。</li>
+    <li>放宽阈值的链接（名字一致但无州佐证），16 对非重复被拒样本人工核对：6 对确为同一家、3 对不确定、7 对确非同一家——拒绝最多损失 9 条真链接、至少避免 7 条错链接。</li>
+    <li>两个大文件的抽样是刻意播种的，README 里披露：精确率是实测的，覆盖率从不声明。</li>
+  </ul>
+</section>
+
+<section class="note">
+  <h2>README 速览 <span class="en">How to run</span></h2>
+  <div class="tablewrap"><table>
+    <tr><th>步骤</th><th>命令</th><th>说明</th></tr>
+    <tr><td>装依赖</td><td><code>uv sync</code></td><td>约 1 分钟</td></tr>
+    <tr><td>跑测试</td><td><code>uv run pytest -q</code></td><td>35 个，秒级</td></tr>
+    <tr><td>Part 1</td><td><code>uv run firm triage</code></td><td>联网查 CKAN，约 1 分钟</td></tr>
+    <tr><td>Part 2 引擎</td><td><code>uv run firm extract &lt;源&gt;</code></td><td>确定性、免费</td></tr>
+    <tr><td>Part 3</td><td><code>uv run firm resolve</code></td><td>链接+拒绝队列+簇</td></tr>
+    <tr><td>Part 4</td><td><code>uv run firm profile</code></td><td>50 档案；<code>--drop-source</code> 跑脆弱性实验</td></tr>
+    <tr><td>Agent 演示</td><td><code>uv run firm onboard &lt;id&gt;</code></td><td>需要 OpenRouter key，约 $0.20，停在审批点等人</td></tr>
+  </table></div>
+  <p class="muted">README 还包含：产物地图（哪个文件对应哪个交付物）、抽样偏差披露、六个源的许可证表、AI 使用声明、已知问题。</p>
+</section>
+</main>
