@@ -1,0 +1,204 @@
+<title>映射审核 · corporate-transparency</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: single reading column, status-led; data tables full width */
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --fg: #1d2129; --muted: #6b7280;
+  --line: #e3e4e0; --accent: #1f6f54;
+  --ok-bg: #e4f2ea; --ok-fg: #19613f; --warn-bg: #fdf0d7; --warn-fg: #8a5a0a;
+  --bad-bg: #fbe5e3; --bad-fg: #a02c21; --code-bg: #f0f0ed;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97;
+  --ok-bg: #173527; --ok-fg: #7fd7ab; --warn-bg: #3a2d10; --warn-fg: #ecbf63;
+  --bad-bg: #40201d; --bad-fg: #f1988e; --code-bg: #272b31; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97;
+  --ok-bg: #173527; --ok-fg: #7fd7ab; --warn-bg: #3a2d10; --warn-fg: #ecbf63;
+  --bad-bg: #40201d; --bad-fg: #f1988e; --code-bg: #272b31; color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--fg);
+  font: 15px/1.6 -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+main { max-width: 980px; margin: 0 auto; display: grid; gap: 28px; }
+h1 { font-size: 1.45rem; margin: 0; text-wrap: balance; }
+h2 { font-size: 1.05rem; margin: 0 0 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+h4, h5 { margin: 0 0 6px; }
+section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; letter-spacing: 0.02em; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tablewrap { overflow-x: auto; }
+code { background: var(--code-bg); border-radius: 4px; padding: 1px 5px; font-size: 0.85em; }
+pre { background: var(--code-bg); border-radius: 6px; padding: 10px 12px; overflow-x: auto; font-size: 0.8rem; line-height: 1.5; margin: 0; }
+.pill { border-radius: 99px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+.pill.ok, .ok { background: var(--ok-bg); color: var(--ok-fg); }
+.pill.warn, .warn { background: var(--warn-bg); color: var(--warn-fg); }
+.pill.bad, .bad { background: var(--bad-bg); color: var(--bad-fg); }
+.status { display: inline-block; border-radius: 6px; padding: 4px 14px; font-weight: 700; }
+.chip { background: var(--code-bg); border-radius: 99px; padding: 1px 8px; font-size: 0.75rem; }
+.muted { color: var(--muted); }
+.evidence { min-width: 260px; }
+.metagrid { display: grid; grid-template-columns: 9em 1fr; gap: 4px 14px; font-size: 0.9rem; }
+.metagrid dt { color: var(--muted); } .metagrid dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.guide ol { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pair > div { min-width: 0; }
+@media (max-width: 720px) { .pair { grid-template-columns: 1fr; } }
+.example { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+.example:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+.decision pre { user-select: all; }
+details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
+</style>
+<main>
+<header>
+  <h1>映射审核 · corporate-transparency</h1>
+  <p><span class="status ok">PASSING</span>
+     <span class="muted">修订 0/3 · 流程步数 5 · 审核材料同步存于 review.md</span></p>
+</header>
+
+<section class="guide">
+  <h2>怎么审（约 5 分钟）</h2>
+  <ol>
+    <li><strong>看硬指标</strong>（<a href="#checks">校验结果</a>）：有没有 ❌。校验位、枚举、唯一性是代码算的，不会说谎。</li>
+    <li><strong>看语义疑点</strong>（<a href="#flags">语义抽检</a>）：这是最需要人的部分——模型挑出「解析没错但含义可能错」的字段，你判断同不同意。</li>
+    <li><strong>抽看对照样例</strong>（<a href="#examples">原始 vs 输出</a>）：随手挑两条，问自己「左边这列的意思，真的是右边那个字段吗？」</li>
+    <li><strong>扫一眼未映射清单</strong>（<a href="#unmapped">unmapped</a>）：理由是否诚实，有没有本该映射却被偷懒放弃的列。</li>
+  </ol>
+  <p class="muted">你只有三个动作：approve / reject + 意见 / abandon。你不能直接改配置文件——人一改，配置就成了「手写的」，作业的核心主张（agent 独立完成映射）就不成立了。</p>
+</section>
+
+<section>
+  <h2>来源与关键决定</h2>
+  <dl class="metagrid">
+    <dt>数据集</dt><dd>Corporate Tax Transparency（corporate-transparency）</dd>
+    <dt>发布方 / 许可</dt><dd>Australian Taxation Office / cc-by</dd>
+    <dt>读取方式</dt><dd><code>{&quot;format&quot;: &quot;xlsx&quot;, &quot;delimiter&quot;: null, &quot;encoding&quot;: &quot;utf-8&quot;, &quot;header_row&quot;: 0, &quot;sheet&quot;: &quot;Income tax details&quot;}</code></dd>
+    <dt>source_reliability</dt><dd>0.9 — The ATO is the national tax regulator publishing its own corporate tax transparency report under CC-BY, so names and ABNs are authoritative.</dd>
+    <dt>record_id</dt><dd><code>column [&#x27;Name&#x27;]</code> — The report has no record key and the ABN is nullable (1.5% blank, 197 distinct over 200 rows), so ABN alone is not unique. The Name column is 100% populated with 200 distinct values across 200 rows. Each entity appears once per income year, and the sample covers a single year, so Name is unique per record.</dd>
+    <dt>observed_at</dt><dd><code>dataset_modified</code>（basis: proxy，值 2026-10-12）— There is no per-record extract or update date column. &#x27;Income year&#x27; is a reporting period label, not an assertion date, so I use the catalogue modified date as a weak proxy.</dd>
+  </dl>
+</section>
+
+<section id="checks">
+  <h2>校验结果 · 350 行留存数据（循环集；最终验收在批准后跑一次）</h2>
+  <div class="tablewrap"><table>
+    <tr><th>检查</th><th>阈值</th><th>结果</th><th></th></tr>
+    <tr><td>identifier checksum (entity.abn)</td><td class='num'>&gt;= 95%</td><td class='num'>100.0% (350 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.legal_name ← Name)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.abn ← ABN)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>record_id unique (full sample)</td><td class='num'>0 duplicates</td><td class='num'>0 duplicates</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>minimum useful (a name or an identifier mapped)</td><td class='num'>required</td><td class='num'>yes</td><td><span class="pill ok">通过</span></td></tr>
+  </table></div>
+  <h4 style="margin-top:14px">未通过/弃权的例子</h4>
+  <p class='muted'>无</p>
+</section>
+
+<section id="flags">
+  <h2>语义抽检 · 10 条留存记录：20 ok / 0 suspicious</h2>
+  <div class="tablewrap"><table>
+    <tr><th>record</th><th>字段</th><th>为什么可疑</th></tr>
+    <tr><td colspan='3' class='muted'>无疑点</td></tr>
+  </table></div>
+  <details><summary>展开 20 条「ok」判定</summary>
+  <div class="tablewrap"><table>
+    <tr><th>record</th><th>字段</th><th>理由</th></tr>
+    <tr><td><code>AUSPORK LIMITED</code></td><td><code>entity.legal_name</code></td><td>&#x27;Name&#x27; in a tax-entity report holds the registered corporate name &#x27;AUSPORK LIMITED&#x27;, and no other party column exists.</td></tr>
+<tr><td><code>AUSPORK LIMITED</code></td><td><code>entity.abn</code></td><td>The ABN 38006563355 passes the mod-89 checksum and belongs to the row&#x27;s own entity.</td></tr>
+<tr><td><code>BEST FAB PTY LTD</code></td><td><code>entity.legal_name</code></td><td>&#x27;BEST FAB PTY LTD&#x27; is a registered-style company name with a PTY LTD suffix.</td></tr>
+<tr><td><code>BEST FAB PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 83105906876 passes the mod-89 checksum, and the row has no other party&#x27;s identifier.</td></tr>
+<tr><td><code>BENDIGO AND ADELAIDE BANK LIMITED</code></td><td><code>entity.legal_name</code></td><td>This is the registered name of the bank, not a brand name.</td></tr>
+<tr><td><code>BENDIGO AND ADELAIDE BANK LIMITED</code></td><td><code>entity.abn</code></td><td>The ABN 11068049178 passes the mod-89 checksum.</td></tr>
+<tr><td><code>AVENG AUSTRALIA HOLDINGS PTY LTD</code></td><td><code>entity.legal_name</code></td><td>The raw &#x27;Name&#x27; is the entity&#x27;s own registered name. &#x27;Holdings&#x27; is part of that name and does not mean a parent company was substituted.</td></tr>
+<tr><td><code>AVENG AUSTRALIA HOLDINGS PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 33108058331 passes the mod-89 checksum.</td></tr>
+<tr><td><code>APS GROUP (HOLDINGS) PTY LTD</code></td><td><code>entity.legal_name</code></td><td>The name is copied verbatim, including the parentheses, and is a registered company name.</td></tr>
+<tr><td><code>APS GROUP (HOLDINGS) PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 94096418101 passes the mod-89 checksum.</td></tr>
+<tr><td><code>BARALABA COAL COMPANY PTY LTD</code></td><td><code>entity.legal_name</code></td><td>This is a registered company name with a PTY LTD suffix.</td></tr>
+<tr><td><code>BARALABA COAL COMPANY PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 42096909634 passes the mod-89 checksum.</td></tr>
+<tr><td><code>BNC GLOBAL INVESTMENTS PTY LTD</code></td><td><code>entity.legal_name</code></td><td>This is a registered company name with a PTY LTD suffix.</td></tr>
+<tr><td><code>BNC GLOBAL INVESTMENTS PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 39618091517 passes the mod-89 checksum.</td></tr>
+<tr><td><code>AMENTUM AUSTRALIA PROPRIETARY LIMITED</code></td><td><code>entity.legal_name</code></td><td>&#x27;PROPRIETARY LIMITED&#x27; is the long form of a registered company suffix, so this is a legal name.</td></tr>
+<tr><td><code>AMENTUM AUSTRALIA PROPRIETARY LIMITED</code></td><td><code>entity.abn</code></td><td>The ABN 12079749287 passes the mod-89 checksum.</td></tr>
+<tr><td><code>ARCHIES FOOTWEAR PTY LTD</code></td><td><code>entity.legal_name</code></td><td>The PTY LTD suffix marks this as the registered entity, not the &#x27;Archies&#x27; brand.</td></tr>
+<tr><td><code>ARCHIES FOOTWEAR PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 91164576854 passes the mod-89 checksum.</td></tr>
+<tr><td><code>BGC (AUSTRALIA) PTY LTD</code></td><td><code>entity.legal_name</code></td><td>This is a registered company name copied verbatim.</td></tr>
+<tr><td><code>BGC (AUSTRALIA) PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 62005736005 passes the mod-89 checksum.</td></tr>
+  </table></div></details>
+</section>
+
+<section id="mapping">
+  <h2>字段映射 · 2 条（共 6 个源列）</h2>
+  <div class="tablewrap"><table>
+    <tr><th>canonical</th><th>← 源列</th><th>transforms</th><th>conf.</th><th></th><th>语义证据</th></tr>
+    <tr><td><code>entity.legal_name</code></td><td><code>Name</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.9</td><td></td><td class='evidence'>Column &#x27;Name&#x27; holds values like &#x27;ALLIANZ AUSTRALIA LIMITED&#x27; and &#x27;B &amp; E FOODS PTY LTD&#x27;. These are registered corporate names with suffixes such as PTY LTD, not trading names. The report is of tax entities identified by name and ABN, so this is the legal name.</td></tr>
+<tr><td><code>entity.abn</code></td><td><code>ABN</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;strip_float_suffix&quot;, &quot;abn_normalize&quot;]</code></td><td class='num'>0.95</td><td></td><td class='evidence'>Column &#x27;ABN&#x27; has values like &#x27;23068447763&#x27; and &#x27;21000006226&#x27;. All are 11 digits (profile hint), and the ATO describes the report as containing each entity&#x27;s ABN. It is not an ACN because the values are 11 digits. About 1.5% are blank, and empty_to_null makes those absent.</td></tr>
+  </table></div>
+</section>
+
+<section id="unmapped">
+  <h2>未映射的列 · 4</h2>
+  <div class="tablewrap"><table>
+    <tr><th>源列</th><th>理由</th></tr>
+    <tr><td><code>Total income $</code></td><td>Financial aggregate statistic (e.g. 103673135) for the income year, not an entity attribute in the ontology.</td></tr>
+<tr><td><code>Taxable income $</code></td><td>Financial aggregate statistic (e.g. 5784882), not an entity attribute in the ontology; also about 20% blank.</td></tr>
+<tr><td><code>Tax payable $</code></td><td>Financial aggregate statistic (e.g. 1735465), not an entity attribute in the ontology.</td></tr>
+<tr><td><code>Income year</code></td><td>Reporting period label (&#x27;2024-25&#x27;) rather than a date. It is not a registration date or a per-record extract date, and no ontology field fits.</td></tr>
+  </table></div>
+</section>
+
+<section id="examples">
+  <h2>对照样例 · 5 条原始行 vs 标准化输出</h2>
+  <p class="muted">读含义，别读通过率：日期是注册日还是牌照日？名字是本人还是代理人？ABN 是这一行主体自己的吗？</p>
+  <div class='example'><h4>样例 1 · record <code>AUSTRALIAN POSTAL CORPORATION</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: AUSTRALIAN POSTAL CORPORATION
+ABN: 28864970579
+Total income $: 9714900825
+Taxable income $: 67626224
+Tax payable $: 19457009
+Income year: 2024-25</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;AUSTRALIAN POSTAL CORPORATION&quot;   (conf 0.9)
+entity.abn = &quot;28864970579&quot;   (conf 0.95)</pre></div></div></div>
+<div class='example'><h4>样例 2 · record <code>AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD
+ABN: 28611628909
+Total income $: 2318405446
+Taxable income $: 
+Tax payable $: 
+Income year: 2024-25</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD&quot;   (conf 0.9)
+entity.abn = &quot;28611628909&quot;   (conf 0.95)</pre></div></div></div>
+<div class='example'><h4>样例 3 · record <code>ALCON LABORATORIES (AUSTRALIA) PTY LTD</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: ALCON LABORATORIES (AUSTRALIA) PTY LTD
+ABN: 88000740830
+Total income $: 347900229
+Taxable income $: 7591333
+Tax payable $: 2277400
+Income year: 2024-25</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;ALCON LABORATORIES (AUSTRALIA) PTY LTD&quot;   (conf 0.9)
+entity.abn = &quot;88000740830&quot;   (conf 0.95)</pre></div></div></div>
+<div class='example'><h4>样例 4 · record <code>ALLIED CREDIT PTY LTD</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: ALLIED CREDIT PTY LTD
+ABN: 65143964667
+Total income $: 297051241
+Taxable income $: 
+Tax payable $: 
+Income year: 2024-25</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;ALLIED CREDIT PTY LTD&quot;   (conf 0.9)
+entity.abn = &quot;65143964667&quot;   (conf 0.95)</pre></div></div></div>
+<div class='example'><h4>样例 5 · record <code>AVJENNINGS LIMITED</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: AVJENNINGS LIMITED
+ABN: 44004327771
+Total income $: 254590674
+Taxable income $: 17470140
+Tax payable $: 5241042
+Income year: 2024-25</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;AVJENNINGS LIMITED&quot;   (conf 0.9)
+entity.abn = &quot;44004327771&quot;   (conf 0.95)</pre></div></div></div>
+</section>
+
+<section class="decision">
+  <h2>你的决定（在终端运行其一）</h2>
+  <pre>uv run firm onboard corporate-transparency --decide "approve"</pre>
+  <pre>uv run firm onboard corporate-transparency --decide "reject: &lt;哪里不对、应该用哪个列/含义&gt;"</pre>
+  <pre>uv run firm onboard corporate-transparency --decide "abandon"</pre>
+  <p class="muted">reject 的意见会原文交给 agent 的 revise 节点，它自己改完会再生成一份新的审核材料。</p>
+</section>
+</main>

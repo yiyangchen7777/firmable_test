@@ -1,0 +1,66 @@
+# Mapping config written by the schema-inference agent (not by hand).
+# dataset: corporate-transparency | revisions used: 0/3
+# approved by a human reviewer at 2026-10-17T09:27:38+00:00
+source_reliability:
+  value: 0.9
+  rationale: The ATO is the national tax regulator publishing its own corporate tax
+    transparency report under CC-BY, so names and ABNs are authoritative.
+reliability_overrides: {}
+record_id:
+  strategy: column
+  columns:
+  - Name
+observed_at:
+  strategy: dataset_modified
+  basis: proxy
+  column: Income year
+  format: null
+  value: '2026-10-12'
+fields:
+- canonical: entity.legal_name
+  source: Name
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.9
+  evidence: Column 'Name' holds values like 'ALLIANZ AUSTRALIA LIMITED' and 'B & E
+    FOODS PTY LTD'. These are registered corporate names with suffixes such as PTY
+    LTD, not trading names. The report is of tax entities identified by name and ABN,
+    so this is the legal name.
+  conditional: false
+- canonical: entity.abn
+  source: ABN
+  transforms:
+  - trim
+  - empty_to_null
+  - strip_float_suffix
+  - abn_normalize
+  confidence: 0.95
+  evidence: Column 'ABN' has values like '23068447763' and '21000006226'. All are
+    11 digits (profile hint), and the ATO describes the report as containing each
+    entity's ABN. It is not an ACN because the values are 11 digits. About 1.5% are
+    blank, and empty_to_null makes those absent.
+  conditional: false
+unmapped:
+- source: Total income $
+  reason: Financial aggregate statistic (e.g. 103673135) for the income year, not
+    an entity attribute in the ontology.
+- source: Taxable income $
+  reason: Financial aggregate statistic (e.g. 5784882), not an entity attribute in
+    the ontology; also about 20% blank.
+- source: Tax payable $
+  reason: Financial aggregate statistic (e.g. 1735465), not an entity attribute in
+    the ontology.
+- source: Income year
+  reason: Reporting period label ('2024-25') rather than a date. It is not a registration
+    date or a per-record extract date, and no ontology field fits.
+source_id: corporate-transparency
+dataset_id: corporate-transparency
+resource_url: https://data.gov.au/data/dataset/c2524c87-cea4-4636-acac-599a82048a26/resource/15bf4eaa-7a14-48e9-8a3f-092df32a644e/download/2024-25-corporate-report-of-entity-tax-information.xlsx
+licence: cc-by
+reader:
+  format: xlsx
+  delimiter: null
+  encoding: utf-8
+  header_row: 0
+  sheet: Income tax details

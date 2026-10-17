@@ -1,0 +1,37 @@
+{
+  "checks": [
+    {
+      "check": "identifier checksum (entity.abn)",
+      "threshold": ">= 95%",
+      "result": "100.0% (149 ok / 0 failed)",
+      "pass": true
+    },
+    {
+      "check": "null drift (entity.legal_name \u2190 Name)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (entity.abn \u2190 ABN)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "record_id unique (full sample)",
+      "threshold": "0 duplicates",
+      "result": "0 duplicates",
+      "pass": true
+    },
+    {
+      "check": "minimum useful (a name or an identifier mapped)",
+      "threshold": "required",
+      "result": "yes",
+      "pass": true
+    }
+  ],
+  "failing_examples": [],
+  "all_pass": true,
+  "useful": true
+}
