@@ -1,0 +1,148 @@
+# Mapping config written by the schema-inference agent (not by hand).
+# dataset: ipgod2022 | revisions used: 3/3
+# status at review: NOT PASSING
+# approved by a human reviewer at 2026-10-17T09:55:24+00:00
+# reviewer's note: the 1.71% duplicate record_ids are literal full-row duplicates in the source; the engine suffixes and flags them deterministically, and no column or composite is unique, so row_hash is correct. Noted for the record: agent/submitter rows carry the law firm's own name/ABN, which are legitimate observations about that firm; party_role cannot be mapped or filtered under the current config mechanism (WRITEUP item), and Part 3 must treat legal_name from this source at its 0.65 confidence, including trading-style names and pseudonymised individuals (iNNNNNN).
+source_reliability:
+  value: 0.8
+  rationale: IP Australia is the national regulator for IP rights, but party names,
+    addresses and ABNs are applicant-supplied (and individuals are pseudonymised),
+    so reliability sits below a core registry like ASIC or the ABR.
+reliability_overrides:
+  entity.legal_name: 0.65
+  address.state: 0.7
+  address.postcode: 0.7
+  address.country: 0.75
+record_id:
+  strategy: row_hash
+  columns:
+  - application_number
+  - party_id
+  - party_role
+  - party_role_category
+  - party_name
+  - party_type
+  - abn
+  - state_code
+  - post_code
+  - country_code
+  - effective_from_date
+  - effective_to_date
+  - is_current
+  - is_founding
+observed_at:
+  strategy: dataset_modified
+  basis: proxy
+  column: null
+  format: null
+  value: '2022-06-20'
+fields:
+- canonical: entity.legal_name
+  source: party_name
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.65
+  evidence: Column party_name holds names such as 'davis ip pty ltd', 'exlites pty
+    ltd', 'oculus vr llc'. Semantic spot-checks flagged that many rows are agent,
+    opponent or submitter parties (e.g. opposition_claimant_agent 'krouzer ip', 'fpa
+    patent attorneys', applicant_agent 'davis ip pty ltd'), not the right holder.
+    Each row is still a real party entity on the IP record, and the name is that party's
+    own name, paired with that party's own ABN and address. Because the schema has
+    no role-based entity filter, the claim is kept at reduced confidence. Role columns
+    stay in unmapped. party_type='individual' rows carry only a pseudonymised id (e.g.
+    'i244880', 'i125033') and give junk name claims, which the catalogue cannot filter.
+  conditional: false
+- canonical: entity.abn
+  source: abn
+  transforms:
+  - trim
+  - empty_to_null
+  - strip_float_suffix
+  - abn_normalize
+  confidence: 0.8
+  evidence: Column abn holds float-serialised 11-digit values such as '53637813471.0'
+    and '35026846389.0'. Checksum pass is 100% (236/236). Semantic flags note that
+    the ABN often sits on agent or submitter rows, so it identifies the named party
+    on that row, which may be an agent firm rather than the right holder. It stays
+    aligned with the party_name on the same row, so the name and ABN pair is consistent.
+    Confidence is lowered for the role ambiguity.
+  conditional: false
+- canonical: address.state
+  source: state_code
+  transforms:
+  - trim
+  - empty_to_null
+  - state_normalize
+  confidence: 0.9
+  evidence: Column state_code holds lowercase Australian state abbreviations ('qld',
+    'vic', 'nsw', 'wa', 'act', 'sa'), which state_normalize handles case-insensitively.
+    Enum legality is 100%. It is the party's address state, not the IP right's jurisdiction.
+    Blanks are for foreign parties (vg, us).
+  conditional: false
+- canonical: address.postcode
+  source: post_code
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.65
+  evidence: Column post_code mixes Australian 4-digit postcodes ('4006', '3000', padded
+    ' 2075 ') with foreign postal codes ('qc, h4t 1k', '443-742', '90404', '315010',
+    '95014'). The keep_if_length 4 gate turned about 15% of non-null values into absence,
+    so conditional pair coverage was only 84.9% (needs >= 95%). The gate and postcode_normalize
+    are removed. The foreign values are genuine postal codes of the party's address
+    (the country sits in country_code), so they are kept as trimmed raw text and every
+    non-null value now yields a claim. Confidence is lowered because the format is
+    no longer uniform. 1xxx PO-box-style postcodes flagged by the spot-check remain
+    a known caveat.
+  conditional: false
+- canonical: address.country
+  source: country_code
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.85
+  evidence: Column country_code holds lowercase ISO-style codes ('au', 'vg', 'us',
+    'de', 'jp') sitting alongside the party's state and postcode, so it is the party's
+    address country. It is not the IP right's filing country. Values are kept raw
+    because no country normaliser exists in the catalogue; the case flag is a formatting
+    concern, not a meaning error.
+  conditional: false
+unmapped:
+- source: ip_right_type
+  reason: Constant 'design' (1 distinct value); describes the IP right type, no ontology
+    field.
+- source: application_number
+  reason: 9-digit IP application identifier (e.g. 201914700), not an ACN despite the
+    ACN-like hint; no ontology field.
+- source: party_id
+  reason: Source-internal party identifier (e.g. 'o196099'), no ontology field.
+- source: party_role_category
+  reason: Role of the party in the IP application (applicant, agent, opposition);
+    relationship, not an entity attribute.
+- source: party_role
+  reason: Role of the party in the IP application (owner, agent, opponent); relationship,
+    not an entity attribute.
+- source: party_type
+  reason: organisation/individual does not map to the entity_type enum (company, trust,
+    etc.); guessing would risk harm.
+- source: effective_from_date
+  reason: Start of the party's role on the IP record, not the entity's registration
+    date, so not date_registered; also not a record-level extract date, so not observed_at.
+- source: effective_to_date
+  reason: End of the party's role on the IP record (83% null); no ontology field.
+- source: is_current
+  reason: Whether the party-role link is current, not the entity's status; no ontology
+    field.
+- source: is_founding
+  reason: Flag on the IP record history; no ontology field.
+source_id: ipgod2022
+dataset_id: ipgod2022
+resource_url: https://data.gov.au/data/dataset/49017fd0-e7be-4fc0-88c8-046fc366d980/resource/89dacae9-4649-4612-aeb8-489af3aec379/download/design-party-activity.csv
+licence: cc-by-2.5
+reader:
+  format: csv
+  delimiter: ','
+  encoding: utf-8-sig
+  header_row: 0
+  sheet: null

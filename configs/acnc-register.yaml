@@ -1,0 +1,265 @@
+# Mapping config written by the schema-inference agent (not by hand).
+# dataset: acnc-register | revisions used: 1/3
+# status at review: PASSING WITH FLAGS
+# approved by a human reviewer at 2026-10-17T10:00:55+00:00
+source_reliability:
+  value: 0.9
+  rationale: ACNC is the national charity regulator and this is its own Charity Register
+    published under CC-BY, so identity, name and registration claims are authoritative.
+reliability_overrides:
+  entity.website: 0.6
+  entity.trading_name: 0.7
+record_id:
+  strategy: composite
+  columns:
+  - ABN
+  - Charity_Legal_Name
+observed_at:
+  strategy: dataset_modified
+  basis: proxy
+  column: null
+  format: null
+  value: '2026-10-11'
+fields:
+- canonical: entity.abn
+  source: ABN
+  transforms:
+  - trim
+  - empty_to_null
+  - strip_float_suffix
+  - abn_normalize
+  confidence: 0.95
+  evidence: Column ABN holds 11-digit values such as 28679970527 and 80778454864.
+    These are the charity's Australian Business Number, not an ACN, since all are
+    11 digits. About 2% are blank (e.g. the row named 859701-Y9K2G5 PAF).
+  conditional: false
+- canonical: entity.legal_name
+  source: Charity_Legal_Name
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.95
+  evidence: Charity_Legal_Name holds values like Caloola Union Church and ZAMZAM FOUNDATION
+    INCORPORATED. These are the registered names of the charity, distinct from Other_Organisation_Names,
+    which holds alternative names.
+  conditional: false
+- canonical: entity.trading_name
+  source: Other_Organisation_Names
+  transforms:
+  - trim
+  - empty_to_null
+  - split: ','
+  confidence: 0.75
+  evidence: Other_Organisation_Names holds comma-packed alternative names such as
+    'ZamZam, ZamZam Foundation' and 'Allergy Life, Allergy Life Australia'. These
+    are names other than the legal name, so they map to trading_name, one claim per
+    part. Some values are truncated in the source. Occasional person names (e.g. 'Geofrey
+    Osawa') are source dirt that the reviewer accepted.
+  conditional: false
+- canonical: address.full
+  source: Address_Line_1
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.7
+  evidence: Address_Line_1 holds street lines such as '2837 Trunkey Rd' and '18 California
+    Road'. It is the primary street line of the Business address and is only partial,
+    since Address_Line_2 and Address_Line_3 are sparse continuation lines. It is not
+    a locality because Town_City holds that. PO Box values such as 'PO BOX 105' are
+    source dirt that the reviewer accepted.
+  conditional: false
+- canonical: address.locality
+  source: Town_City
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.92
+  evidence: Town_City holds suburbs and towns such as Caloola, Oxley and Croydon South,
+    which is the locality of the address.
+  conditional: false
+- canonical: address.state
+  source: State
+  transforms:
+  - trim
+  - empty_to_null
+  - state_normalize
+  confidence: 0.95
+  evidence: State holds Australian state abbreviations (NSW, QLD, VIC, SA, WA, NT,
+    TAS, ACT) for the registered business address. It is not the Operates_in_* flags,
+    which describe where the charity operates.
+  conditional: false
+- canonical: address.postcode
+  source: Postcode
+  transforms:
+  - trim
+  - empty_to_null
+  - strip_float_suffix
+  - postcode_normalize
+  confidence: 0.93
+  evidence: Postcode holds 4-digit values such as 2795, 4075 and 3134, which are the
+    Australian postcodes of the business address.
+  conditional: false
+- canonical: address.country
+  source: Country
+  transforms:
+  - trim
+  - empty_to_null
+  - map_enum:
+      mapping:
+        Australia: AU
+        AU: AU
+  confidence: 0.92
+  evidence: Country has the single value Australia for the business address. Per the
+    reviewer it is normalised to the ISO code 'AU' with map_enum. This is not Operating_Countries,
+    which lists ISO codes for where the charity operates.
+  conditional: false
+- canonical: entity.website
+  source: Charity_Website
+  transforms:
+  - trim
+  - empty_to_null
+  - url_normalize
+  confidence: 0.9
+  evidence: Charity_Website holds URLs such as www.zamzam.org.au and https://www.warfrets.com.au.
+    Some are Facebook pages, which are still the charity's declared web presence.
+    Scheme-less values get http:// prepended.
+  conditional: false
+unmapped:
+- source: Address_Type
+  reason: Constant value Business; describes the address kind, no ontology field.
+- source: Address_Line_2
+  reason: Sparse continuation line (89% null) that sometimes holds a suburb; address.full
+    uses Address_Line_1 only.
+- source: Address_Line_3
+  reason: Very sparse continuation line (98.5% null); no separate ontology field.
+- source: Registration_Date
+  reason: Date ACNC granted charity status, not the entity's own registration date.
+    The separate Date_Organisation_Established column shows the source distinguishes
+    the two, and pre-2012 organisations are all clamped to ACNC's Dec-2012 launch,
+    a systematic bias that mapping cannot fix. Unmapped on reviewer instruction.
+- source: Date_Organisation_Established
+  reason: '''Established'' is not ''registered'', so it is not remapped to date_registered.
+    It also holds 01/01/1900 placeholders. Unmapped on reviewer instruction; no ontology
+    field.'
+- source: Charity_Size
+  reason: Size classification (Small/Medium/Large), no ontology field.
+- source: Number_of_Responsible_Persons
+  reason: Aggregate count, not an entity attribute in the ontology.
+- source: Financial_Year_End
+  reason: Reporting period end, no ontology field.
+- source: Operates_in_ACT
+  reason: Operating-jurisdiction flag, no ontology field; not the registered address
+    state.
+- source: Operates_in_NSW
+  reason: Operating-jurisdiction flag, no ontology field.
+- source: Operates_in_NT
+  reason: Operating-jurisdiction flag, no ontology field.
+- source: Operates_in_QLD
+  reason: Operating-jurisdiction flag, no ontology field.
+- source: Operates_in_SA
+  reason: Operating-jurisdiction flag, no ontology field.
+- source: Operates_in_TAS
+  reason: Operating-jurisdiction flag, no ontology field.
+- source: Operates_in_VIC
+  reason: Operating-jurisdiction flag, no ontology field.
+- source: Operates_in_WA
+  reason: Operating-jurisdiction flag, no ontology field.
+- source: Operating_Countries
+  reason: List of ISO country codes where the charity operates, not the address country;
+    no ontology field.
+- source: PBI
+  reason: Public benevolent institution status flag, no ontology field.
+- source: HPC
+  reason: Health promotion charity status flag, no ontology field.
+- source: Preventing_or_relieving_suffering_of_animals
+  reason: Charitable purpose flag, no ontology field.
+- source: Advancing_Culture
+  reason: Charitable purpose flag, no ontology field.
+- source: Advancing_Education
+  reason: Charitable purpose flag, no ontology field.
+- source: Advancing_Health
+  reason: Charitable purpose flag, no ontology field.
+- source: Promote_or_oppose_a_change_to_law__government_poll_or_prac
+  reason: Charitable purpose flag, no ontology field.
+- source: Advancing_natual_environment
+  reason: Charitable purpose flag, no ontology field.
+- source: Promoting_or_protecting_human_rights
+  reason: Charitable purpose flag, no ontology field.
+- source: Purposes_beneficial_to_ther_general_public_and_other_analogous
+  reason: Charitable purpose flag, no ontology field.
+- source: Promoting_reconciliation__mutual_respect_and_tolerance
+  reason: Charitable purpose flag, no ontology field.
+- source: Advancing_Religion
+  reason: Charitable purpose flag, no ontology field.
+- source: Advancing_social_or_public_welfare
+  reason: Charitable purpose flag, no ontology field.
+- source: Advancing_security_or_safety_of_Australia_or_Australian_public
+  reason: Charitable purpose flag, no ontology field.
+- source: Aboriginal_or_TSI
+  reason: Beneficiary-group flag, no ontology field.
+- source: Adults
+  reason: Beneficiary-group flag, no ontology field.
+- source: Aged_Persons
+  reason: Beneficiary-group flag, no ontology field.
+- source: Children
+  reason: Beneficiary-group flag, no ontology field.
+- source: Communities_Overseas
+  reason: Beneficiary-group flag, no ontology field.
+- source: Early_Childhood
+  reason: Beneficiary-group flag, no ontology field.
+- source: Ethnic_Groups
+  reason: Beneficiary-group flag, no ontology field.
+- source: Families
+  reason: Beneficiary-group flag, no ontology field.
+- source: Females
+  reason: Beneficiary-group flag, no ontology field.
+- source: Financially_Disadvantaged
+  reason: Beneficiary-group flag, no ontology field.
+- source: LGBTIQA+
+  reason: Beneficiary-group flag, no ontology field.
+- source: General_Community_in_Australia
+  reason: Beneficiary-group flag, no ontology field.
+- source: Males
+  reason: Beneficiary-group flag, no ontology field.
+- source: Migrants_Refugees_or_Asylum_Seekers
+  reason: Beneficiary-group flag, no ontology field.
+- source: Other_Beneficiaries
+  reason: Beneficiary-group flag, no ontology field.
+- source: Other_Charities
+  reason: Beneficiary-group flag, no ontology field.
+- source: People_at_risk_of_homelessness
+  reason: Beneficiary-group flag, no ontology field.
+- source: People_with_Chronic_Illness
+  reason: Beneficiary-group flag, no ontology field.
+- source: People_with_Disabilities
+  reason: Beneficiary-group flag, no ontology field.
+- source: Pre_Post_Release_Offenders
+  reason: Beneficiary-group flag, no ontology field.
+- source: Rural_Regional_Remote_Communities
+  reason: Beneficiary-group flag, no ontology field.
+- source: Unemployed_Person
+  reason: Beneficiary-group flag, no ontology field.
+- source: Veterans_or_their_families
+  reason: Beneficiary-group flag, no ontology field.
+- source: Victims_of_crime
+  reason: Beneficiary-group flag, no ontology field.
+- source: Victims_of_Disasters
+  reason: Beneficiary-group flag, no ontology field.
+- source: Youth
+  reason: Beneficiary-group flag, no ontology field.
+- source: animals
+  reason: Activity-tag flag, no ontology field.
+- source: environment
+  reason: Activity-tag flag, no ontology field.
+- source: other_gender_identities
+  reason: Beneficiary-group flag, no ontology field.
+source_id: acnc-register
+dataset_id: acnc-register
+resource_url: https://data.gov.au/data/dataset/b050b242-4487-4306-abf5-07ca073e5594/resource/8fb32972-24e9-4c95-885e-7140be51be8a/download/datadotgov_main.csv
+licence: cc-by
+reader:
+  format: csv
+  delimiter: ','
+  encoding: utf-8-sig
+  header_row: 0
+  sheet: null

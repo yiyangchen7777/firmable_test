@@ -177,38 +177,98 @@ def collect_seed_abns(exclude_source: str) -> set[str]:
     return seeds
 
 
-def seeded_rows(data_path: Path, cfg: MappingConfig, limit: int, seeds: set[str]) -> list[dict]:
+def collect_seed_names(exclude_source: str) -> set[str]:
+    """Normalised names from sources that have NO ABN claims at all.
+
+    A source without identifiers (the discount directory) can only ever be
+    linked by name, so its names — and only its — also seed the big-file scan.
+    Sources that carry ABNs don't need name seeding and would flood the sample.
+    """
+    from .names import name_key
+
+    seeds: set[str] = set()
+    obs_dir = OUTPUTS / "observations"
+    if not obs_dir.exists():
+        return seeds
+    for path in obs_dir.glob("*.jsonl"):
+        if path.stem == exclude_source:
+            continue
+        names: set[str] = set()
+        has_abn = False
+        for line in path.read_text().splitlines():
+            obs = json.loads(line)
+            for claim in obs["claims"]:
+                if claim["field"] == "entity.abn":
+                    has_abn = True
+                elif claim["field"] in ("entity.legal_name", "entity.trading_name"):
+                    key = name_key(str(claim["value"]))
+                    if len(key) >= 6:  # too-short keys match everything
+                        names.add(key)
+        if not has_abn:
+            seeds.update(names)
+    return seeds
+
+
+def seeded_rows(
+    data_path: Path, cfg: MappingConfig, limit: int,
+    abn_seeds: set[str], name_seeds: set[str],
+) -> list[dict]:
     """Sample a big file so cross-source overlap actually lands in the sample.
 
     Random 1000-row samples of a 3.4M-row file would share ~0 businesses with
     the other sources (measured during source selection), so: keep the first
     limit/2 rows as an unbiased fill, then scan the whole file keeping rows
-    whose ABN appears in another source, until the sample is full. The bias is
-    deliberate and documented: precision is measured either way; coverage is
-    never claimed.
+    whose ABN appears in another source — or whose name matches a source that
+    has no ABNs to match on — until the sample is full. The bias is deliberate
+    and documented: precision is measured either way; coverage is never claimed.
     """
-    abn_columns = []
+    from .names import name_key
+
+    abn_entries = []
+    name_columns = []
     for entry in cfg.fields:
         if entry.canonical == "entity.abn":
-            abn_columns.append(entry.source)
+            abn_entries.append(entry)
+        if entry.canonical in ("entity.legal_name", "entity.trading_name"):
+            name_columns.append(entry.source)
+
     fill_target = limit // 2
     sample: list[dict] = []
-    matches = 0
+    abn_matches = 0
+    name_matches = 0
     for row in readers.iter_rows(data_path, cfg.reader.model_dump()):
         if len(sample) < fill_target:
             sample.append(row)
             continue
-        digits = ""
-        for column in abn_columns:
-            digits = "".join(ch for ch in row.get(column, "") if ch.isdigit())
-            if digits:
+
+        matched = False
+        for entry in abn_entries:
+            # normalise with the exact transforms the config declares for this
+            # column (e.g. strip_float_suffix for "34291651910.0") — the
+            # sampler must not invent its own cleaning rules
+            try:
+                value = apply_transforms(row.get(entry.source, ""), entry.transforms)
+            except TransformError:
+                continue
+            if value is not None and str(value) in abn_seeds:
+                matched = True
+                abn_matches += 1
                 break
-        if digits in seeds:
+        if not matched:
+            for column in name_columns:
+                if name_key(row.get(column, "")) in name_seeds:
+                    matched = True
+                    name_matches += 1
+                    break
+
+        if matched:
             sample.append(row)
-            matches += 1
             if len(sample) >= limit:
                 break
-    print(f"seeded sampling: {fill_target} head rows + {matches} seed-matching rows")
+    print(
+        f"seeded sampling: {fill_target} head rows + {abn_matches} ABN matches "
+        f"+ {name_matches} name matches (name seeds from no-ABN sources only)"
+    )
     return sample
 
 
@@ -221,7 +281,10 @@ def run_extract(source_id: str, limit: int = 1000, seeded: bool = False) -> Path
     raw_path = readers.download(cfg.resource_url, cfg.source_id)
     data_path = readers.unzip_if_needed(raw_path)
     if seeded:
-        rows = seeded_rows(data_path, cfg, limit, collect_seed_abns(source_id))
+        rows = seeded_rows(
+            data_path, cfg, limit,
+            collect_seed_abns(source_id), collect_seed_names(source_id),
+        )
     else:
         rows = readers.read_rows(data_path, cfg.reader.model_dump(), limit)
 

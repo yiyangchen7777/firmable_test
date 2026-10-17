@@ -1,18 +1,19 @@
 {
   "source_id": "corporate-transparency",
   "config_path": "/Users/yc/Desktop/firmable_test/configs/corporate-transparency.yaml",
-  "extractor_version": "cfg-64b3cd0ddcb1+engine-0.1",
+  "extractor_version": "cfg-b653fe2e783e+engine-0.1",
   "input_path": "/Users/yc/Desktop/firmable_test/data/raw/corporate-transparency/2024-25-corporate-report-of-entity-tax-information.xlsx",
   "input_bytes": 290744,
-  "row_limit": 1000,
-  "rows_read": 1000,
-  "observations_written": 1000,
+  "row_limit": 4400,
+  "seeded_sampling": false,
+  "rows_read": 4400,
+  "observations_written": 4400,
   "claim_counts": {
-    "entity.legal_name": 1000,
-    "entity.abn": 994
+    "entity.legal_name": 4400,
+    "entity.abn": 4366
   },
   "flag_counts": {},
   "output_path": "/Users/yc/Desktop/firmable_test/outputs/observations/corporate-transparency.jsonl",
-  "ingested_at": "2026-10-17T09:27:49+00:00",
+  "ingested_at": "2026-10-17T10:05:41+00:00",
   "api_cost_usd": 0.0
 }

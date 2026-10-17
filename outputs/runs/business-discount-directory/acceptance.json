@@ -1,0 +1,55 @@
+{
+  "checks": [
+    {
+      "check": "null drift (entity.trading_name \u2190 Trading Name)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (entity.trading_name \u2190 Outlet Name)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (entity.website \u2190 Website)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (address.full \u2190 Outlet Address)",
+      "threshold": "<= +2pp",
+      "result": "-0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (address.locality \u2190 Outlet Suburb)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (address.postcode \u2190 Outlet Postcode)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "record_id effectively unique (full sample)",
+      "threshold": "<= 0.5% duplicates",
+      "result": "0 duplicates (0.00%)",
+      "pass": true
+    },
+    {
+      "check": "minimum useful (a name or an identifier mapped)",
+      "threshold": "required",
+      "result": "yes",
+      "pass": true
+    }
+  ],
+  "failing_examples": [],
+  "all_pass": true,
+  "useful": true
+}

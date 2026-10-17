@@ -27,6 +27,7 @@ from datetime import datetime, timezone
 from rapidfuzz import fuzz
 
 from .config import OUTPUTS, ROOT
+from .names import name_key
 
 MATCHER_VERSION = "matcher-0.1"
 ABN_CONFIDENCE = 0.98
@@ -35,28 +36,6 @@ NAME_CONFIDENCE = 0.75
 FUZZY_QUEUE_BAND = (85, 100)  # similarity scores that land in the queue
 MIN_NAME_KEY_LEN = 6  # "SMITH" alone is too generic to link on
 CLUSTER_SIZE_FLAG = 10
-
-# trailing legal-form tokens stripped when normalising a name for matching
-SUFFIX_TOKENS = {
-    "PTY", "LTD", "LIMITED", "PROPRIETARY", "P/L", "PTY.", "LTD.",
-    "INC", "INC.", "INCORPORATED", "PLC", "NL", "CO", "CO.",
-}
-
-
-def name_key(name: str) -> str:
-    """Normalise a business name for matching: upper-case, strip punctuation,
-    collapse spaces, drop trailing legal-form tokens (PTY LTD etc.)."""
-    cleaned = []
-    for ch in name.upper():
-        if ch.isalnum() or ch == " ":
-            cleaned.append(ch)
-        else:
-            cleaned.append(" ")
-    tokens = "".join(cleaned).split()
-    while tokens and tokens[-1] in SUFFIX_TOKENS:
-        tokens.pop()
-    return " ".join(tokens)
-
 
 def load_records(drop_source: str | None = None) -> dict[str, dict]:
     """One summary per observation record: identifiers, name keys, state."""

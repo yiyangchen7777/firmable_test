@@ -113,8 +113,10 @@ dataset not used during development; ship its config and run log as `unseen demo
 yield six sources whose businesses never co-occur, starving Parts 3–4 (50 linked
 entities are needed). Before committing to the six: sample each candidate's identifier
 columns, intersect pairwise, and keep a set with enough expected cross-source entities.
-If organic overlap in 1,000-row samples is too thin, seed the sampling by shared ABNs
-and say so in the README: precision is measured either way; coverage is never claimed.
+If organic overlap in 1,000-row samples is too thin, seed the sampling by shared ABNs —
+and, for sources that carry no identifiers at all, by their normalised names, since
+names are the only way such a source can ever link — and say so in the README:
+precision is measured either way; coverage is never claimed.
 If a source is swapped out for resisting, its failed run stays in outputs/runs/ and is
 discussed in the write-up — the boundary of the system's generality is a finding.
 

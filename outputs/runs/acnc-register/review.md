@@ -6,13 +6,13 @@
 | Publisher / licence | Australian Charities and Not-for-profits Commission (ACNC) / cc-by |
 | Resource | https://data.gov.au/data/dataset/b050b242-4487-4306-abf5-07ca073e5594/resource/8fb32972-24e9-4c95-885e-7140be51be8a/download/datadotgov_main.csv |
 | Reader | {"format": "csv", "delimiter": ",", "encoding": "utf-8-sig", "header_row": 0, "sheet": null} |
-| Agent run | revisions used 0/3 · steps 5 |
+| Agent run | revisions used 1/3 · steps 8 |
 | **Status** | **PASSING WITH FLAGS** |
 | Source reliability | 0.9 — ACNC is the national charity regulator and this is its own Charity Register published under CC-BY, so identity, name and registration claims are authoritative. |
 | Record id | composite ['ABN', 'Charity_Legal_Name'] — ABN alone is not safe: it has about 2% blanks and some rows (e.g. 859701-Y9K2G5 PAF) have none. Charity_Legal_Name is 200 distinct over 200 rows with no nulls. The composite of ABN and Charity_Legal_Name is therefore unique per register row even when ABN is blank. The source has no explicit record key column. |
 | Observed at | dataset_modified → 2026-10-11 (basis: proxy) — No per-record extract or last-updated column exists. Registration_Date and Date_Organisation_Established are historical facts (valid_from material), not assertion times. The dataset is refreshed weekly, so the catalogue modified date is used as a weak proxy. |
 
-## Mapping (10 field mappings from 69 source columns)
+## Mapping (9 field mappings from 69 source columns)
 
 | canonical | ← source column | transforms | conf. | cond. | evidence |
 |---|---|---|---|---|---|
@@ -23,9 +23,8 @@
 | address.locality | Town_City | `["trim", "empty_to_null"]` | 0.92 |  | Town_City holds suburbs and towns such as Caloola, Oxley and Croydon South, which is the locality of the address. |
 | address.state | State | `["trim", "empty_to_null", "state_normalize"]` | 0.95 |  | State holds Australian state abbreviations (NSW, QLD, VIC, SA, WA, NT, TAS, ACT) for the registered business address. It is not the Operates_in_* flags, which describe where the charity operates. |
 | address.postcode | Postcode | `["trim", "empty_to_null", "strip_float_suffix", "postcode_normalize"]` | 0.93 |  | Postcode holds 4-digit values such as 2795, 4075 and 3134, which are the Australian postcodes of the business address. |
-| address.country | Country | `["trim", "empty_to_null"]` | 0.92 |  | Country has the single value Australia for the business address. This is not Operating_Countries, which lists ISO codes for where the charity operates. |
+| address.country | Country | `["trim", "empty_to_null", {"map_enum": {"mapping": {"Australia": "AU", "AU": "AU"}}}]` | 0.92 |  | Country has the single value Australia for the business address. Per the reviewer it is normalised to the ISO code 'AU' with map_enum. This is not Operating_Countries, which lists ISO codes for where the charity operates |
 | entity.website | Charity_Website | `["trim", "empty_to_null", "url_normalize"]` | 0.9 |  | Charity_Website holds URLs such as www.zamzam.org.au and https://www.warfrets.com.au. Some are Facebook pages, which are still the charity's declared web presence. Scheme-less values get http:// prepended. |
-| entity.date_registered | Registration_Date | `["trim", "empty_to_null", {"parse_date": "%d/%m/%Y"}]` | 0.9 |  | Registration_Date holds values such as 03/12/2012 and 26/02/2013. The format is day-first, proved by 26/02/2013, 14/11/2021 and 27/11/2020, where the day exceeds 12. 03/12/2012 matches the 3 Dec 2012 start of ACNC regist |
 
 ## Validation — 350 held-out rows (loop set; final acceptance runs once after approval)
 
@@ -33,7 +32,6 @@
 |---|---|---|---|
 | identifier checksum (entity.abn) | >= 95% | 100.0% (345 ok / 0 failed) | ✅ |
 | enum legality (address.state) | >= 98% | 100.0% (306 ok / 0 failed) | ✅ |
-| date parse (entity.date_registered) | >= 95% | 100.0% (349 ok / 0 failed) | ✅ |
 | null drift (entity.abn ← ABN) | <= +2pp | -0.0% | ✅ |
 | null drift (entity.legal_name ← Charity_Legal_Name) | <= +2pp | +0.0% | ✅ |
 | null drift (entity.trading_name ← Other_Organisation_Names) | <= +2pp | +0.0% | ✅ |
@@ -43,120 +41,110 @@
 | null drift (address.postcode ← Postcode) | <= +2pp | +0.0% | ✅ |
 | null drift (address.country ← Country) | <= +2pp | +0.0% | ✅ |
 | null drift (entity.website ← Charity_Website) | <= +2pp | +0.0% | ✅ |
-| null drift (entity.date_registered ← Registration_Date) | <= +2pp | +0.0% | ✅ |
-| record_id unique (full sample) | 0 duplicates | 0 duplicates | ✅ |
+| record_id effectively unique (full sample) | <= 0.5% duplicates | 0 duplicates (0.00%) | ✅ |
 | minimum useful (a name or an identifier mapped) | required | yes | ✅ |
 
 ### Failing examples
 none
 
-## Semantic spot-check — 10 held-out records: 79 ok, 13 suspicious
+## Semantic spot-check — 10 held-out records: 77 ok, 5 suspicious
 
 | record | field | verdict | why |
 |---|---|---|---|
-| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | entity.abn | ok | The ABN is in the charity's own ABN column and matches the charity named on the row. |
-| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | entity.legal_name | ok | Charity_Legal_Name holds the registered company name, with the LTD suffix. |
-| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | address.full | suspicious | Address_Line_1 is only the institution name 'Holy Trinity Lutheran College'; the actual street line '25 Trinity Drive' is in the unmapped Address_Line_2. |
-| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | address.locality | ok | Horsham is a town and matches postcode 3400 and state VIC. |
-| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | address.state | ok | VIC is consistent with Horsham 3400. |
+| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | entity.abn | ok | The 11-digit ABN passes the checksum and sits on the same row as the college's legal name. |
+| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | entity.legal_name | ok | Charity_Legal_Name is the registered company name, with the LTD suffix. |
+| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | address.full | suspicious | Address_Line_1 holds only the institution name 'Holy Trinity Lutheran College', and the actual street line '25 Trinity Drive' is in the unmapped Address_Line_2, |
+| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | address.locality | ok | Horsham is a town and matches postcode 3400 in VIC. |
+| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | address.state | ok | VIC is the business address state and is consistent with the postcode. |
 | 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | address.postcode | ok | 3400 is the Horsham postcode. |
-| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | address.country | ok | Australia is the country of the business address. |
-| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | entity.website | ok | The URL is the school's own website. |
-| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | entity.date_registered | ok | Registration_Date equals Date_Organisation_Established (04/05/2021), so the value is the same under either reading. |
-| 60684006102|IP INSIDERS LIMITED | entity.abn | ok | The ABN is in the charity's own ABN column on the row for IP INSIDERS LIMITED. |
-| 60684006102|IP INSIDERS LIMITED | entity.legal_name | ok | Charity_Legal_Name holds the registered company name, with the LIMITED suffix. |
-| 60684006102|IP INSIDERS LIMITED | address.full | ok | Address_Line_1 is the full street line, and Lines 2 and 3 are empty. |
-| 60684006102|IP INSIDERS LIMITED | address.locality | ok | Hamilton (Brisbane) is consistent with postcode 4007 and QLD. |
-| 60684006102|IP INSIDERS LIMITED | address.state | ok | QLD is consistent with postcode 4007; the VIC operating flag is a separate unmapped column. |
-| 60684006102|IP INSIDERS LIMITED | address.postcode | ok | 4007 matches Hamilton QLD. |
-| 60684006102|IP INSIDERS LIMITED | address.country | ok | Australia is the country of the business address. |
-| 60684006102|IP INSIDERS LIMITED | entity.website | ok | The domain matches the organisation name, and http:// was added to a scheme-less value. |
-| 60684006102|IP INSIDERS LIMITED | entity.date_registered | suspicious | Registration_Date (04/02/2025) is the ACNC charity registration date and differs from Date_Organisation_Established (28/01/2025), so it is not the entity's own  |
-| 77105390237|National Capital Containers | entity.abn | ok | The ABN is in the charity's own ABN column on this row. |
-| 77105390237|National Capital Containers | entity.legal_name | ok | It is copied from Charity_Legal_Name; the lack of a company suffix is plausible for an ACNC-listed entity. |
-| 77105390237|National Capital Containers | address.full | ok | Address_Line_1 is a complete street line, and Lines 2 and 3 are empty. |
+| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | address.country | ok | Australia maps to AU. |
+| 90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD | entity.website | ok | The URL is the school's own domain. |
+| 60684006102|IP INSIDERS LIMITED | entity.abn | ok | The 11-digit ABN is on the row of the named charity. |
+| 60684006102|IP INSIDERS LIMITED | entity.legal_name | ok | IP INSIDERS LIMITED is the registered company name. |
+| 60684006102|IP INSIDERS LIMITED | address.full | ok | Address_Line_1 is a unit and street line and Address_Line_2 is empty. The 'Tnhs' prefix is odd but is source text. |
+| 60684006102|IP INSIDERS LIMITED | address.locality | ok | Hamilton, QLD matches postcode 4007. |
+| 60684006102|IP INSIDERS LIMITED | address.state | ok | QLD is consistent with the Hamilton postcode. The Operates_in_VIC flag is a separate field and was not used. |
+| 60684006102|IP INSIDERS LIMITED | address.postcode | ok | 4007 is a Hamilton QLD postcode. |
+| 60684006102|IP INSIDERS LIMITED | address.country | ok | Australia maps to AU. Operating_Countries was not used. |
+| 60684006102|IP INSIDERS LIMITED | entity.website | ok | The scheme-less URL had http:// prepended and the domain matches the charity name. |
+| 77105390237|National Capital Containers | entity.abn | ok | The ABN is on the row's own subject entity and no agent or parent ABN column exists. |
+| 77105390237|National Capital Containers | entity.legal_name | ok | It is a verbatim copy of Charity_Legal_Name. The name has no company suffix and reads like a trading name, but no other name column exists to compare it with. |
+| 77105390237|National Capital Containers | address.full | ok | '15 Margany Cl' is a complete street line and the continuation lines are empty. |
 | 77105390237|National Capital Containers | address.locality | ok | Ngunnawal is an ACT suburb and matches postcode 2913. |
-| 77105390237|National Capital Containers | address.state | ok | ACT matches Ngunnawal 2913; the NSW operating flag is a separate column. |
+| 77105390237|National Capital Containers | address.state | ok | ACT is consistent with the Ngunnawal suburb and postcode. |
 | 77105390237|National Capital Containers | address.postcode | ok | 2913 is the Ngunnawal postcode. |
-| 77105390237|National Capital Containers | address.country | ok | Australia is the country of the business address. |
-| 77105390237|National Capital Containers | entity.website | ok | It is the declared charity website, with http:// prepended to a scheme-less value. |
-| 77105390237|National Capital Containers | entity.date_registered | ok | Registration_Date equals Date_Organisation_Established (06/08/2025), so the value is the same under either reading. |
-| 65351615350|Biyani House Revesby Women's Shelter Incorporated | entity.abn | ok | The ABN is in the charity's own ABN column on this row. |
-| 65351615350|Biyani House Revesby Women's Shelter Incorporated | entity.legal_name | ok | Charity_Legal_Name holds the registered name, with the Incorporated suffix. |
-| 65351615350|Biyani House Revesby Women's Shelter Incorporated | address.full | suspicious | 'PO BOX 105' is a postal address, not a street or premises address, yet the mapping presents it as the business address. |
-| 65351615350|Biyani House Revesby Women's Shelter Incorporated | address.locality | ok | Revesby North matches postcode 2212 and NSW. |
-| 65351615350|Biyani House Revesby Women's Shelter Incorporated | address.state | ok | NSW is consistent with postcode 2212. |
-| 65351615350|Biyani House Revesby Women's Shelter Incorporated | address.postcode | ok | 2212 is the Revesby postcode. |
-| 65351615350|Biyani House Revesby Women's Shelter Incorporated | address.country | ok | Australia is the country of the address. |
-| 65351615350|Biyani House Revesby Women's Shelter Incorporated | entity.website | ok | The URL is the charity's own website. |
-| 65351615350|Biyani House Revesby Women's Shelter Incorporated | entity.date_registered | suspicious | Registration_Date (28/04/2021) is the ACNC registration date and differs from Date_Organisation_Established (21/04/2021), so it is not the entity's own registra |
-| 59646048320|YADAH SUS FOUNDATION LIMITED | entity.abn | ok | The ABN is in the charity's own ABN column on this row. |
-| 59646048320|YADAH SUS FOUNDATION LIMITED | entity.legal_name | ok | Charity_Legal_Name holds the registered company name, with the LIMITED suffix. |
-| 59646048320|YADAH SUS FOUNDATION LIMITED | entity.trading_name | suspicious | Other_Organisation_Names holds 'Geofrey Osawa', which is a person's name (likely a director or contact), not a trading or alternative organisation name. |
-| 59646048320|YADAH SUS FOUNDATION LIMITED | address.full | ok | Address_Line_1 is a complete street line, and Lines 2 and 3 are empty. |
-| 59646048320|YADAH SUS FOUNDATION LIMITED | address.locality | ok | Bennett Springs matches postcode 6063 and WA. |
-| 59646048320|YADAH SUS FOUNDATION LIMITED | address.state | ok | WA is consistent with postcode 6063. |
-| 59646048320|YADAH SUS FOUNDATION LIMITED | address.postcode | ok | 6063 is the Bennett Springs postcode. |
-| 59646048320|YADAH SUS FOUNDATION LIMITED | address.country | ok | Australia is the business address country; the Kenya operating country is a separate column. |
-| 59646048320|YADAH SUS FOUNDATION LIMITED | entity.website | ok | The domain matches the foundation's name, and http:// was added to a scheme-less value. |
-| 59646048320|YADAH SUS FOUNDATION LIMITED | entity.date_registered | suspicious | Registration_Date (19/12/2020) is the ACNC registration date and differs from Date_Organisation_Established (20/11/2020), so it is not the entity's own registra |
-| 84337084591|Aboriginal children on Country Incorporated | entity.abn | ok | The ABN is in the charity's own ABN column on this row. |
-| 84337084591|Aboriginal children on Country Incorporated | entity.legal_name | ok | Charity_Legal_Name holds the registered name, with the Incorporated suffix. |
-| 84337084591|Aboriginal children on Country Incorporated | address.full | ok | 'U 2 210 Shellharbour Rd' is a complete street line, and Lines 2 and 3 are empty. |
-| 84337084591|Aboriginal children on Country Incorporated | address.locality | ok | Port Kembla matches postcode 2505 and NSW. |
-| 84337084591|Aboriginal children on Country Incorporated | address.state | ok | NSW is consistent with postcode 2505. |
+| 77105390237|National Capital Containers | address.country | ok | Australia maps to AU. |
+| 77105390237|National Capital Containers | entity.website | ok | The URL is the entity's declared site, with http:// prepended. |
+| 65351615350|Biyani House Revesby Women's Shelter Incorporated | entity.abn | ok | The ABN is on the row of the named incorporated association. |
+| 65351615350|Biyani House Revesby Women's Shelter Incorporated | entity.legal_name | ok | It is the registered name, including 'Incorporated'. |
+| 65351615350|Biyani House Revesby Women's Shelter Incorporated | address.full | suspicious | 'PO BOX 105' is a postal address, not a premises or registered street address, so it should not be stored as a general full address without a postal/street dist |
+| 65351615350|Biyani House Revesby Women's Shelter Incorporated | address.locality | ok | Revesby North is a locality and matches postcode 2212. |
+| 65351615350|Biyani House Revesby Women's Shelter Incorporated | address.state | ok | NSW is consistent with the postcode. |
+| 65351615350|Biyani House Revesby Women's Shelter Incorporated | address.postcode | ok | 2212 is the Revesby postcode and goes with the PO Box. |
+| 65351615350|Biyani House Revesby Women's Shelter Incorporated | address.country | ok | Australia maps to AU. |
+| 65351615350|Biyani House Revesby Women's Shelter Incorporated | entity.website | ok | The URL is the shelter's own site. |
+| 59646048320|YADAH SUS FOUNDATION LIMITED | entity.abn | ok | The ABN is on the row of the named foundation. |
+| 59646048320|YADAH SUS FOUNDATION LIMITED | entity.legal_name | ok | YADAH SUS FOUNDATION LIMITED is the registered company name. |
+| 59646048320|YADAH SUS FOUNDATION LIMITED | entity.trading_name | suspicious | 'Geofrey Osawa' is a person's name (probably a responsible person or contact), not a trading name of the foundation. |
+| 59646048320|YADAH SUS FOUNDATION LIMITED | address.full | ok | '37 constellations drive' is a plain street line. |
+| 59646048320|YADAH SUS FOUNDATION LIMITED | address.locality | ok | Bennett Springs is a WA suburb and matches postcode 6063. |
+| 59646048320|YADAH SUS FOUNDATION LIMITED | address.state | ok | WA is consistent with the postcode. The Operates_in_WA flag is blank but unrelated to the address. |
+| 59646048320|YADAH SUS FOUNDATION LIMITED | address.postcode | ok | 6063 matches Bennett Springs. |
+| 59646048320|YADAH SUS FOUNDATION LIMITED | address.country | ok | Australia is the address country. Operating_Countries is KEN, a separate field that was not used. |
+| 59646048320|YADAH SUS FOUNDATION LIMITED | entity.website | ok | The scheme-less domain had http:// prepended, and the trailing slash is harmless. |
+| 84337084591|Aboriginal children on Country Incorporated | entity.abn | ok | The ABN is on the row of the named association. |
+| 84337084591|Aboriginal children on Country Incorporated | entity.legal_name | ok | It is the registered name, including 'Incorporated'. |
+| 84337084591|Aboriginal children on Country Incorporated | address.full | ok | 'U 2 210 Shellharbour Rd' is a unit and street line. |
+| 84337084591|Aboriginal children on Country Incorporated | address.locality | ok | Port Kembla matches postcode 2505 in NSW. |
+| 84337084591|Aboriginal children on Country Incorporated | address.state | ok | NSW is consistent with the postcode. |
 | 84337084591|Aboriginal children on Country Incorporated | address.postcode | ok | 2505 is the Port Kembla postcode. |
-| 84337084591|Aboriginal children on Country Incorporated | address.country | ok | Australia is the country of the address. |
-| 84337084591|Aboriginal children on Country Incorporated | entity.website | ok | The URL is the charity's own website. |
-| 84337084591|Aboriginal children on Country Incorporated | entity.date_registered | suspicious | Registration_Date (31/07/2025) is the ACNC registration date and differs from Date_Organisation_Established (30/07/2025), so it is not the entity's own registra |
-| 21482069281|Hamilton Field Naturalists Club Inc. | entity.abn | ok | The ABN is in the charity's own ABN column on this row. |
-| 21482069281|Hamilton Field Naturalists Club Inc. | entity.legal_name | ok | Charity_Legal_Name holds the registered name, with the Inc. suffix. |
-| 21482069281|Hamilton Field Naturalists Club Inc. | entity.trading_name | ok | Other_Organisation_Names is the same name without 'Inc.', a reasonable alternative name. |
-| 21482069281|Hamilton Field Naturalists Club Inc. | address.full | ok | Address_Line_1 is a complete street line, and Lines 2 and 3 are empty. |
-| 21482069281|Hamilton Field Naturalists Club Inc. | address.locality | ok | Hamilton VIC matches postcode 3300. |
-| 21482069281|Hamilton Field Naturalists Club Inc. | address.state | ok | VIC is consistent with postcode 3300. |
+| 84337084591|Aboriginal children on Country Incorporated | address.country | ok | Australia maps to AU. |
+| 84337084591|Aboriginal children on Country Incorporated | entity.website | ok | The URL is the organisation's own domain. |
+| 21482069281|Hamilton Field Naturalists Club Inc. | entity.abn | ok | The ABN is on the row of the named club. |
+| 21482069281|Hamilton Field Naturalists Club Inc. | entity.legal_name | ok | 'Inc.' marks the registered incorporated name. |
+| 21482069281|Hamilton Field Naturalists Club Inc. | entity.trading_name | ok | It is the same name without 'Inc.', a genuine alternative name and not a person or other party. |
+| 21482069281|Hamilton Field Naturalists Club Inc. | address.full | ok | '333 North Boundary Rd' is a street line. |
+| 21482069281|Hamilton Field Naturalists Club Inc. | address.locality | ok | Hamilton, VIC matches postcode 3300. |
+| 21482069281|Hamilton Field Naturalists Club Inc. | address.state | ok | VIC is consistent with the postcode. |
 | 21482069281|Hamilton Field Naturalists Club Inc. | address.postcode | ok | 3300 is the Hamilton VIC postcode. |
-| 21482069281|Hamilton Field Naturalists Club Inc. | address.country | ok | Australia is the country of the address. |
-| 21482069281|Hamilton Field Naturalists Club Inc. | entity.website | ok | The URL is the club's own website. |
-| 21482069281|Hamilton Field Naturalists Club Inc. | entity.date_registered | ok | Registration_Date equals Date_Organisation_Established (28/10/2024), so the value is the same under either reading. |
-| 37690427467|North East Arnhem Land Aboriginal Corporation | entity.abn | ok | The ABN is in the charity's own ABN column on this row. |
-| 37690427467|North East Arnhem Land Aboriginal Corporation | entity.legal_name | ok | Charity_Legal_Name holds the registered corporation name. |
-| 37690427467|North East Arnhem Land Aboriginal Corporation | address.full | ok | 'Melville Bay Road' is a street line with no number, which is a source limitation, and Lines 2 and 3 are empty. |
-| 37690427467|North East Arnhem Land Aboriginal Corporation | address.locality | ok | Nhulunbuy matches postcode 0880 and NT. |
-| 37690427467|North East Arnhem Land Aboriginal Corporation | address.state | ok | NT is consistent with postcode 0880. |
-| 37690427467|North East Arnhem Land Aboriginal Corporation | address.postcode | ok | 0880 keeps its leading zero and is the Nhulunbuy postcode. |
-| 37690427467|North East Arnhem Land Aboriginal Corporation | address.country | ok | Australia is the country of the address. |
-| 37690427467|North East Arnhem Land Aboriginal Corporation | entity.website | ok | The domain matches the organisation, with http:// added to a scheme-less value. |
-| 37690427467|North East Arnhem Land Aboriginal Corporation | entity.date_registered | suspicious | Registration_Date (21/09/2021) is the ACNC registration date; the organisation was established 21/04/2020, so the mapped value is not the entity's own registrat |
-| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | entity.abn | ok | The ABN is in the charity's own ABN column on this row. |
-| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | entity.legal_name | suspicious | The name carries a trailing '. 8749', which looks like an ORIC/ICN registration number appended to the name rather than part of the registered name. |
-| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | address.full | ok | Address_Line_1 is a complete street line, and Lines 2 and 3 are empty. |
-| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | address.locality | ok | Tumbarumba matches postcode 2653 and NSW; it is in upper case in the source. |
-| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | address.state | ok | NSW is consistent with postcode 2653. |
+| 21482069281|Hamilton Field Naturalists Club Inc. | address.country | ok | Australia maps to AU. |
+| 21482069281|Hamilton Field Naturalists Club Inc. | entity.website | ok | The URL is the club's own domain. |
+| 37690427467|North East Arnhem Land Aboriginal Corporation | entity.abn | ok | The ABN is on the row of the named corporation. |
+| 37690427467|North East Arnhem Land Aboriginal Corporation | entity.legal_name | ok | It is the registered corporation name. |
+| 37690427467|North East Arnhem Land Aboriginal Corporation | address.full | ok | 'Melville Bay Road' has no street number but is a genuine street line. |
+| 37690427467|North East Arnhem Land Aboriginal Corporation | address.locality | ok | Nhulunbuy is an NT town and matches postcode 0880. |
+| 37690427467|North East Arnhem Land Aboriginal Corporation | address.state | ok | NT is consistent with the postcode. |
+| 37690427467|North East Arnhem Land Aboriginal Corporation | address.postcode | ok | 0880 keeps its leading zero and is correct for Nhulunbuy. |
+| 37690427467|North East Arnhem Land Aboriginal Corporation | address.country | ok | Australia maps to AU. |
+| 37690427467|North East Arnhem Land Aboriginal Corporation | entity.website | ok | The URL is the entity's own domain, with http:// prepended. |
+| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | entity.abn | ok | The ABN is on the row of the named corporation. |
+| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | entity.legal_name | suspicious | The value carries a trailing '. 8749', which looks like an ICN registration number appended to the name. It is a verbatim copy, but it may not be the name exact |
+| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | address.full | ok | '15 Lyne Street East' is a street line. |
+| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | address.locality | ok | TUMBARUMBA is an NSW town and matches postcode 2653. It is upper-case but correct. |
+| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | address.state | ok | NSW is consistent with the postcode. The Operates_in_ACT flag was not used. |
 | 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | address.postcode | ok | 2653 is the Tumbarumba postcode. |
-| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | address.country | ok | Australia is the country of the address. |
-| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | entity.website | ok | The URL is the organisation's own website. |
-| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | entity.date_registered | suspicious | Registration_Date (01/07/2021) is the ACNC registration date; the organisation was established 12/12/2017, so the mapped value is not the entity's own registrat |
-| 85763061657|The Trustee for HOME BEYOND HOME | entity.abn | suspicious | The name is a trustee-style name, so the ABN may belong to the trustee or trust rather than the charity 'Home Beyond Home'; ownership is unclear. |
-| 85763061657|The Trustee for HOME BEYOND HOME | entity.legal_name | suspicious | 'The Trustee for HOME BEYOND HOME' describes the trustee role, not the charity or trust itself; the party in legal_name may be the wrong one. |
-| 85763061657|The Trustee for HOME BEYOND HOME | address.full | ok | 'U 14 1378 Lytton Rd' is a complete street line, and Lines 2 and 3 are empty. |
-| 85763061657|The Trustee for HOME BEYOND HOME | address.locality | ok | Hemmant matches postcode 4174 and QLD. |
-| 85763061657|The Trustee for HOME BEYOND HOME | address.state | ok | QLD is consistent with postcode 4174. |
+| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | address.country | ok | Australia maps to AU. |
+| 90686129629|Ngarigo Nation Indigenous Corporation. 8749 | entity.website | ok | The URL is the entity's own domain. |
+| 85763061657|The Trustee for HOME BEYOND HOME | entity.abn | ok | The ABN is on the row's own entity. It is presumably the trust's ABN, which goes with the trustee-style name. |
+| 85763061657|The Trustee for HOME BEYOND HOME | entity.legal_name | suspicious | 'The Trustee for HOME BEYOND HOME' names the trustee capacity of a trust, not the charity's own name 'Home Beyond Home'. The name or entity type should be revie |
+| 85763061657|The Trustee for HOME BEYOND HOME | address.full | ok | 'U 14 1378 Lytton Rd' is a unit and street line. |
+| 85763061657|The Trustee for HOME BEYOND HOME | address.locality | ok | Hemmant is a QLD suburb and matches postcode 4174. |
+| 85763061657|The Trustee for HOME BEYOND HOME | address.state | ok | QLD is consistent with the postcode. |
 | 85763061657|The Trustee for HOME BEYOND HOME | address.postcode | ok | 4174 is the Hemmant postcode. |
-| 85763061657|The Trustee for HOME BEYOND HOME | address.country | ok | Australia is the country of the address. |
-| 85763061657|The Trustee for HOME BEYOND HOME | entity.website | ok | The domain matches 'Home Beyond Home'. |
-| 85763061657|The Trustee for HOME BEYOND HOME | entity.date_registered | suspicious | Registration_Date (20/12/2024) is the ACNC registration date and differs from Date_Organisation_Established (15/12/2024), so it is not the entity's own registra |
+| 85763061657|The Trustee for HOME BEYOND HOME | address.country | ok | Australia maps to AU. |
+| 85763061657|The Trustee for HOME BEYOND HOME | entity.website | ok | The URL is the charity's own domain. |
 
-Notes: entity.date_registered is mapped from Registration_Date, which the evidence itself identifies as the ACNC charity registration date. In 7 of 10 records it differs from Date_Organisation_Established, so the config conflates charity registration with entity registration or incorporation. Either remap it or document the semantics.; address.full uses only Address_Line_1. In the Holy Trinity record the street number sits in the unmapped Address_Line_2, and PO Box values (Biyani House) are postal rather than premises addresses. Consider concatenating Lines 1-3 and flagging PO boxes.; Other_Organisation_Names is not reliably trading names. It held a person's name in one record (Yadah), so the mapping needs filtering or a lower confidence.; Charity_Legal_Name can hold trustee-style names ('The Trustee for ...') or names with a registry number appended ('. 8749'). Both break the 'as registered' meaning and may affect which party the ABN belongs to.
+Notes: Address_Line_1 alone as address.full is unreliable: Address_Line_2 and Address_Line_3 are dropped, and record 90649930049 shows the street line sitting in Address_Line_2 behind a building-name line in Line_1. The config should concatenate Lines 1-3.; Other_Organisation_Names is not reliably a trading-name field: it can hold person names (Geofrey Osawa), so splitting it into trading_name risks wrong-party claims.; Charity_Legal_Name sometimes contains trustee wording ('The Trustee for ...') or a registration-number suffix ('. 8749'), so it may not equal the registered name of the entity.; PO Box values appear in the Business address column, so premises and postal addresses are mixed.; Registration_Date and Date_Organisation_Established are correctly left unmapped, since neither is a company registration date. The ABN column was only length-checked here (one ABN was checksum-verified by hand), so checksum validation should stay in the pipeline.
 
-## Unmapped columns (59)
+## Unmapped columns (60)
 
 | source column | reason |
 |---|---|
 | Address_Type | Constant value Business; describes the address kind, no ontology field. |
 | Address_Line_2 | Sparse continuation line (89% null) that sometimes holds a suburb; address.full uses Address_Line_1 only. |
 | Address_Line_3 | Very sparse continuation line (98.5% null); no separate ontology field. |
-| Date_Organisation_Established | Date the organisation was established, not registered with ACNC; contains placeholders such as 01/01/1900; no ontology field. |
+| Registration_Date | Date ACNC granted charity status, not the entity's own registration date. The separate Date_Organisation_Established column shows the source distinguishes the two, and pre-2012 organisations are all clamped to ACNC's Dec-2012 launch, a systematic bias that mapping cannot fix. Unmapped on reviewer instruction. |
+| Date_Organisation_Established | 'Established' is not 'registered', so it is not remapped to date_registered. It also holds 01/01/1900 placeholders. Unmapped on reviewer instruction; no ontology field. |
 | Charity_Size | Size classification (Small/Medium/Large), no ontology field. |
 | Number_of_Responsible_Persons | Aggregate count, not an entity attribute in the ontology. |
 | Financial_Year_End | Reporting period end, no ontology field. |
@@ -300,8 +288,7 @@ address.full = "8 Spike Bar Way"    (raw: "8 Spike Bar Way", field_confidence: 0
 address.locality = "Moolap"    (raw: "Moolap", field_confidence: 0.92)
 address.state = "VIC"    (raw: "VIC", field_confidence: 0.95)
 address.postcode = "3224"    (raw: "3224", field_confidence: 0.93)
-address.country = "Australia"    (raw: "Australia", field_confidence: 0.92)
-entity.date_registered = "2021-06-23"    (raw: "23/06/2021", field_confidence: 0.9)
+address.country = "AU"    (raw: "Australia", field_confidence: 0.92)
 ```
 
 ### Example 2 — source_record_id 48638482514|MEDICAL AID AUSTRALIA LTD.
@@ -385,9 +372,8 @@ address.full = "6 Gunya ST St"    (raw: "6 Gunya ST  St", field_confidence: 0.7)
 address.locality = "Regents Park"    (raw: "Regents Park", field_confidence: 0.92)
 address.state = "NSW"    (raw: "NSW", field_confidence: 0.95)
 address.postcode = "2143"    (raw: "2143", field_confidence: 0.93)
-address.country = "Australia"    (raw: "Australia", field_confidence: 0.92)
+address.country = "AU"    (raw: "Australia", field_confidence: 0.92)
 entity.website = "http://www.medaid.org.au"    (raw: "www.medaid.org.au", field_confidence: 0.9)
-entity.date_registered = "2021-10-11"    (raw: "11/10/2021", field_confidence: 0.9)
 ```
 
 ### Example 3 — source_record_id 92635761527|THE AUSTRALASIAN SOCIETY FOR PHYSICAL ACTIVITY LTD
@@ -471,9 +457,8 @@ address.full = "Deakin University Burwood"    (raw: "Deakin University Burwood",
 address.locality = "Burwood"    (raw: "Burwood", field_confidence: 0.92)
 address.state = "VIC"    (raw: "VIC", field_confidence: 0.95)
 address.postcode = "3125"    (raw: "3125", field_confidence: 0.93)
-address.country = "Australia"    (raw: "Australia", field_confidence: 0.92)
+address.country = "AU"    (raw: "Australia", field_confidence: 0.92)
 entity.website = "http://www.aspactivity.org"    (raw: "www.aspactivity.org", field_confidence: 0.9)
-entity.date_registered = "2019-10-22"    (raw: "22/10/2019", field_confidence: 0.9)
 ```
 
 ### Example 4 — source_record_id 66230988037|VALOP Australia Charitable Trust
@@ -557,8 +542,7 @@ address.full = "Se 211 430 Little Collins St"    (raw: "Se 211 430 Little Collin
 address.locality = "Melbourne"    (raw: "Melbourne", field_confidence: 0.92)
 address.state = "VIC"    (raw: "VIC", field_confidence: 0.95)
 address.postcode = "3000"    (raw: "3000", field_confidence: 0.93)
-address.country = "Australia"    (raw: "Australia", field_confidence: 0.92)
-entity.date_registered = "2020-09-10"    (raw: "10/09/2020", field_confidence: 0.9)
+address.country = "AU"    (raw: "Australia", field_confidence: 0.92)
 ```
 
 ### Example 5 — source_record_id 64670918279|SVETOCH LTD
@@ -642,9 +626,8 @@ address.full = "17 Mexicali Court"    (raw: "17 Mexicali Court", field_confidenc
 address.locality = "Broadbeach Waters"    (raw: "Broadbeach Waters", field_confidence: 0.92)
 address.state = "QLD"    (raw: "QLD", field_confidence: 0.95)
 address.postcode = "4218"    (raw: "4218", field_confidence: 0.93)
-address.country = "Australia"    (raw: "Australia", field_confidence: 0.92)
+address.country = "AU"    (raw: "Australia", field_confidence: 0.92)
 entity.website = "https://svetoch.pro/"    (raw: "https://svetoch.pro/", field_confidence: 0.9)
-entity.date_registered = "2023-08-30"    (raw: "30/08/2023", field_confidence: 0.9)
 ```
 
 ## Your decision

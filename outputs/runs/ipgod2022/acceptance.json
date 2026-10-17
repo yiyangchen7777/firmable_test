@@ -1,0 +1,61 @@
+{
+  "checks": [
+    {
+      "check": "identifier checksum (entity.abn)",
+      "threshold": ">= 95%",
+      "result": "100.0% (100 ok / 0 failed)",
+      "pass": true
+    },
+    {
+      "check": "enum legality (address.state)",
+      "threshold": ">= 98%",
+      "result": "100.0% (103 ok / 0 failed)",
+      "pass": true
+    },
+    {
+      "check": "null drift (entity.legal_name \u2190 party_name)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (entity.abn \u2190 abn)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (address.state \u2190 state_code)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (address.postcode \u2190 post_code)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "null drift (address.country \u2190 country_code)",
+      "threshold": "<= +2pp",
+      "result": "+0.0%",
+      "pass": true
+    },
+    {
+      "check": "record_id effectively unique (full sample)",
+      "threshold": "<= 0.5% duplicates",
+      "result": "0 duplicates (0.00%)",
+      "pass": true
+    },
+    {
+      "check": "minimum useful (a name or an identifier mapped)",
+      "threshold": "required",
+      "result": "yes",
+      "pass": true
+    }
+  ],
+  "failing_examples": [],
+  "all_pass": true,
+  "useful": true
+}

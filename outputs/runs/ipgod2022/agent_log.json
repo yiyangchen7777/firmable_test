@@ -1,0 +1,23 @@
+{
+  "dataset_id": "ipgod2022",
+  "steps": [
+    "fetch_meta",
+    "inspect",
+    "profile",
+    "propose",
+    "validate",
+    "revise",
+    "validate",
+    "revise",
+    "validate",
+    "revise",
+    "validate",
+    "review",
+    "emit"
+  ],
+  "revisions": 3,
+  "status_at_review": "NOT PASSING",
+  "approval_note": "the 1.71% duplicate record_ids are literal full-row duplicates in the source; the engine suffixes and flags them deterministically, and no column or composite is unique, so row_hash is correct. Noted for the record: agent/submitter rows carry the law firm's own name/ABN, which are legitimate observations about that firm; party_role cannot be mapped or filtered under the current config mechanism (WRITEUP item), and Part 3 must treat legal_name from this source at its 0.65 confidence, including trading-style names and pseudonymised individuals (iNNNNNN).",
+  "acceptance_all_pass": true,
+  "config_path": "/Users/yc/Desktop/firmable_test/configs/ipgod2022.yaml"
+}

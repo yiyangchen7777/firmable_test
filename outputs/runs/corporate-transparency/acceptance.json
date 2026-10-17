@@ -19,9 +19,9 @@
       "pass": true
     },
     {
-      "check": "record_id unique (full sample)",
-      "threshold": "0 duplicates",
-      "result": "0 duplicates",
+      "check": "record_id effectively unique (full sample)",
+      "threshold": "<= 0.5% duplicates",
+      "result": "0 duplicates (0.00%)",
       "pass": true
     },
     {

@@ -1,0 +1,19 @@
+{
+  "source_id": "asic-business-names",
+  "config_path": "/Users/yc/Desktop/firmable_test/configs/asic-business-names.yaml",
+  "extractor_version": "cfg-55dd6d9f669a+engine-0.1",
+  "input_path": "/Users/yc/Desktop/firmable_test/data/raw/asic-business-names/business_names_202610.csv",
+  "input_bytes": 247695642,
+  "row_limit": 1000,
+  "seeded_sampling": true,
+  "rows_read": 1000,
+  "observations_written": 1000,
+  "claim_counts": {
+    "entity.trading_name": 1000,
+    "entity.abn": 909
+  },
+  "flag_counts": {},
+  "output_path": "/Users/yc/Desktop/firmable_test/outputs/observations/asic-business-names.jsonl",
+  "ingested_at": "2026-10-17T10:05:50+00:00",
+  "api_cost_usd": 0.0
+}

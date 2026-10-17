@@ -62,7 +62,7 @@ details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
 <header>
   <h1>映射审核 · corporate-transparency</h1>
   <p><span class="status ok">PASSING</span>
-     <span class="muted">修订 0/3 · 流程步数 5 · 审核材料同步存于 review.md</span></p>
+     <span class="muted">修订 1/3 · 流程步数 8 · 审核材料同步存于 review.md</span></p>
 </header>
 
 <section class="guide">
@@ -83,7 +83,7 @@ details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
     <dt>发布方 / 许可</dt><dd>Australian Taxation Office / cc-by</dd>
     <dt>读取方式</dt><dd><code>{&quot;format&quot;: &quot;xlsx&quot;, &quot;delimiter&quot;: null, &quot;encoding&quot;: &quot;utf-8&quot;, &quot;header_row&quot;: 0, &quot;sheet&quot;: &quot;Income tax details&quot;}</code></dd>
     <dt>source_reliability</dt><dd>0.9 — The ATO is the national tax regulator publishing its own corporate tax transparency report under CC-BY, so names and ABNs are authoritative.</dd>
-    <dt>record_id</dt><dd><code>column [&#x27;Name&#x27;]</code> — The report has no record key and the ABN is nullable (1.5% blank, 197 distinct over 200 rows), so ABN alone is not unique. The Name column is 100% populated with 200 distinct values across 200 rows. Each entity appears once per income year, and the sample covers a single year, so Name is unique per record.</dd>
+    <dt>record_id</dt><dd><code>column [&#x27;Name&#x27;, &#x27;Income year&#x27;]</code> — The report has no record key and the ABN is nullable (1.5% blank, 197 distinct over 200 rows), so ABN alone is not unique. The Name column is 100% populated with 200 distinct values across 200 rows. Each entity appears once per income year, and the sample covers a single year, so Name is unique per record.</dd>
     <dt>observed_at</dt><dd><code>dataset_modified</code>（basis: proxy，值 2026-10-12）— There is no per-record extract or update date column. &#x27;Income year&#x27; is a reporting period label, not an assertion date, so I use the catalogue modified date as a weak proxy.</dd>
   </dl>
 </section>
@@ -95,7 +95,7 @@ details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
     <tr><td>identifier checksum (entity.abn)</td><td class='num'>&gt;= 95%</td><td class='num'>100.0% (350 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
 <tr><td>null drift (entity.legal_name ← Name)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
 <tr><td>null drift (entity.abn ← ABN)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
-<tr><td>record_id unique (full sample)</td><td class='num'>0 duplicates</td><td class='num'>0 duplicates</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>record_id effectively unique (full sample)</td><td class='num'>&lt;= 0.5% duplicates</td><td class='num'>0 duplicates (0.00%)</td><td><span class="pill ok">通过</span></td></tr>
 <tr><td>minimum useful (a name or an identifier mapped)</td><td class='num'>required</td><td class='num'>yes</td><td><span class="pill ok">通过</span></td></tr>
   </table></div>
   <h4 style="margin-top:14px">未通过/弃权的例子</h4>
@@ -111,26 +111,26 @@ details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
   <details><summary>展开 20 条「ok」判定</summary>
   <div class="tablewrap"><table>
     <tr><th>record</th><th>字段</th><th>理由</th></tr>
-    <tr><td><code>AUSPORK LIMITED</code></td><td><code>entity.legal_name</code></td><td>&#x27;Name&#x27; in a tax-entity report holds the registered corporate name &#x27;AUSPORK LIMITED&#x27;, and no other party column exists.</td></tr>
-<tr><td><code>AUSPORK LIMITED</code></td><td><code>entity.abn</code></td><td>The ABN 38006563355 passes the mod-89 checksum and belongs to the row&#x27;s own entity.</td></tr>
-<tr><td><code>BEST FAB PTY LTD</code></td><td><code>entity.legal_name</code></td><td>&#x27;BEST FAB PTY LTD&#x27; is a registered-style company name with a PTY LTD suffix.</td></tr>
-<tr><td><code>BEST FAB PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 83105906876 passes the mod-89 checksum, and the row has no other party&#x27;s identifier.</td></tr>
-<tr><td><code>BENDIGO AND ADELAIDE BANK LIMITED</code></td><td><code>entity.legal_name</code></td><td>This is the registered name of the bank, not a brand name.</td></tr>
-<tr><td><code>BENDIGO AND ADELAIDE BANK LIMITED</code></td><td><code>entity.abn</code></td><td>The ABN 11068049178 passes the mod-89 checksum.</td></tr>
-<tr><td><code>AVENG AUSTRALIA HOLDINGS PTY LTD</code></td><td><code>entity.legal_name</code></td><td>The raw &#x27;Name&#x27; is the entity&#x27;s own registered name. &#x27;Holdings&#x27; is part of that name and does not mean a parent company was substituted.</td></tr>
-<tr><td><code>AVENG AUSTRALIA HOLDINGS PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 33108058331 passes the mod-89 checksum.</td></tr>
-<tr><td><code>APS GROUP (HOLDINGS) PTY LTD</code></td><td><code>entity.legal_name</code></td><td>The name is copied verbatim, including the parentheses, and is a registered company name.</td></tr>
-<tr><td><code>APS GROUP (HOLDINGS) PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 94096418101 passes the mod-89 checksum.</td></tr>
-<tr><td><code>BARALABA COAL COMPANY PTY LTD</code></td><td><code>entity.legal_name</code></td><td>This is a registered company name with a PTY LTD suffix.</td></tr>
-<tr><td><code>BARALABA COAL COMPANY PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 42096909634 passes the mod-89 checksum.</td></tr>
-<tr><td><code>BNC GLOBAL INVESTMENTS PTY LTD</code></td><td><code>entity.legal_name</code></td><td>This is a registered company name with a PTY LTD suffix.</td></tr>
-<tr><td><code>BNC GLOBAL INVESTMENTS PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 39618091517 passes the mod-89 checksum.</td></tr>
-<tr><td><code>AMENTUM AUSTRALIA PROPRIETARY LIMITED</code></td><td><code>entity.legal_name</code></td><td>&#x27;PROPRIETARY LIMITED&#x27; is the long form of a registered company suffix, so this is a legal name.</td></tr>
-<tr><td><code>AMENTUM AUSTRALIA PROPRIETARY LIMITED</code></td><td><code>entity.abn</code></td><td>The ABN 12079749287 passes the mod-89 checksum.</td></tr>
-<tr><td><code>ARCHIES FOOTWEAR PTY LTD</code></td><td><code>entity.legal_name</code></td><td>The PTY LTD suffix marks this as the registered entity, not the &#x27;Archies&#x27; brand.</td></tr>
-<tr><td><code>ARCHIES FOOTWEAR PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 91164576854 passes the mod-89 checksum.</td></tr>
-<tr><td><code>BGC (AUSTRALIA) PTY LTD</code></td><td><code>entity.legal_name</code></td><td>This is a registered company name copied verbatim.</td></tr>
-<tr><td><code>BGC (AUSTRALIA) PTY LTD</code></td><td><code>entity.abn</code></td><td>The ABN 62005736005 passes the mod-89 checksum.</td></tr>
+    <tr><td><code>AUSPORK LIMITED|2024-25</code></td><td><code>entity.legal_name</code></td><td>The &#x27;Name&#x27; column is the tax-entity name and &#x27;AUSPORK LIMITED&#x27; carries a corporate suffix, so it is the registered name.</td></tr>
+<tr><td><code>AUSPORK LIMITED|2024-25</code></td><td><code>entity.abn</code></td><td>The ABN belongs to the row&#x27;s entity and the 11-digit value passes the ABN checksum.</td></tr>
+<tr><td><code>BEST FAB PTY LTD|2024-25</code></td><td><code>entity.legal_name</code></td><td>&#x27;BEST FAB PTY LTD&#x27; is a registered-style company name from the entity Name column.</td></tr>
+<tr><td><code>BEST FAB PTY LTD|2024-25</code></td><td><code>entity.abn</code></td><td>The ABN is the row&#x27;s own identifier and passes the checksum.</td></tr>
+<tr><td><code>BENDIGO AND ADELAIDE BANK LIMITED|2024-25</code></td><td><code>entity.legal_name</code></td><td>This is the full registered bank name, not a brand or trading name.</td></tr>
+<tr><td><code>BENDIGO AND ADELAIDE BANK LIMITED|2024-25</code></td><td><code>entity.abn</code></td><td>The ABN passes the checksum and is the entity&#x27;s own, with no agent or parent column on the row.</td></tr>
+<tr><td><code>AVENG AUSTRALIA HOLDINGS PTY LTD|2024-25</code></td><td><code>entity.legal_name</code></td><td>The name is the reported entity itself. &#x27;Holdings&#x27; is part of the registered name, and the row has no separate parent column.</td></tr>
+<tr><td><code>AVENG AUSTRALIA HOLDINGS PTY LTD|2024-25</code></td><td><code>entity.abn</code></td><td>The ABN passes the checksum and sits on the same row as its entity name.</td></tr>
+<tr><td><code>APS GROUP (HOLDINGS) PTY LTD|2024-25</code></td><td><code>entity.legal_name</code></td><td>The parentheses are part of the registered name and it is copied verbatim from the entity Name column.</td></tr>
+<tr><td><code>APS GROUP (HOLDINGS) PTY LTD|2024-25</code></td><td><code>entity.abn</code></td><td>The ABN passes the checksum and belongs to the row&#x27;s entity.</td></tr>
+<tr><td><code>BARALABA COAL COMPANY PTY LTD|2024-25</code></td><td><code>entity.legal_name</code></td><td>&#x27;BARALABA COAL COMPANY PTY LTD&#x27; is a corporate registered name.</td></tr>
+<tr><td><code>BARALABA COAL COMPANY PTY LTD|2024-25</code></td><td><code>entity.abn</code></td><td>The ABN passes the checksum and is the row entity&#x27;s own.</td></tr>
+<tr><td><code>BNC GLOBAL INVESTMENTS PTY LTD|2024-25</code></td><td><code>entity.legal_name</code></td><td>The Name column holds a corporate name with a PTY LTD suffix.</td></tr>
+<tr><td><code>BNC GLOBAL INVESTMENTS PTY LTD|2024-25</code></td><td><code>entity.abn</code></td><td>The ABN passes the checksum and matches the row&#x27;s entity.</td></tr>
+<tr><td><code>AMENTUM AUSTRALIA PROPRIETARY LIMITED|2024-25</code></td><td><code>entity.legal_name</code></td><td>&#x27;PROPRIETARY LIMITED&#x27; is the long-form company suffix, so this is the registered name.</td></tr>
+<tr><td><code>AMENTUM AUSTRALIA PROPRIETARY LIMITED|2024-25</code></td><td><code>entity.abn</code></td><td>The ABN passes the checksum and belongs to the row&#x27;s entity.</td></tr>
+<tr><td><code>ARCHIES FOOTWEAR PTY LTD|2024-25</code></td><td><code>entity.legal_name</code></td><td>The name carries a PTY LTD suffix, so it is the registered name even though it resembles a brand.</td></tr>
+<tr><td><code>ARCHIES FOOTWEAR PTY LTD|2024-25</code></td><td><code>entity.abn</code></td><td>The ABN passes the checksum and is the row entity&#x27;s own.</td></tr>
+<tr><td><code>BGC (AUSTRALIA) PTY LTD|2024-25</code></td><td><code>entity.legal_name</code></td><td>This is a registered company name copied verbatim from the entity Name column.</td></tr>
+<tr><td><code>BGC (AUSTRALIA) PTY LTD|2024-25</code></td><td><code>entity.abn</code></td><td>The ABN passes the checksum and belongs to the row&#x27;s entity.</td></tr>
   </table></div></details>
 </section>
 
@@ -157,35 +157,35 @@ details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
 <section id="examples">
   <h2>对照样例 · 5 条原始行 vs 标准化输出</h2>
   <p class="muted">读含义，别读通过率：日期是注册日还是牌照日？名字是本人还是代理人？ABN 是这一行主体自己的吗？</p>
-  <div class='example'><h4>样例 1 · record <code>AUSTRALIAN POSTAL CORPORATION</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: AUSTRALIAN POSTAL CORPORATION
+  <div class='example'><h4>样例 1 · record <code>AUSTRALIAN POSTAL CORPORATION|2024-25</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: AUSTRALIAN POSTAL CORPORATION
 ABN: 28864970579
 Total income $: 9714900825
 Taxable income $: 67626224
 Tax payable $: 19457009
 Income year: 2024-25</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;AUSTRALIAN POSTAL CORPORATION&quot;   (conf 0.9)
 entity.abn = &quot;28864970579&quot;   (conf 0.95)</pre></div></div></div>
-<div class='example'><h4>样例 2 · record <code>AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD
+<div class='example'><h4>样例 2 · record <code>AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD|2024-25</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD
 ABN: 28611628909
 Total income $: 2318405446
 Taxable income $: 
 Tax payable $: 
 Income year: 2024-25</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD&quot;   (conf 0.9)
 entity.abn = &quot;28611628909&quot;   (conf 0.95)</pre></div></div></div>
-<div class='example'><h4>样例 3 · record <code>ALCON LABORATORIES (AUSTRALIA) PTY LTD</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: ALCON LABORATORIES (AUSTRALIA) PTY LTD
+<div class='example'><h4>样例 3 · record <code>ALCON LABORATORIES (AUSTRALIA) PTY LTD|2024-25</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: ALCON LABORATORIES (AUSTRALIA) PTY LTD
 ABN: 88000740830
 Total income $: 347900229
 Taxable income $: 7591333
 Tax payable $: 2277400
 Income year: 2024-25</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;ALCON LABORATORIES (AUSTRALIA) PTY LTD&quot;   (conf 0.9)
 entity.abn = &quot;88000740830&quot;   (conf 0.95)</pre></div></div></div>
-<div class='example'><h4>样例 4 · record <code>ALLIED CREDIT PTY LTD</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: ALLIED CREDIT PTY LTD
+<div class='example'><h4>样例 4 · record <code>ALLIED CREDIT PTY LTD|2024-25</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: ALLIED CREDIT PTY LTD
 ABN: 65143964667
 Total income $: 297051241
 Taxable income $: 
 Tax payable $: 
 Income year: 2024-25</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;ALLIED CREDIT PTY LTD&quot;   (conf 0.9)
 entity.abn = &quot;65143964667&quot;   (conf 0.95)</pre></div></div></div>
-<div class='example'><h4>样例 5 · record <code>AVJENNINGS LIMITED</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: AVJENNINGS LIMITED
+<div class='example'><h4>样例 5 · record <code>AVJENNINGS LIMITED|2024-25</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Name: AVJENNINGS LIMITED
 ABN: 44004327771
 Total income $: 254590674
 Taxable income $: 17470140

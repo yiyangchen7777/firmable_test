@@ -1,0 +1,20 @@
+{
+  "dataset_id": "business-discount-directory",
+  "steps": [
+    "fetch_meta",
+    "inspect",
+    "profile",
+    "propose",
+    "validate",
+    "review",
+    "revise",
+    "validate",
+    "review",
+    "emit"
+  ],
+  "revisions": 1,
+  "status_at_review": "PASSING WITH FLAGS",
+  "approval_note": "",
+  "acceptance_all_pass": true,
+  "config_path": "/Users/yc/Desktop/firmable_test/configs/business-discount-directory.yaml"
+}

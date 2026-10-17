@@ -1,0 +1,28 @@
+{
+  "source_id": "acnc-register",
+  "config_path": "/Users/yc/Desktop/firmable_test/configs/acnc-register.yaml",
+  "extractor_version": "cfg-e1e3e9f5166e+engine-0.1",
+  "input_path": "/Users/yc/Desktop/firmable_test/data/raw/acnc-register/datadotgov_main.csv",
+  "input_bytes": 15136050,
+  "row_limit": 1000,
+  "seeded_sampling": false,
+  "rows_read": 1000,
+  "observations_written": 1000,
+  "claim_counts": {
+    "entity.abn": 980,
+    "entity.legal_name": 999,
+    "address.full": 873,
+    "address.locality": 877,
+    "address.state": 876,
+    "address.postcode": 877,
+    "address.country": 868,
+    "entity.website": 654,
+    "entity.trading_name": 182
+  },
+  "flag_counts": {
+    "record_id_component_empty": 21
+  },
+  "output_path": "/Users/yc/Desktop/firmable_test/outputs/observations/acnc-register.jsonl",
+  "ingested_at": "2026-10-17T10:05:42+00:00",
+  "api_cost_usd": 0.0
+}

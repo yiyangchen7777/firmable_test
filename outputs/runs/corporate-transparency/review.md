@@ -6,10 +6,10 @@
 | Publisher / licence | Australian Taxation Office / cc-by |
 | Resource | https://data.gov.au/data/dataset/c2524c87-cea4-4636-acac-599a82048a26/resource/15bf4eaa-7a14-48e9-8a3f-092df32a644e/download/2024-25-corporate-report-of-entity-tax-information.xlsx |
 | Reader | {"format": "xlsx", "delimiter": null, "encoding": "utf-8", "header_row": 0, "sheet": "Income tax details"} |
-| Agent run | revisions used 0/3 · steps 5 |
+| Agent run | revisions used 1/3 · steps 8 |
 | **Status** | **PASSING** |
 | Source reliability | 0.9 — The ATO is the national tax regulator publishing its own corporate tax transparency report under CC-BY, so names and ABNs are authoritative. |
-| Record id | column ['Name'] — The report has no record key and the ABN is nullable (1.5% blank, 197 distinct over 200 rows), so ABN alone is not unique. The Name column is 100% populated with 200 distinct values across 200 rows. Each entity appears once per income year, and the sample covers a single year, so Name is unique per record. |
+| Record id | column ['Name', 'Income year'] — The report has no record key and the ABN is nullable (1.5% blank, 197 distinct over 200 rows), so ABN alone is not unique. The Name column is 100% populated with 200 distinct values across 200 rows. Each entity appears once per income year, and the sample covers a single year, so Name is unique per record. |
 | Observed at | dataset_modified → 2026-10-12 (basis: proxy) — There is no per-record extract or update date column. 'Income year' is a reporting period label, not an assertion date, so I use the catalogue modified date as a weak proxy. |
 
 ## Mapping (2 field mappings from 6 source columns)
@@ -26,7 +26,7 @@
 | identifier checksum (entity.abn) | >= 95% | 100.0% (350 ok / 0 failed) | ✅ |
 | null drift (entity.legal_name ← Name) | <= +2pp | +0.0% | ✅ |
 | null drift (entity.abn ← ABN) | <= +2pp | +0.0% | ✅ |
-| record_id unique (full sample) | 0 duplicates | 0 duplicates | ✅ |
+| record_id effectively unique (full sample) | <= 0.5% duplicates | 0 duplicates (0.00%) | ✅ |
 | minimum useful (a name or an identifier mapped) | required | yes | ✅ |
 
 ### Failing examples
@@ -36,28 +36,28 @@ none
 
 | record | field | verdict | why |
 |---|---|---|---|
-| AUSPORK LIMITED | entity.legal_name | ok | 'Name' in a tax-entity report holds the registered corporate name 'AUSPORK LIMITED', and no other party column exists. |
-| AUSPORK LIMITED | entity.abn | ok | The ABN 38006563355 passes the mod-89 checksum and belongs to the row's own entity. |
-| BEST FAB PTY LTD | entity.legal_name | ok | 'BEST FAB PTY LTD' is a registered-style company name with a PTY LTD suffix. |
-| BEST FAB PTY LTD | entity.abn | ok | The ABN 83105906876 passes the mod-89 checksum, and the row has no other party's identifier. |
-| BENDIGO AND ADELAIDE BANK LIMITED | entity.legal_name | ok | This is the registered name of the bank, not a brand name. |
-| BENDIGO AND ADELAIDE BANK LIMITED | entity.abn | ok | The ABN 11068049178 passes the mod-89 checksum. |
-| AVENG AUSTRALIA HOLDINGS PTY LTD | entity.legal_name | ok | The raw 'Name' is the entity's own registered name. 'Holdings' is part of that name and does not mean a parent company was substituted. |
-| AVENG AUSTRALIA HOLDINGS PTY LTD | entity.abn | ok | The ABN 33108058331 passes the mod-89 checksum. |
-| APS GROUP (HOLDINGS) PTY LTD | entity.legal_name | ok | The name is copied verbatim, including the parentheses, and is a registered company name. |
-| APS GROUP (HOLDINGS) PTY LTD | entity.abn | ok | The ABN 94096418101 passes the mod-89 checksum. |
-| BARALABA COAL COMPANY PTY LTD | entity.legal_name | ok | This is a registered company name with a PTY LTD suffix. |
-| BARALABA COAL COMPANY PTY LTD | entity.abn | ok | The ABN 42096909634 passes the mod-89 checksum. |
-| BNC GLOBAL INVESTMENTS PTY LTD | entity.legal_name | ok | This is a registered company name with a PTY LTD suffix. |
-| BNC GLOBAL INVESTMENTS PTY LTD | entity.abn | ok | The ABN 39618091517 passes the mod-89 checksum. |
-| AMENTUM AUSTRALIA PROPRIETARY LIMITED | entity.legal_name | ok | 'PROPRIETARY LIMITED' is the long form of a registered company suffix, so this is a legal name. |
-| AMENTUM AUSTRALIA PROPRIETARY LIMITED | entity.abn | ok | The ABN 12079749287 passes the mod-89 checksum. |
-| ARCHIES FOOTWEAR PTY LTD | entity.legal_name | ok | The PTY LTD suffix marks this as the registered entity, not the 'Archies' brand. |
-| ARCHIES FOOTWEAR PTY LTD | entity.abn | ok | The ABN 91164576854 passes the mod-89 checksum. |
-| BGC (AUSTRALIA) PTY LTD | entity.legal_name | ok | This is a registered company name copied verbatim. |
-| BGC (AUSTRALIA) PTY LTD | entity.abn | ok | The ABN 62005736005 passes the mod-89 checksum. |
+| AUSPORK LIMITED|2024-25 | entity.legal_name | ok | The 'Name' column is the tax-entity name and 'AUSPORK LIMITED' carries a corporate suffix, so it is the registered name. |
+| AUSPORK LIMITED|2024-25 | entity.abn | ok | The ABN belongs to the row's entity and the 11-digit value passes the ABN checksum. |
+| BEST FAB PTY LTD|2024-25 | entity.legal_name | ok | 'BEST FAB PTY LTD' is a registered-style company name from the entity Name column. |
+| BEST FAB PTY LTD|2024-25 | entity.abn | ok | The ABN is the row's own identifier and passes the checksum. |
+| BENDIGO AND ADELAIDE BANK LIMITED|2024-25 | entity.legal_name | ok | This is the full registered bank name, not a brand or trading name. |
+| BENDIGO AND ADELAIDE BANK LIMITED|2024-25 | entity.abn | ok | The ABN passes the checksum and is the entity's own, with no agent or parent column on the row. |
+| AVENG AUSTRALIA HOLDINGS PTY LTD|2024-25 | entity.legal_name | ok | The name is the reported entity itself. 'Holdings' is part of the registered name, and the row has no separate parent column. |
+| AVENG AUSTRALIA HOLDINGS PTY LTD|2024-25 | entity.abn | ok | The ABN passes the checksum and sits on the same row as its entity name. |
+| APS GROUP (HOLDINGS) PTY LTD|2024-25 | entity.legal_name | ok | The parentheses are part of the registered name and it is copied verbatim from the entity Name column. |
+| APS GROUP (HOLDINGS) PTY LTD|2024-25 | entity.abn | ok | The ABN passes the checksum and belongs to the row's entity. |
+| BARALABA COAL COMPANY PTY LTD|2024-25 | entity.legal_name | ok | 'BARALABA COAL COMPANY PTY LTD' is a corporate registered name. |
+| BARALABA COAL COMPANY PTY LTD|2024-25 | entity.abn | ok | The ABN passes the checksum and is the row entity's own. |
+| BNC GLOBAL INVESTMENTS PTY LTD|2024-25 | entity.legal_name | ok | The Name column holds a corporate name with a PTY LTD suffix. |
+| BNC GLOBAL INVESTMENTS PTY LTD|2024-25 | entity.abn | ok | The ABN passes the checksum and matches the row's entity. |
+| AMENTUM AUSTRALIA PROPRIETARY LIMITED|2024-25 | entity.legal_name | ok | 'PROPRIETARY LIMITED' is the long-form company suffix, so this is the registered name. |
+| AMENTUM AUSTRALIA PROPRIETARY LIMITED|2024-25 | entity.abn | ok | The ABN passes the checksum and belongs to the row's entity. |
+| ARCHIES FOOTWEAR PTY LTD|2024-25 | entity.legal_name | ok | The name carries a PTY LTD suffix, so it is the registered name even though it resembles a brand. |
+| ARCHIES FOOTWEAR PTY LTD|2024-25 | entity.abn | ok | The ABN passes the checksum and is the row entity's own. |
+| BGC (AUSTRALIA) PTY LTD|2024-25 | entity.legal_name | ok | This is a registered company name copied verbatim from the entity Name column. |
+| BGC (AUSTRALIA) PTY LTD|2024-25 | entity.abn | ok | The ABN passes the checksum and belongs to the row's entity. |
 
-Notes: All 10 ABNs are 11 digits and pass the mod-89 checksum.; Every 'Name' value carries a corporate suffix (LIMITED, PTY LTD, PROPRIETARY LIMITED). None looks like a trading name or a person.; The unmapped columns (Total income, Taxable income, Tax payable, Income year) are financial figures. None is a party name, an alternate identifier or a registration date, so nothing was mis-mapped.; The source is a tax-transparency report. The mapping correctly avoids deriving entity.status, entity.date_registered or an address from it.
+Notes: All 10 ABNs pass the mod-89 checksum, and every Name value is a corporate name with a company suffix.; The unmapped columns (Total income, Taxable income, Tax payable, Income year) are financial or period data. None was wrongly mapped to a date or status field, and they create no party or identifier ambiguity.; The source is an ATO tax-transparency style report with one entity per row. It carries no separate agent, parent or trading-name columns that could confuse legal_name or abn.
 
 ## Unmapped columns (4)
 
@@ -74,7 +74,7 @@ Read these for meaning, not parse success: is the date a registration date or a
 licence date? Is the name the licensee or the applicant? Is the ABN the subject
 entity's?
 
-### Example 1 — source_record_id AUSTRALIAN POSTAL CORPORATION
+### Example 1 — source_record_id AUSTRALIAN POSTAL CORPORATION|2024-25
 RAW
 ```
 Name: AUSTRALIAN POSTAL CORPORATION
@@ -90,7 +90,7 @@ entity.legal_name = "AUSTRALIAN POSTAL CORPORATION"    (raw: "AUSTRALIAN POSTAL 
 entity.abn = "28864970579"    (raw: "28864970579", field_confidence: 0.95)
 ```
 
-### Example 2 — source_record_id AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD
+### Example 2 — source_record_id AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD|2024-25
 RAW
 ```
 Name: AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD
@@ -106,7 +106,7 @@ entity.legal_name = "AUSTRALIAN LOGISTICS ACQUISITION HOLDINGS PTY LTD"    (raw:
 entity.abn = "28611628909"    (raw: "28611628909", field_confidence: 0.95)
 ```
 
-### Example 3 — source_record_id ALCON LABORATORIES (AUSTRALIA) PTY LTD
+### Example 3 — source_record_id ALCON LABORATORIES (AUSTRALIA) PTY LTD|2024-25
 RAW
 ```
 Name: ALCON LABORATORIES (AUSTRALIA) PTY LTD
@@ -122,7 +122,7 @@ entity.legal_name = "ALCON LABORATORIES (AUSTRALIA) PTY LTD"    (raw: "ALCON LAB
 entity.abn = "88000740830"    (raw: "88000740830", field_confidence: 0.95)
 ```
 
-### Example 4 — source_record_id ALLIED CREDIT PTY LTD
+### Example 4 — source_record_id ALLIED CREDIT PTY LTD|2024-25
 RAW
 ```
 Name: ALLIED CREDIT PTY LTD
@@ -138,7 +138,7 @@ entity.legal_name = "ALLIED CREDIT PTY LTD"    (raw: "ALLIED CREDIT PTY LTD", fi
 entity.abn = "65143964667"    (raw: "65143964667", field_confidence: 0.95)
 ```
 
-### Example 5 — source_record_id AVJENNINGS LIMITED
+### Example 5 — source_record_id AVJENNINGS LIMITED|2024-25
 RAW
 ```
 Name: AVJENNINGS LIMITED

@@ -1,0 +1,5244 @@
+{
+ "meta": {
+  "run_id": "resolve-20261017T100635-297d07e8a530",
+  "matcher_version": "matcher-0.1",
+  "created_at": "2026-10-17T10:06:35+00:00",
+  "input_records": 19542,
+  "input_hash": "297d07e8a530",
+  "thresholds": {
+   "abn": 0.98,
+   "acn": 0.95,
+   "name_exact_state": 0.75,
+   "fuzzy_queue_band": [
+    85,
+    100
+   ]
+  },
+  "drop_source": null
+ },
+ "note": "derived cache, not truth; recompute from links",
+ "clusters": [
+  {
+   "entity_id": "acnc-register::52010690730|AUSTRALIAN INSTITUTE OF INTERNATIONAL UNDERSTANDING LIMITED",
+   "members": [
+    "acnc-register::52010690730|AUSTRALIAN INSTITUTE OF INTERNATIONAL UNDERSTANDING LIMITED",
+    "asic-business-names::989bec1f01cc8bc2"
+   ],
+   "sources": [
+    "acnc-register",
+    "asic-business-names"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "acnc-register::63650524824|ALLERGY LIFE LTD",
+   "members": [
+    "acnc-register::63650524824|ALLERGY LIFE LTD",
+    "asic-business-names::a16a7e6af171934c"
+   ],
+   "sources": [
+    "acnc-register",
+    "asic-business-names"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "acnc-register::82648039025|MAJLIS KHUDDAMUL AHMADIYYA AUSTRALIA LIMITED",
+   "members": [
+    "acnc-register::82648039025|MAJLIS KHUDDAMUL AHMADIYYA AUSTRALIA LIMITED",
+    "asic-business-names::ef5304e0ffc4e82a"
+   ],
+   "sources": [
+    "acnc-register",
+    "asic-business-names"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::008e00afa4385be6",
+   "members": [
+    "asic-business-names::008e00afa4385be6",
+    "asic-business-names::1b9e101a1aea6e63",
+    "asic-business-names::1e582ad15e0fd236",
+    "asic-business-names::39fdb924b52a2cea",
+    "asic-business-names::533e8205de5edf47",
+    "asic-business-names::58e34704ff4bb479",
+    "asic-business-names::66dec28f941f860c",
+    "asic-business-names::778c667567293599",
+    "asic-business-names::b2e4978227eea1bd",
+    "asic-business-names::c70219eab3cb0bc4",
+    "asic-business-names::d18bcafe08462095",
+    "asic-business-names::d7a3ef2276e0c5a2",
+    "asic-business-names::ff6c787657361459",
+    "corporate-transparency::ADBRI PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "asic-business-names::00dd6d4394faa5e6",
+   "members": [
+    "asic-business-names::00dd6d4394faa5e6",
+    "corporate-transparency::GERALDTON FISHERMEN'S CO-OPERATIVE LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0118e762be57bb3e",
+   "members": [
+    "asic-business-names::0118e762be57bb3e",
+    "corporate-transparency::WAYNE PHILLIS FORD PTY. LTD.|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::01dd55813b84d546",
+   "members": [
+    "asic-business-names::01dd55813b84d546",
+    "corporate-transparency::ABC TISSUE PRODUCTS PTY LIMITED|2024-25",
+    "ipgod2022::1df0721901100679",
+    "ipgod2022::b330cb62cb0e256c"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::034e9b483b78d2d8",
+   "members": [
+    "asic-business-names::034e9b483b78d2d8",
+    "asic-credit-licensee::525880"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0477bf30e7154e83",
+   "members": [
+    "asic-business-names::0477bf30e7154e83",
+    "asic-business-names::15090f9ef4302afa",
+    "asic-business-names::1d407239f1168b0b",
+    "corporate-transparency::ALAN MANCE MOTORS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::056ddec968f89065",
+   "members": [
+    "asic-business-names::056ddec968f89065",
+    "asic-business-names::560820547e36c254",
+    "asic-business-names::5c4c2ba5cbe792a0",
+    "asic-business-names::696bd8f7b138e5e0",
+    "asic-business-names::9c1e34b8741a5367",
+    "asic-business-names::bf48fc48ef98e4b7",
+    "corporate-transparency::EMIRATES LEISURE RETAIL (AUSTRALIA) PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::088cc572ca871a5d",
+   "members": [
+    "asic-business-names::088cc572ca871a5d",
+    "asic-business-names::9b6cf1f14650bf4d",
+    "asic-business-names::a1583616744ca731",
+    "corporate-transparency::WEST HQ LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::098293e11d949df4",
+   "members": [
+    "asic-business-names::098293e11d949df4",
+    "asic-credit-licensee::387406"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::09ccb2c2c214ec09",
+   "members": [
+    "asic-business-names::09ccb2c2c214ec09",
+    "asic-credit-licensee::392750"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::09f1a6a37247c3cd",
+   "members": [
+    "asic-business-names::09f1a6a37247c3cd",
+    "corporate-transparency::ACTRON ENGINEERING PTY LTD|2024-25",
+    "ipgod2022::ba91cfe53bc38982"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0a07e6d9de70fdc7",
+   "members": [
+    "asic-business-names::0a07e6d9de70fdc7",
+    "asic-business-names::67fbf33a17266e43",
+    "asic-credit-licensee::477983"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0a96a951eeb2df4e",
+   "members": [
+    "asic-business-names::0a96a951eeb2df4e",
+    "asic-business-names::40e987eb2cd27c26",
+    "asic-business-names::45b0ac09540c4c9c",
+    "asic-business-names::6635d67f7a84d5e0",
+    "asic-business-names::6b3c23f5b9eccbe9",
+    "asic-business-names::6fc4cbb4729fa1e0",
+    "asic-business-names::7df221b10dc98e35",
+    "asic-business-names::96b439629bea7490",
+    "asic-business-names::991b839dd9796663",
+    "asic-business-names::c9635ba00b54374e",
+    "asic-business-names::d3154556779f7ef6",
+    "asic-business-names::dcca62582dd18e21",
+    "asic-business-names::e949005fbed48c86",
+    "asic-business-names::ef3566593fe2bf75",
+    "asic-business-names::f65678a055d6ee81",
+    "corporate-transparency::ACCESS EQUIPMENT GROUP PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "asic-business-names::0b9fe4b6503f7db1",
+   "members": [
+    "asic-business-names::0b9fe4b6503f7db1",
+    "corporate-transparency::CAPEM PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0c0350a7ebb63cfa",
+   "members": [
+    "asic-business-names::0c0350a7ebb63cfa",
+    "asic-business-names::4b6c8601b5eeed17",
+    "corporate-transparency::EAST YARRA FRIENDLY SOCIETY PTY LTD|2023-24"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0cf236bd2a69ce1a",
+   "members": [
+    "asic-business-names::0cf236bd2a69ce1a",
+    "asic-business-names::bcf4101ef37fa803",
+    "asic-business-names::cb6bc58313bcc530",
+    "asic-credit-licensee::230694",
+    "corporate-transparency::MLC LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0d45f36ac721ab16",
+   "members": [
+    "asic-business-names::0d45f36ac721ab16",
+    "asic-credit-licensee::445833"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0dcd2875ac7bd7af",
+   "members": [
+    "asic-business-names::0dcd2875ac7bd7af",
+    "asic-business-names::5241e43b9892acb3",
+    "asic-credit-licensee::388275"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0e3012061783c1d8",
+   "members": [
+    "asic-business-names::0e3012061783c1d8",
+    "asic-business-names::66b1607d15489103",
+    "asic-business-names::82353230e77049c5",
+    "asic-business-names::874360ff099014f5",
+    "asic-business-names::f7ce5e1dfe351c8a",
+    "corporate-transparency::J.J. RICHARDS & SONS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0ec91a96c155c1ce",
+   "members": [
+    "asic-business-names::0ec91a96c155c1ce",
+    "asic-business-names::18441182af2ccc87",
+    "asic-business-names::97da0d951dcc10b6",
+    "asic-credit-licensee::364295"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0ece31a767bd7aa8",
+   "members": [
+    "asic-business-names::0ece31a767bd7aa8",
+    "corporate-transparency::DURATEC LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::0f640a6551c2bfe1",
+   "members": [
+    "asic-business-names::0f640a6551c2bfe1",
+    "asic-credit-licensee::234945",
+    "corporate-transparency::COMMONWEALTH BANK OF AUSTRALIA|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::10eb32282a5e5bce",
+   "members": [
+    "asic-business-names::10eb32282a5e5bce",
+    "asic-business-names::4ae61b27d17b7da4",
+    "asic-business-names::4f3c88f6784f2ba0",
+    "asic-business-names::8040ed86d1328044",
+    "asic-business-names::9606849369ab6180",
+    "asic-business-names::b8b2762a21784db7",
+    "asic-business-names::d7a3bc1a2c1c5a8a",
+    "asic-business-names::e0c604d40eae7841",
+    "asic-credit-licensee::436121"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::118013ec03f600ac",
+   "members": [
+    "asic-business-names::118013ec03f600ac",
+    "asic-business-names::166ed853f9b6ab59",
+    "asic-business-names::4e70ad235dd0ae9f",
+    "asic-business-names::fa2e6fca91358b8e",
+    "asic-credit-licensee::393676"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::12c664b8e22a6cf8",
+   "members": [
+    "asic-business-names::12c664b8e22a6cf8",
+    "corporate-transparency::STARHILL HOTEL (SYDNEY) PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::13c01db106281064",
+   "members": [
+    "asic-business-names::13c01db106281064",
+    "asic-credit-licensee::491308"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::14199e05924c9b10",
+   "members": [
+    "asic-business-names::14199e05924c9b10",
+    "corporate-transparency::INCHURCH AUTOMOTIVE PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::14252e607a340b01",
+   "members": [
+    "asic-business-names::14252e607a340b01",
+    "asic-credit-licensee::391620"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::143fc99e0b470e9e",
+   "members": [
+    "asic-business-names::143fc99e0b470e9e",
+    "asic-credit-licensee::406761"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1534949006299575",
+   "members": [
+    "asic-business-names::1534949006299575",
+    "asic-business-names::a48ce30a59ae37a8",
+    "asic-business-names::fbdee83dffe78713",
+    "corporate-transparency::4CYTE PATHOLOGY PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1661184b3314c3ac",
+   "members": [
+    "asic-business-names::1661184b3314c3ac",
+    "asic-credit-licensee::376872"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::16a22ba0aa5e9a1c",
+   "members": [
+    "asic-business-names::16a22ba0aa5e9a1c",
+    "asic-business-names::2aeada99a43e1f63",
+    "asic-business-names::4b2a194487a42416",
+    "asic-business-names::719d03359604da3c",
+    "asic-business-names::7b0280c01bb8bf39",
+    "asic-business-names::7dbf5c096ec7e0c2",
+    "asic-business-names::8dd89d3e16c2cd61",
+    "asic-business-names::bded71dc8d51b816",
+    "asic-business-names::dc02c4d5b5481ac0",
+    "asic-business-names::ff7910e76273b7f8",
+    "corporate-transparency::SOUTHERN CLASSIC GROUP PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "asic-business-names::16dac547927f2322",
+   "members": [
+    "asic-business-names::16dac547927f2322",
+    "asic-credit-licensee::484982"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::18622a139f463848",
+   "members": [
+    "asic-business-names::18622a139f463848",
+    "asic-business-names::30885a7f73463699",
+    "asic-business-names::696b3c7338beb4ed",
+    "asic-business-names::6f69819e484e7ab9",
+    "asic-business-names::bad1f05a563e004b",
+    "asic-business-names::bcf63dbcee96a8e9",
+    "asic-business-names::beaab1defdb12f25",
+    "corporate-transparency::FAMILY DOCTOR PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::18b74d0c61b02848",
+   "members": [
+    "asic-business-names::18b74d0c61b02848",
+    "asic-business-names::5b54041e6e6277ae",
+    "asic-business-names::5fb11f7f91d2d070",
+    "asic-business-names::7d570349a5631a18",
+    "asic-business-names::b38537f0bcc792c3",
+    "asic-business-names::ee130033cfb47ed0",
+    "asic-credit-licensee::392387"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::196f8989b45aa473",
+   "members": [
+    "asic-business-names::196f8989b45aa473",
+    "asic-business-names::3be3f847685ea287",
+    "asic-business-names::4bcdb0a883b336fc",
+    "asic-business-names::589066f76fc50727",
+    "asic-business-names::703cb8cb77f36148",
+    "asic-business-names::70ab1d76a14d7be9",
+    "asic-business-names::7a319e58d36122ed",
+    "asic-business-names::88c0fb2019171c46",
+    "asic-business-names::8c2f3df9d9f084b9",
+    "asic-business-names::9dbe04a7f1660d74",
+    "asic-business-names::a31406aab7183f33",
+    "asic-business-names::aa1748406183d3e3",
+    "asic-business-names::c06687dfba4b161b",
+    "asic-business-names::c9ff27c8da0ec699",
+    "asic-business-names::ceead6873c9e58f3",
+    "asic-business-names::d5d7f4fe8b47908c",
+    "corporate-transparency::MEDINA PROPERTY SERVICES PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "asic-business-names::19c8f35252979d68",
+   "members": [
+    "asic-business-names::19c8f35252979d68",
+    "asic-business-names::1d2e61b470b7b158",
+    "asic-business-names::33e77c6f5d285235",
+    "asic-business-names::732966db12eba91a",
+    "asic-business-names::806ff519cc2c2522",
+    "asic-business-names::934cbe81d7a36d54",
+    "asic-business-names::e26c2a86a0d97f91",
+    "asic-business-names::e628663a7a9f034f",
+    "asic-business-names::fa5879398221238b",
+    "corporate-transparency::AUSTRALIAN LEISURE AND HOSPITALITY GROUP PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1a573f51ab479f7b",
+   "members": [
+    "asic-business-names::1a573f51ab479f7b",
+    "asic-business-names::1c2ac963bae37c82",
+    "corporate-transparency::AMPLIFON AUSTRALIA HOLDING PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1a6c64d2710c449b",
+   "members": [
+    "asic-business-names::1a6c64d2710c449b",
+    "asic-business-names::54a377cf1a422aac",
+    "corporate-transparency::ROHLIG AUSTRALIA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1a952503e550ea3d",
+   "members": [
+    "asic-business-names::1a952503e550ea3d",
+    "asic-credit-licensee::392259"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1b9db4a133daed01",
+   "members": [
+    "asic-business-names::1b9db4a133daed01",
+    "asic-credit-licensee::387574"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1ba073577c177860",
+   "members": [
+    "asic-business-names::1ba073577c177860",
+    "asic-credit-licensee::370298"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1c217b60319dab85",
+   "members": [
+    "asic-business-names::1c217b60319dab85",
+    "corporate-transparency::STOWE AUSTRALIA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1ce9c5aefae142fc",
+   "members": [
+    "asic-business-names::1ce9c5aefae142fc",
+    "corporate-transparency::COMMERCIAL MOTOR VEHICLES PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1dafd26207a22827",
+   "members": [
+    "asic-business-names::1dafd26207a22827",
+    "corporate-transparency::TPG TELECOM LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1dfc4cfa5656fb71",
+   "members": [
+    "asic-business-names::1dfc4cfa5656fb71",
+    "asic-business-names::41aaad0645f99acc",
+    "asic-business-names::58bd9ebd8ad5f1ba",
+    "asic-business-names::7cef28100161527b",
+    "asic-business-names::833ab8d0b8406bf1",
+    "asic-business-names::8b6d5fdc0f5c5737",
+    "asic-business-names::9b1487dba0000619",
+    "asic-business-names::aa4d6f3b2a11a8be",
+    "asic-business-names::adcda6ff2a3ba639",
+    "asic-business-names::b13e9e35c98a082e",
+    "asic-business-names::b42e26d637200d90",
+    "asic-business-names::c110f5610c63580f",
+    "asic-business-names::d96da5ee54ff94d7",
+    "corporate-transparency::ABBOTT AUSTRALASIA PTY LIMITED|2024-25",
+    "ipgod2022::0ca90b078be3aaf7",
+    "ipgod2022::15a885f86b995fdd",
+    "ipgod2022::2ec558ac24273d53",
+    "ipgod2022::5bd0fbb57a80e7d7",
+    "ipgod2022::87192a6098f7bd10",
+    "ipgod2022::9af23eae8ae839d2",
+    "ipgod2022::ce114a9cf3f2ced3",
+    "ipgod2022::f9effef392f312d0"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "asic-business-names::1f3392191a381500",
+   "members": [
+    "asic-business-names::1f3392191a381500",
+    "asic-credit-licensee::416229"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::1f97846e671d731b",
+   "members": [
+    "asic-business-names::1f97846e671d731b",
+    "asic-business-names::2ecf7aa0456ada25",
+    "asic-business-names::5e8c2330fd7c54a4",
+    "asic-business-names::5ff410e65707c317",
+    "asic-business-names::6a41fd68d32a93b4",
+    "asic-business-names::8299a57391f75888",
+    "asic-business-names::ec993ebd8e36c4e1",
+    "corporate-transparency::ANL CONTAINER LINE PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::205aa6e97ee5757b",
+   "members": [
+    "asic-business-names::205aa6e97ee5757b",
+    "asic-credit-licensee::419768"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::20a08714ad21ee93",
+   "members": [
+    "asic-business-names::20a08714ad21ee93",
+    "asic-business-names::e19b14783a5d22c8",
+    "corporate-transparency::ADAPT-A-LIFT GROUP PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::20d676d6d28223b8",
+   "members": [
+    "asic-business-names::20d676d6d28223b8",
+    "asic-business-names::99d9b62596ce8ac9",
+    "corporate-transparency::OMNICOM MEDIA GROUP AUSTRALIA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::216dcadfec352b13",
+   "members": [
+    "asic-business-names::216dcadfec352b13",
+    "corporate-transparency::CL COMMODITIES PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::2220ebd556a3c4f9",
+   "members": [
+    "asic-business-names::2220ebd556a3c4f9",
+    "corporate-transparency::RICHEMONT AUSTRALIA PTY LTD|2024-25",
+    "ipgod2022::06d868b33616a786",
+    "ipgod2022::33b20491d1a5063d",
+    "ipgod2022::3b5a0378e34ab85a",
+    "ipgod2022::5f23c7d4deb8570d",
+    "ipgod2022::67bd63fffdee8c9f",
+    "ipgod2022::75915c0a676fc008",
+    "ipgod2022::7a6dd1ae4c47cc83",
+    "ipgod2022::8fe396d9566fd00d",
+    "ipgod2022::9824db4d2a0af0e2",
+    "ipgod2022::ef4775624dc02f4f"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "asic-business-names::22363e11c62c792f",
+   "members": [
+    "asic-business-names::22363e11c62c792f",
+    "asic-business-names::b0dfaf3b537f8467",
+    "asic-credit-licensee::314889"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::232e39d5f31a824e",
+   "members": [
+    "asic-business-names::232e39d5f31a824e",
+    "corporate-transparency::ACCESS HARDWARE HOLDINGS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::247ce6e1a5811e15",
+   "members": [
+    "asic-business-names::247ce6e1a5811e15",
+    "asic-business-names::522a24aa5c1e18f1",
+    "asic-business-names::6b5a0309c44c363c",
+    "asic-business-names::d6b1da4f4186fdaa",
+    "corporate-transparency::AUTOMATIC DATA PROCESSING LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::25951c73a0b6bc64",
+   "members": [
+    "asic-business-names::25951c73a0b6bc64",
+    "corporate-transparency::BIZCAP AU PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::27e97e749a6c5c08",
+   "members": [
+    "asic-business-names::27e97e749a6c5c08",
+    "asic-business-names::2f39b2a87d70aa07",
+    "asic-business-names::651f354ed3e7482e",
+    "asic-business-names::72720374efbd1f06",
+    "asic-business-names::924bc409f70aaa7a",
+    "corporate-transparency::ROYSTON HOMES PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::29c5da3d81f1e3a7",
+   "members": [
+    "asic-business-names::29c5da3d81f1e3a7",
+    "asic-business-names::3bd0281ac277c8b8",
+    "asic-credit-licensee::504193"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::2a1257fd4e0c131d",
+   "members": [
+    "asic-business-names::2a1257fd4e0c131d",
+    "asic-credit-licensee::395976"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::2aa12554cbf55f9a",
+   "members": [
+    "asic-business-names::2aa12554cbf55f9a",
+    "asic-business-names::caec52afeb21ab58",
+    "asic-credit-licensee::392064"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::2c23cce47c93923b",
+   "members": [
+    "asic-business-names::2c23cce47c93923b",
+    "corporate-transparency::K.S. & C.A. HUNT & SON PTY. LTD.|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::2cd742664f7130ee",
+   "members": [
+    "asic-business-names::2cd742664f7130ee",
+    "asic-business-names::e79bb237e453d9cd",
+    "corporate-transparency::OUTDOOR SUPACENTRE PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::2e029c5e1f8ab3b4",
+   "members": [
+    "asic-business-names::2e029c5e1f8ab3b4",
+    "corporate-transparency::ADCO CONSTRUCTIONS PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::316a0975a5d8c8ff",
+   "members": [
+    "asic-business-names::316a0975a5d8c8ff",
+    "asic-business-names::3d3948897bfbc466",
+    "asic-business-names::7920b0282e879a56",
+    "asic-business-names::d181575a47c317ae",
+    "corporate-transparency::PARAMOUNT MACHINERY (BROWNS) PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::31f07aae6901017e",
+   "members": [
+    "asic-business-names::31f07aae6901017e",
+    "corporate-transparency::NUTRITION WAREHOUSE PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::322f7aedc76a19d3",
+   "members": [
+    "asic-business-names::322f7aedc76a19d3",
+    "asic-credit-licensee::386340"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::3370183ef75f362a",
+   "members": [
+    "asic-business-names::3370183ef75f362a",
+    "asic-credit-licensee::388884"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::35a57ada37cd9128",
+   "members": [
+    "asic-business-names::35a57ada37cd9128",
+    "asic-credit-licensee::237879",
+    "corporate-transparency::BENDIGO AND ADELAIDE BANK LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::36d54b3372df6909",
+   "members": [
+    "asic-business-names::36d54b3372df6909",
+    "asic-business-names::c2f8aec27a6e7613",
+    "corporate-transparency::AUSTRALIAN MOTORS S.A. PTY. LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::398f0704d767a547",
+   "members": [
+    "asic-business-names::398f0704d767a547",
+    "asic-credit-licensee::420367"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::3aa920744e99e82b",
+   "members": [
+    "asic-business-names::3aa920744e99e82b",
+    "asic-credit-licensee::478029"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::3c513841f2649325",
+   "members": [
+    "asic-business-names::3c513841f2649325",
+    "asic-business-names::7d06ba18c944af16",
+    "asic-business-names::b061976a0c64b5bf",
+    "corporate-transparency::ACHMEA SCHADEVERZEKERINGEN N.V.|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::3d0f9f850319821f",
+   "members": [
+    "asic-business-names::3d0f9f850319821f",
+    "asic-credit-licensee::396362"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::3e5608033b1d2f98",
+   "members": [
+    "asic-business-names::3e5608033b1d2f98",
+    "asic-business-names::959b805de67a2cd9",
+    "asic-credit-licensee::389206"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::3f1a72ef4feb2876",
+   "members": [
+    "asic-business-names::3f1a72ef4feb2876",
+    "asic-credit-licensee::237988",
+    "corporate-transparency::AUSTRALIAN MILITARY BANK LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::3f325e9ae1c2ad3e",
+   "members": [
+    "asic-business-names::3f325e9ae1c2ad3e",
+    "asic-business-names::d42d7b678ac2d014",
+    "asic-credit-licensee::538623"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::3fd093af901e9928",
+   "members": [
+    "asic-business-names::3fd093af901e9928",
+    "asic-business-names::71dfa74fc4dc3651",
+    "asic-business-names::74b9e42ee68bfecf",
+    "asic-business-names::bf27c85f939cc199",
+    "asic-credit-licensee::384408"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::4043a0cac3618b13",
+   "members": [
+    "asic-business-names::4043a0cac3618b13",
+    "corporate-transparency::SYESUN PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::40556cb3b155c778",
+   "members": [
+    "asic-business-names::40556cb3b155c778",
+    "asic-business-names::5dbde0b364772b1f",
+    "asic-business-names::a1a100dc4149a6d2",
+    "asic-business-names::ae93a1904b8fd20c",
+    "asic-business-names::f6295b4ababa4357",
+    "corporate-transparency::ALSCO PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::415041f112a18147",
+   "members": [
+    "asic-business-names::415041f112a18147",
+    "asic-credit-licensee::389667"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::433f814c9f89dfea",
+   "members": [
+    "asic-business-names::433f814c9f89dfea",
+    "asic-business-names::58653f2282f99071",
+    "asic-business-names::78b8fe0d87f302dd",
+    "corporate-transparency::ABC REFINERY (AUSTRALIA) PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::47437b54ba621ec1",
+   "members": [
+    "asic-business-names::47437b54ba621ec1",
+    "asic-business-names::98806cd7c50332cf",
+    "corporate-transparency::A.G. COOMBS PTY. LTD.|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::47d28229296336af",
+   "members": [
+    "asic-business-names::47d28229296336af",
+    "corporate-transparency::GROSVENOR ENGINEERING GROUP PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::48dfd7eb40afd471",
+   "members": [
+    "asic-business-names::48dfd7eb40afd471",
+    "asic-business-names::90a3398659a3a303",
+    "asic-credit-licensee::230043",
+    "corporate-transparency::AIA AUSTRALIA LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::48e249bf16f21bf3",
+   "members": [
+    "asic-business-names::48e249bf16f21bf3",
+    "asic-business-names::5fe015494048e6d6",
+    "asic-business-names::92658492ac164cd0",
+    "corporate-transparency::SONOVA AUDIOLOGICAL CARE AUSTRALIA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::4ad0bf78118fbde5",
+   "members": [
+    "asic-business-names::4ad0bf78118fbde5",
+    "corporate-transparency::INSURANCE AUSTRALIA GROUP LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::4bc38b384f55a179",
+   "members": [
+    "asic-business-names::4bc38b384f55a179",
+    "asic-credit-licensee::390997"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::4e2e55a2cfd72f87",
+   "members": [
+    "asic-business-names::4e2e55a2cfd72f87",
+    "corporate-transparency::ABBVIE PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::4f4714a7bfe0672d",
+   "members": [
+    "asic-business-names::4f4714a7bfe0672d",
+    "asic-business-names::5de379736b861c92",
+    "asic-business-names::99ac6cdb7d1cbf66",
+    "asic-credit-licensee::528089"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::52330e9fcea698f7",
+   "members": [
+    "asic-business-names::52330e9fcea698f7",
+    "asic-credit-licensee::389087",
+    "corporate-transparency::AUSTRALIAN FINANCE GROUP LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::52bff0d6437dd3f7",
+   "members": [
+    "asic-business-names::52bff0d6437dd3f7",
+    "asic-credit-licensee::389221"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::53aee5a7fca35668",
+   "members": [
+    "asic-business-names::53aee5a7fca35668",
+    "asic-credit-licensee::568102"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::54211cfe32a36cc7",
+   "members": [
+    "asic-business-names::54211cfe32a36cc7",
+    "corporate-transparency::ABN RESIDENTIAL WA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::54874f439d159d7a",
+   "members": [
+    "asic-business-names::54874f439d159d7a",
+    "asic-credit-licensee::393536"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::554d564c571eafcf",
+   "members": [
+    "asic-business-names::554d564c571eafcf",
+    "corporate-transparency::AUSTRALASIAN PERFORMING RIGHT ASSOCIATION LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::55c0dee6252e1029",
+   "members": [
+    "asic-business-names::55c0dee6252e1029",
+    "asic-credit-licensee::375062"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::57bf8c60c4ffb422",
+   "members": [
+    "asic-business-names::57bf8c60c4ffb422",
+    "corporate-transparency::BGC (AUSTRALIA) PTY LTD|2024-25",
+    "ipgod2022::6d2452342211fe83"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::588cd03a6fe4d8c0",
+   "members": [
+    "asic-business-names::588cd03a6fe4d8c0",
+    "corporate-transparency::AMR RECYCLERS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::5a9d24806b6ef5c2",
+   "members": [
+    "asic-business-names::5a9d24806b6ef5c2",
+    "asic-credit-licensee::384512"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::5afceb9638eac54e",
+   "members": [
+    "asic-business-names::5afceb9638eac54e",
+    "asic-credit-licensee::498636"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::5cd5e714c8aae547",
+   "members": [
+    "asic-business-names::5cd5e714c8aae547",
+    "asic-credit-licensee::238520"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::5e6e016116a9aade",
+   "members": [
+    "asic-business-names::5e6e016116a9aade",
+    "asic-business-names::6f9bc6850c952e78",
+    "asic-business-names::92fbbbb5dec7b7d4",
+    "corporate-transparency::ADELAIDE AIRPORT LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::5e72df6707d1af1e",
+   "members": [
+    "asic-business-names::5e72df6707d1af1e",
+    "asic-business-names::7fbc5932d87a3fdc",
+    "asic-business-names::841d0c7a2fcbe9eb",
+    "asic-business-names::9c3d64e207b3daec",
+    "asic-business-names::d4c4fb77ce8ba3c8",
+    "corporate-transparency::ANDREW MIEDECKE MOTORS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::5e91b0caa6b4babb",
+   "members": [
+    "asic-business-names::5e91b0caa6b4babb",
+    "asic-business-names::92b400f1ef238d90",
+    "corporate-transparency::FARM PRIDE FOODS LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::6047e7f5f2abb59f",
+   "members": [
+    "asic-business-names::6047e7f5f2abb59f",
+    "corporate-transparency::COGNIZANT TECHNOLOGY SOLUTIONS AUSTRALIA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::61aff5f0764657d6",
+   "members": [
+    "asic-business-names::61aff5f0764657d6",
+    "corporate-transparency::KEL CAMPBELL PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::621aa7c14fe5459b",
+   "members": [
+    "asic-business-names::621aa7c14fe5459b",
+    "asic-business-names::a0f00ba248b80f11",
+    "corporate-transparency::LOCKSMITHS NOMINEES PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::6248333c69fff3aa",
+   "members": [
+    "asic-business-names::6248333c69fff3aa",
+    "asic-business-names::6707ed81b486036e",
+    "asic-business-names::9548f6c906ecdc03",
+    "asic-credit-licensee::505343"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::630271292d7129d4",
+   "members": [
+    "asic-business-names::630271292d7129d4",
+    "asic-business-names::bb7eefd94faa58ff",
+    "corporate-transparency::AAPC LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::642f0fa0f2d62221",
+   "members": [
+    "asic-business-names::642f0fa0f2d62221",
+    "asic-business-names::b6496888ec847fc9",
+    "asic-credit-licensee::391202"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::648597ea9e0ca767",
+   "members": [
+    "asic-business-names::648597ea9e0ca767",
+    "corporate-transparency::INFOCUS WEALTH MANAGEMENT LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::6946f1bb93005cd1",
+   "members": [
+    "asic-business-names::6946f1bb93005cd1",
+    "asic-credit-licensee::229892"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::6a572db1ea53452c",
+   "members": [
+    "asic-business-names::6a572db1ea53452c",
+    "corporate-transparency::HUTCHEON & PEARCE OPERATIONS PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::6aa2306301fd0ac9",
+   "members": [
+    "asic-business-names::6aa2306301fd0ac9",
+    "asic-credit-licensee::462491"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::6bca17b3a5a7b2ce",
+   "members": [
+    "asic-business-names::6bca17b3a5a7b2ce",
+    "asic-business-names::a281b543d0839303",
+    "corporate-transparency::BERRICK INVESTMENTS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::6c4dc30cf08b6800",
+   "members": [
+    "asic-business-names::6c4dc30cf08b6800",
+    "corporate-transparency::TECHWOOL TRADING PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::6f1928678132c267",
+   "members": [
+    "asic-business-names::6f1928678132c267",
+    "asic-credit-licensee::430681"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::6f4b3351141f29fd",
+   "members": [
+    "asic-business-names::6f4b3351141f29fd",
+    "asic-credit-licensee::389794"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::7012de0223d93de1",
+   "members": [
+    "asic-business-names::7012de0223d93de1",
+    "corporate-transparency::THE FOURTH FORCE PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::7027f3af5f1f2dce",
+   "members": [
+    "asic-business-names::7027f3af5f1f2dce",
+    "asic-business-names::e774dc6b0815fad4",
+    "asic-credit-licensee::411447"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::714d4f5832cfd72a",
+   "members": [
+    "asic-business-names::714d4f5832cfd72a",
+    "asic-credit-licensee::490343"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::71d8d39eaee76ee3",
+   "members": [
+    "asic-business-names::71d8d39eaee76ee3",
+    "corporate-transparency::ESTEE LAUDER PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::73313072c16b79d5",
+   "members": [
+    "asic-business-names::73313072c16b79d5",
+    "asic-business-names::aa5f149806fb938a",
+    "asic-business-names::ae4a82b40f14d1f4",
+    "asic-business-names::c607758230a817d2",
+    "corporate-transparency::AG N VET MANAGEMENT SERVICES PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::744cc73e8c6bf182",
+   "members": [
+    "asic-business-names::744cc73e8c6bf182",
+    "corporate-transparency::HOUMA HOLDINGS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::7546f13af8b840ac",
+   "members": [
+    "asic-business-names::7546f13af8b840ac",
+    "asic-credit-licensee::388292"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::783338e95ba00f72",
+   "members": [
+    "asic-business-names::783338e95ba00f72",
+    "asic-credit-licensee::384318"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::795baf23c3a6d8fb",
+   "members": [
+    "asic-business-names::795baf23c3a6d8fb",
+    "asic-business-names::93301f3ab4ad55a5",
+    "corporate-transparency::G8 EDUCATION LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::7c665ecd508f3917",
+   "members": [
+    "asic-business-names::7c665ecd508f3917",
+    "corporate-transparency::NRW HOLDINGS LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::7e8f2b60f6947c52",
+   "members": [
+    "asic-business-names::7e8f2b60f6947c52",
+    "corporate-transparency::INTERNET SERVICES AUSTRALIA 1 PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::7f06b76c6ff6790c",
+   "members": [
+    "asic-business-names::7f06b76c6ff6790c",
+    "asic-credit-licensee::389691"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::7f420b1e82d488a5",
+   "members": [
+    "asic-business-names::7f420b1e82d488a5",
+    "corporate-transparency::THE CARE AUTOMOTIVE GROUP PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::7f6bd6e641786f89",
+   "members": [
+    "asic-business-names::7f6bd6e641786f89",
+    "corporate-transparency::AUSTRALIAN CHOICE EXPORTS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::7fe6a710c1e6f45d",
+   "members": [
+    "asic-business-names::7fe6a710c1e6f45d",
+    "ipgod2022::00ed3976032e0873",
+    "ipgod2022::fb6ad8cdde7a9a48"
+   ],
+   "sources": [
+    "asic-business-names",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::805457d2c44946ed",
+   "members": [
+    "asic-business-names::805457d2c44946ed",
+    "asic-credit-licensee::503398"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::82667c6756bbe1c7",
+   "members": [
+    "asic-business-names::82667c6756bbe1c7",
+    "asic-credit-licensee::383999"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::83486a54980564b4",
+   "members": [
+    "asic-business-names::83486a54980564b4",
+    "asic-credit-licensee::493903"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::83749ec1fd960f30",
+   "members": [
+    "asic-business-names::83749ec1fd960f30",
+    "corporate-transparency::ALLIANZ AUSTRALIA LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::83dc5220ea251b6b",
+   "members": [
+    "asic-business-names::83dc5220ea251b6b",
+    "asic-credit-licensee::402957"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::83eb113f98e189f3",
+   "members": [
+    "asic-business-names::83eb113f98e189f3",
+    "asic-credit-licensee::473666"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::83f98e4191d7d20e",
+   "members": [
+    "asic-business-names::83f98e4191d7d20e",
+    "corporate-transparency::WIN CORPORATION PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::84ff41076c1217b8",
+   "members": [
+    "asic-business-names::84ff41076c1217b8",
+    "asic-credit-licensee::521774"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::85b833a7468feae9",
+   "members": [
+    "asic-business-names::85b833a7468feae9",
+    "corporate-transparency::WESTERN SUBURBS NCLE LEAGUES CLUB LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::85d8bbabb89376ac",
+   "members": [
+    "asic-business-names::85d8bbabb89376ac",
+    "asic-business-names::f6d097ea6cde1af9",
+    "corporate-transparency::ABN CONSTRUCTION SERVICES PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::870f85388b67859f",
+   "members": [
+    "asic-business-names::870f85388b67859f",
+    "asic-credit-licensee::482303"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::87dcc188dc964312",
+   "members": [
+    "asic-business-names::87dcc188dc964312",
+    "asic-credit-licensee::389521"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::8854a20e830454a4",
+   "members": [
+    "asic-business-names::8854a20e830454a4",
+    "asic-business-names::bb74d84bc31164c1",
+    "corporate-transparency::AKESA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::888032e48e9590d1",
+   "members": [
+    "asic-business-names::888032e48e9590d1",
+    "asic-credit-licensee::488825"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::88f3f905f1fe7aeb",
+   "members": [
+    "asic-business-names::88f3f905f1fe7aeb",
+    "corporate-transparency::AUSTRALIAN BULLION COMPANY (N S W) PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::891dbf1d299fbfb4",
+   "members": [
+    "asic-business-names::891dbf1d299fbfb4",
+    "asic-business-names::d4ae5a3a10b0ec48",
+    "corporate-transparency::E.B. MAWSON & SONS PTY. LTD.|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::8a5222a46575c956",
+   "members": [
+    "asic-business-names::8a5222a46575c956",
+    "corporate-transparency::KAH AUSTRALIA PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::8a7e0f91ee5bd482",
+   "members": [
+    "asic-business-names::8a7e0f91ee5bd482",
+    "corporate-transparency::COAST ENTERTAINMENT HOLDINGS LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::8aa0f3603eeeb78f",
+   "members": [
+    "asic-business-names::8aa0f3603eeeb78f",
+    "corporate-transparency::RINNAI AUSTRALIA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::8b31dbe193f94d65",
+   "members": [
+    "asic-business-names::8b31dbe193f94d65",
+    "asic-credit-licensee::468425"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::8bb5d03c6d9bfe44",
+   "members": [
+    "asic-business-names::8bb5d03c6d9bfe44",
+    "corporate-transparency::ADCO GROUP PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::8c57b3427a0d5abf",
+   "members": [
+    "asic-business-names::8c57b3427a0d5abf",
+    "asic-business-names::b50d473e6f9770cb",
+    "corporate-transparency::A.G. COOMBS GROUP PTY. LTD.|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::8d31e6e109d7e1c3",
+   "members": [
+    "asic-business-names::8d31e6e109d7e1c3",
+    "corporate-transparency::AMPLITUDE ENERGY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::8d8a00f6a65c5d59",
+   "members": [
+    "asic-business-names::8d8a00f6a65c5d59",
+    "asic-credit-licensee::412249"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::8e27ee9a77b33b9d",
+   "members": [
+    "asic-business-names::8e27ee9a77b33b9d",
+    "corporate-transparency::H & M HENNES & MAURITZ PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::9075ec7e9ae6be9c",
+   "members": [
+    "asic-business-names::9075ec7e9ae6be9c",
+    "corporate-transparency::MEDIBANK PRIVATE LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::91655184e92357e2",
+   "members": [
+    "asic-business-names::91655184e92357e2",
+    "asic-business-names::bd7325444f214432",
+    "corporate-transparency::AIOI NISSAY DOWA INSURANCE COMPANY AUSTRALIA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::9386e9e7b4f380ef",
+   "members": [
+    "asic-business-names::9386e9e7b4f380ef",
+    "corporate-transparency::MCCORMICK FOODS AUSTRALIA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::96e13f6a19232079",
+   "members": [
+    "asic-business-names::96e13f6a19232079",
+    "asic-business-names::ede574f339b6efde",
+    "corporate-transparency::ALCOA OF AUSTRALIA LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::97988732d0c5bc7f",
+   "members": [
+    "asic-business-names::97988732d0c5bc7f",
+    "asic-business-names::d80540d03254bdc5",
+    "asic-credit-licensee::390841"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::99cfb37085c8d2af",
+   "members": [
+    "asic-business-names::99cfb37085c8d2af",
+    "asic-credit-licensee::386978"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::9a522fba17d10c29",
+   "members": [
+    "asic-business-names::9a522fba17d10c29",
+    "asic-credit-licensee::395275"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::9d6626ef463ec286",
+   "members": [
+    "asic-business-names::9d6626ef463ec286",
+    "asic-credit-licensee::393092"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::9dc40bf69f99443f",
+   "members": [
+    "asic-business-names::9dc40bf69f99443f",
+    "corporate-transparency::SSP AUSTRALIA CATERING PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::a12b3197ab4febeb",
+   "members": [
+    "asic-business-names::a12b3197ab4febeb",
+    "asic-credit-licensee::390486"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::a20109910449501f",
+   "members": [
+    "asic-business-names::a20109910449501f",
+    "corporate-transparency::AA HOLDINGS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::a42ab00443e26723",
+   "members": [
+    "asic-business-names::a42ab00443e26723",
+    "asic-credit-licensee::528711"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::a59f330eac9d856d",
+   "members": [
+    "asic-business-names::a59f330eac9d856d",
+    "asic-business-names::cfedcee142eab6a5",
+    "asic-credit-licensee::566705"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::a624e6f5136fb4b9",
+   "members": [
+    "asic-business-names::a624e6f5136fb4b9",
+    "corporate-transparency::BOEHRINGER INGELHEIM PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::a738f3de69325a75",
+   "members": [
+    "asic-business-names::a738f3de69325a75",
+    "corporate-transparency::A.G.OATLEY WINES PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::a8d21b204b5f8884",
+   "members": [
+    "asic-business-names::a8d21b204b5f8884",
+    "asic-credit-licensee::386616"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::aa2d4b69ff898008",
+   "members": [
+    "asic-business-names::aa2d4b69ff898008",
+    "asic-business-names::f3976c30ee4b5a13",
+    "asic-credit-licensee::494464"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::ad11e45cd1fec147",
+   "members": [
+    "asic-business-names::ad11e45cd1fec147",
+    "corporate-transparency::KENNARDS HIRE PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::ae0ab1185841b0f3",
+   "members": [
+    "asic-business-names::ae0ab1185841b0f3",
+    "corporate-transparency::AGILITUS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::b1df11415243efd5",
+   "members": [
+    "asic-business-names::b1df11415243efd5",
+    "asic-business-names::e2130bb388a2e209",
+    "corporate-transparency::AUTOMOTIVE IMPORTS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::b1e22297799d54c9",
+   "members": [
+    "asic-business-names::b1e22297799d54c9",
+    "corporate-transparency::360 INTERNATIONAL TRADING PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::b26b3291f854894d",
+   "members": [
+    "asic-business-names::b26b3291f854894d",
+    "asic-credit-licensee::379491"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::b2ccc8cfe853f8e7",
+   "members": [
+    "asic-business-names::b2ccc8cfe853f8e7",
+    "corporate-transparency::THE N. & A. FRUIT DISTRIBUTORS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::b3349e0538f14132",
+   "members": [
+    "asic-business-names::b3349e0538f14132",
+    "asic-credit-licensee::387310"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::b4d03811a3b014d6",
+   "members": [
+    "asic-business-names::b4d03811a3b014d6",
+    "asic-credit-licensee::551911"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::b6011728198ebf23",
+   "members": [
+    "asic-business-names::b6011728198ebf23",
+    "asic-credit-licensee::237874"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::b6c9382ab61b36b7",
+   "members": [
+    "asic-business-names::b6c9382ab61b36b7",
+    "asic-credit-licensee::518067"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::ba2980ae81c38ed4",
+   "members": [
+    "asic-business-names::ba2980ae81c38ed4",
+    "asic-credit-licensee::386308"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::bbb5dd92b4673c5b",
+   "members": [
+    "asic-business-names::bbb5dd92b4673c5b",
+    "asic-credit-licensee::419769"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::bd6215a00ecbd9fd",
+   "members": [
+    "asic-business-names::bd6215a00ecbd9fd",
+    "asic-business-names::f68caf093b32f956",
+    "asic-credit-licensee::382008"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::bd845da45d82049e",
+   "members": [
+    "asic-business-names::bd845da45d82049e",
+    "corporate-transparency::GOLD DEALERS EXCHANGE PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::be6325d235fe4a68",
+   "members": [
+    "asic-business-names::be6325d235fe4a68",
+    "asic-credit-licensee::384690"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::c01ca967e0700013",
+   "members": [
+    "asic-business-names::c01ca967e0700013",
+    "corporate-transparency::L.C. DYSONS BUS SERVICES PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::c0c2b1b10bce4d22",
+   "members": [
+    "asic-business-names::c0c2b1b10bce4d22",
+    "corporate-transparency::ABACUS STORAGE OPERATIONS LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::c2e0a49ee1a160f8",
+   "members": [
+    "asic-business-names::c2e0a49ee1a160f8",
+    "corporate-transparency::MULWARRA EXPORT PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::c494e4e99212889a",
+   "members": [
+    "asic-business-names::c494e4e99212889a",
+    "asic-credit-licensee::390506"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::c7ac80dedda5a846",
+   "members": [
+    "asic-business-names::c7ac80dedda5a846",
+    "corporate-transparency::AIRPORT MOTOR GROUP PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::c88f318044b875b1",
+   "members": [
+    "asic-business-names::c88f318044b875b1",
+    "corporate-transparency::MOUNT PRICHARD & DISTRICT COMMUNITY CLUB LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::c8fe62fbcd925fac",
+   "members": [
+    "asic-business-names::c8fe62fbcd925fac",
+    "asic-credit-licensee::413564"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::ca1395d57d626da7",
+   "members": [
+    "asic-business-names::ca1395d57d626da7",
+    "asic-business-names::dd5352591d4d8c9a",
+    "asic-credit-licensee::515210"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::ca1f18b9e84b21a0",
+   "members": [
+    "asic-business-names::ca1f18b9e84b21a0",
+    "corporate-transparency::TREK BICYCLE CORPORATION (AUSTRALIA) PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::cb02983788965e48",
+   "members": [
+    "asic-business-names::cb02983788965e48",
+    "asic-credit-licensee::520874"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::cb15f16b374ca1e9",
+   "members": [
+    "asic-business-names::cb15f16b374ca1e9",
+    "corporate-transparency::HEWITT FOODS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::cc8f6b182e938637",
+   "members": [
+    "asic-business-names::cc8f6b182e938637",
+    "corporate-transparency::AUSTRALIAN ETHICAL INVESTMENT LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::cca9df778993951d",
+   "members": [
+    "asic-business-names::cca9df778993951d",
+    "corporate-transparency::SCI-FLEET MOTORS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::cec6ea428784eebe",
+   "members": [
+    "asic-business-names::cec6ea428784eebe",
+    "asic-credit-licensee::386474"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::cf805da50a9aae57",
+   "members": [
+    "asic-business-names::cf805da50a9aae57",
+    "asic-credit-licensee::236643"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::cf86177035d3d738",
+   "members": [
+    "asic-business-names::cf86177035d3d738",
+    "asic-credit-licensee::388978"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::cfd3c2d0510a41e0",
+   "members": [
+    "asic-business-names::cfd3c2d0510a41e0",
+    "asic-credit-licensee::476666"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::d00e07abe00bf3f9",
+   "members": [
+    "asic-business-names::d00e07abe00bf3f9",
+    "asic-credit-licensee::237757"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::d1559277d7bcc73f",
+   "members": [
+    "asic-business-names::d1559277d7bcc73f",
+    "asic-credit-licensee::542219"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::d39076d62bbb5a08",
+   "members": [
+    "asic-business-names::d39076d62bbb5a08",
+    "corporate-transparency::AUSTRALIAN POSTAL CORPORATION|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::d6d8e46d9f07898e",
+   "members": [
+    "asic-business-names::d6d8e46d9f07898e",
+    "corporate-transparency::ALMONDCO AUSTRALIA LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::d8b22664fd8704bc",
+   "members": [
+    "asic-business-names::d8b22664fd8704bc",
+    "corporate-transparency::UNCLE BILL'S (AUSTRALIA) PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::d9bca7220c9068af",
+   "members": [
+    "asic-business-names::d9bca7220c9068af",
+    "corporate-transparency::WISEWAY GROUP LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::da697759c69bcb11",
+   "members": [
+    "asic-business-names::da697759c69bcb11",
+    "asic-credit-licensee::232706"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::dac2ec192b74531a",
+   "members": [
+    "asic-business-names::dac2ec192b74531a",
+    "corporate-transparency::AIM MINING CORPORATION LIMITED|2023-24",
+    "corporate-transparency::AIM MINING CORPORATION LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::db31e7af33e2ee53",
+   "members": [
+    "asic-business-names::db31e7af33e2ee53",
+    "corporate-transparency::B&W RURAL PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::dbdabe083a4c355f",
+   "members": [
+    "asic-business-names::dbdabe083a4c355f",
+    "corporate-transparency::SLATER AND GORDON LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::de574ca25a1cdd89",
+   "members": [
+    "asic-business-names::de574ca25a1cdd89",
+    "asic-credit-licensee::383158"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::df41ad886b4394d2",
+   "members": [
+    "asic-business-names::df41ad886b4394d2",
+    "asic-business-names::e7084698f6c8dd11",
+    "corporate-transparency::BOC LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::df7b4cea9c536562",
+   "members": [
+    "asic-business-names::df7b4cea9c536562",
+    "corporate-transparency::TAYLOR FERGUSON & CO PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::e089e71b278233ff",
+   "members": [
+    "asic-business-names::e089e71b278233ff",
+    "asic-credit-licensee::429300"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::e2825f97fdd2cb5a",
+   "members": [
+    "asic-business-names::e2825f97fdd2cb5a",
+    "asic-credit-licensee::388170"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::e378c90b0db3beaf",
+   "members": [
+    "asic-business-names::e378c90b0db3beaf",
+    "asic-credit-licensee::506065"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::e3cd4d8e1f87d6d3",
+   "members": [
+    "asic-business-names::e3cd4d8e1f87d6d3",
+    "corporate-transparency::CLEARLIGHT INVESTMENT PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::e87aba8bd5b2f351",
+   "members": [
+    "asic-business-names::e87aba8bd5b2f351",
+    "asic-credit-licensee::391884"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::e9ecdaeb3d5848bd",
+   "members": [
+    "asic-business-names::e9ecdaeb3d5848bd",
+    "asic-credit-licensee::486112"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::eaba87ada29f7d24",
+   "members": [
+    "asic-business-names::eaba87ada29f7d24",
+    "asic-credit-licensee::577960"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::ec5a97d1fe61870d",
+   "members": [
+    "asic-business-names::ec5a97d1fe61870d",
+    "asic-credit-licensee::388249"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::eca83bafe75ffd36",
+   "members": [
+    "asic-business-names::eca83bafe75ffd36",
+    "asic-credit-licensee::388786"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::ed396198367e0781",
+   "members": [
+    "asic-business-names::ed396198367e0781",
+    "asic-credit-licensee::390701"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::edba692923cc03c2",
+   "members": [
+    "asic-business-names::edba692923cc03c2",
+    "corporate-transparency::GCW HOLDINGS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::f09f71f44236c8dc",
+   "members": [
+    "asic-business-names::f09f71f44236c8dc",
+    "corporate-transparency::LOAN MARKET GROUP PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::f2205fab36cf8f4e",
+   "members": [
+    "asic-business-names::f2205fab36cf8f4e",
+    "corporate-transparency::AUSTRALIAN BEARINGS CORPORATION PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::f3956f737fa1f5d3",
+   "members": [
+    "asic-business-names::f3956f737fa1f5d3",
+    "corporate-transparency::4K AUTOMOTIVE GROUP PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::f3c5b5692d7776f0",
+   "members": [
+    "asic-business-names::f3c5b5692d7776f0",
+    "asic-credit-licensee::405773"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::f67634a131c389f3",
+   "members": [
+    "asic-business-names::f67634a131c389f3",
+    "corporate-transparency::AGNVET RURAL PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::f7e17851cb48492e",
+   "members": [
+    "asic-business-names::f7e17851cb48492e",
+    "corporate-transparency::PRYSMIAN AUSTRALIA PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::fd6b830d64103214",
+   "members": [
+    "asic-business-names::fd6b830d64103214",
+    "corporate-transparency::CARNEY TOWNSVILLE PARTNERSHIP|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::fe5d8e694fc30262",
+   "members": [
+    "asic-business-names::fe5d8e694fc30262",
+    "corporate-transparency::ATLAS COPCO AUSTRALIA PTY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-business-names::ff65d5a1480f5e05",
+   "members": [
+    "asic-business-names::ff65d5a1480f5e05",
+    "asic-credit-licensee::247829",
+    "corporate-transparency::RESIMAC GROUP LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-business-names",
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::230686",
+   "members": [
+    "asic-credit-licensee::230686",
+    "corporate-transparency::NATIONAL AUSTRALIA BANK LIMITED|2024-25",
+    "ipgod2022::0fed01c493f9a149"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::231087",
+   "members": [
+    "asic-credit-licensee::231087",
+    "corporate-transparency::UBS AG AUSTRALIA BRANCH|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::233714",
+   "members": [
+    "asic-credit-licensee::233714",
+    "corporate-transparency::WESTPAC BANKING CORPORATION|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::234527",
+   "members": [
+    "asic-credit-licensee::234527",
+    "ipgod2022::1ac3f2bfdb499b10",
+    "ipgod2022::614a57562fdaebb6"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::234582",
+   "members": [
+    "asic-credit-licensee::234582",
+    "corporate-transparency::DEFENCE BANK LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::236870",
+   "members": [
+    "asic-credit-licensee::236870",
+    "corporate-transparency::B & E LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::237391",
+   "members": [
+    "asic-credit-licensee::237391",
+    "corporate-transparency::IMB LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::237856",
+   "members": [
+    "asic-credit-licensee::237856",
+    "corporate-transparency::BEYOND BANK AUSTRALIA LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::238273",
+   "members": [
+    "asic-credit-licensee::238273",
+    "corporate-transparency::NEWCASTLE GREATER MUTUAL GROUP LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::238311",
+   "members": [
+    "asic-credit-licensee::238311",
+    "corporate-transparency::UNITY BANK LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::238317",
+   "members": [
+    "asic-credit-licensee::238317",
+    "corporate-transparency::CREDIT UNION AUSTRALIA LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::238431",
+   "members": [
+    "asic-credit-licensee::238431",
+    "corporate-transparency::BANK AUSTRALIA LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::238981",
+   "members": [
+    "asic-credit-licensee::238981",
+    "corporate-transparency::TEACHERS MUTUAL BANK LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::239686",
+   "members": [
+    "asic-credit-licensee::239686",
+    "corporate-transparency::AUSWIDE BANK LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::240018",
+   "members": [
+    "asic-credit-licensee::240018",
+    "corporate-transparency::POLICE BANK LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::240293",
+   "members": [
+    "asic-credit-licensee::240293",
+    "corporate-transparency::POLICE FINANCIAL SERVICES LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::240701",
+   "members": [
+    "asic-credit-licensee::240701",
+    "corporate-transparency::POLICE & NURSES LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::240960",
+   "members": [
+    "asic-credit-licensee::240960",
+    "corporate-transparency::VICTORIA TEACHERS LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::241066",
+   "members": [
+    "asic-credit-licensee::241066",
+    "corporate-transparency::CREDIT UNION SA LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::241167",
+   "members": [
+    "asic-credit-licensee::241167",
+    "corporate-transparency::REGIONAL AUSTRALIA BANK LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::241195",
+   "members": [
+    "asic-credit-licensee::241195",
+    "corporate-transparency::MEMBERS BANKING GROUP LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::243444",
+   "members": [
+    "asic-credit-licensee::243444",
+    "corporate-transparency::BANK OF SYDNEY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::244248",
+   "members": [
+    "asic-credit-licensee::244248",
+    "corporate-transparency::HUME BANK LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::244310",
+   "members": [
+    "asic-credit-licensee::244310",
+    "corporate-transparency::HERITAGE AND PEOPLE'S CHOICE LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::244533",
+   "members": [
+    "asic-credit-licensee::244533",
+    "corporate-transparency::QUEENSLAND COUNTRY BANK LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::244596",
+   "members": [
+    "asic-credit-licensee::244596",
+    "corporate-transparency::TAIWAN BUSINESS BANK, LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::244616",
+   "members": [
+    "asic-credit-licensee::244616",
+    "corporate-transparency::BANK OF QUEENSLAND LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::245606",
+   "members": [
+    "asic-credit-licensee::245606",
+    "corporate-transparency::HEARTLAND BANK AUSTRALIA LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::247346",
+   "members": [
+    "asic-credit-licensee::247346",
+    "corporate-transparency::MEGA INTERNATIONAL COMMERCIAL BANK CO. LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::286655",
+   "members": [
+    "asic-credit-licensee::286655",
+    "corporate-transparency::PEPPER MONEY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::287322",
+   "members": [
+    "asic-credit-licensee::287322",
+    "corporate-transparency::BANK OF CHINA (AUSTRALIA) LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::290600",
+   "members": [
+    "asic-credit-licensee::290600",
+    "corporate-transparency::FIRSTMAC LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::291313",
+   "members": [
+    "asic-credit-licensee::291313",
+    "corporate-transparency::AMERICAN EXPRESS AUSTRALIA LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::311128",
+   "members": [
+    "asic-credit-licensee::311128",
+    "corporate-transparency::REDZED LENDING SOLUTIONS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::389344",
+   "members": [
+    "asic-credit-licensee::389344",
+    "corporate-transparency::VOLKSWAGEN FINANCIAL SERVICES AUSTRALIA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::389782",
+   "members": [
+    "asic-credit-licensee::389782",
+    "corporate-transparency::SOLVAR LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::391484",
+   "members": [
+    "asic-credit-licensee::391484",
+    "corporate-transparency::JOHN DEERE FINANCIAL LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::393186",
+   "members": [
+    "asic-credit-licensee::393186",
+    "ipgod2022::22c211f95962e813",
+    "ipgod2022::7c4468cde34a76df",
+    "ipgod2022::d817456b2eb13f82"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::395075",
+   "members": [
+    "asic-credit-licensee::395075",
+    "corporate-transparency::K.A.P MOTORS PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::395560",
+   "members": [
+    "asic-credit-licensee::395560",
+    "corporate-transparency::TILFORD PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::396114",
+   "members": [
+    "asic-credit-licensee::396114",
+    "corporate-transparency::PICKERING CORPORATION PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::442007",
+   "members": [
+    "asic-credit-licensee::442007",
+    "corporate-transparency::KUBOTA AUSTRALIA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::450305",
+   "members": [
+    "asic-credit-licensee::450305",
+    "corporate-transparency::MONEYSPOT FINANCE PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::489187",
+   "members": [
+    "asic-credit-licensee::489187",
+    "corporate-transparency::JMC AUTOMOTIVE GROUP PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::503540",
+   "members": [
+    "asic-credit-licensee::503540",
+    "corporate-transparency::MCCARROLLS OF MOSS VALE PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::521900",
+   "members": [
+    "asic-credit-licensee::521900",
+    "corporate-transparency::DYNAMONEY LIMITED|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::548384",
+   "members": [
+    "asic-credit-licensee::548384",
+    "corporate-transparency::GENPACT AUSTRALIA PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "asic-credit-licensee::564080",
+   "members": [
+    "asic-credit-licensee::564080",
+    "corporate-transparency::THINK TANK GROUP PTY LTD|2024-25"
+   ],
+   "sources": [
+    "asic-credit-licensee",
+    "corporate-transparency"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::ABCOR PTY. LTD.|2024-25",
+   "members": [
+    "corporate-transparency::ABCOR PTY. LTD.|2024-25",
+    "ipgod2022::6113d47078afcda2"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::ALLEGION (AUSTRALIA) PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::ALLEGION (AUSTRALIA) PTY LTD|2024-25",
+    "ipgod2022::06631a79d786dbb5",
+    "ipgod2022::22496e3566770731",
+    "ipgod2022::6551acf308f3a3fc",
+    "ipgod2022::656a2cdcb76c607a",
+    "ipgod2022::c540f91576e99c14",
+    "ipgod2022::fb5d26ef74fe8d22"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::AMCOR PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::AMCOR PTY LTD|2024-25",
+    "ipgod2022::5e89446e66bee5cf",
+    "ipgod2022::6dbc8167795386a9",
+    "ipgod2022::8b838d6b10e8ccbc",
+    "ipgod2022::99cab41dc7b7e444",
+    "ipgod2022::ac1d302fd56c147b",
+    "ipgod2022::b07a46a19f951d75"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::ANSELL LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::ANSELL LIMITED|2024-25",
+    "ipgod2022::05534ca307400862",
+    "ipgod2022::105ac7dae6123c16",
+    "ipgod2022::1308d5c8f4cc7620",
+    "ipgod2022::29cbd51e3d63a524",
+    "ipgod2022::29f790e152801de0",
+    "ipgod2022::2e34a1632eb00f70",
+    "ipgod2022::33e593925e20e73a",
+    "ipgod2022::52402657fa37c64b",
+    "ipgod2022::618aefbe8096d5b4",
+    "ipgod2022::77b0881dd28506d4",
+    "ipgod2022::7b827e5ff901fed3",
+    "ipgod2022::89385c3943ebb655",
+    "ipgod2022::8d56720e8d9836f7",
+    "ipgod2022::9569e50d23632267",
+    "ipgod2022::a57bbd23fd8af5a0",
+    "ipgod2022::aca5d863fcb952c8",
+    "ipgod2022::c9fe1595723d591d",
+    "ipgod2022::d8bda83d2a140e40",
+    "ipgod2022::e6fd52edf4de79a5"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "corporate-transparency::APEX BUILDING PRODUCTS PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::APEX BUILDING PRODUCTS PTY LTD|2024-25",
+    "ipgod2022::ea11f14b887145c7"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::APEX STEEL PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::APEX STEEL PTY LTD|2024-25",
+    "ipgod2022::1a65c5d910e791ad"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::ARB CORPORATION LTD|2024-25",
+   "members": [
+    "corporate-transparency::ARB CORPORATION LTD|2024-25",
+    "ipgod2022::42f1406ae14b70e2",
+    "ipgod2022::9356cba1d886c34c",
+    "ipgod2022::9e9e9e980d3a294d",
+    "ipgod2022::aa450001815c6385",
+    "ipgod2022::b7cf5218cd8c667c",
+    "ipgod2022::cfdab0012aa53657",
+    "ipgod2022::e35dd84d94f9fe40"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::ARCHITECTURAL WINDOW SYSTEMS PTY LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::ARCHITECTURAL WINDOW SYSTEMS PTY LIMITED|2024-25",
+    "ipgod2022::0a56c433d0c40df8",
+    "ipgod2022::0d31f37fb32f0df7",
+    "ipgod2022::0f6bf1168a44421b",
+    "ipgod2022::1f04742f64c45648",
+    "ipgod2022::24ddde0a9d9c9750",
+    "ipgod2022::39eb637982761a14",
+    "ipgod2022::93ed8a2a0a13c74d",
+    "ipgod2022::c0f4e64c4788ee06",
+    "ipgod2022::c69f98b2f88ca36f"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::AUSTIN ENGINEERING LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::AUSTIN ENGINEERING LIMITED|2024-25",
+    "ipgod2022::7f66f20fe3db1de6",
+    "ipgod2022::b21fd76182db21f7"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::BHP GROUP LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::BHP GROUP LIMITED|2024-25",
+    "ipgod2022::2235acf3a094353a",
+    "ipgod2022::d661f228418d0cf5"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::BLUESCOPE STEEL LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::BLUESCOPE STEEL LIMITED|2024-25",
+    "ipgod2022::057259f246a58d28",
+    "ipgod2022::0af408d09ffc3d9a",
+    "ipgod2022::0e711d1eea43a62a",
+    "ipgod2022::15dd2d6c0739477f",
+    "ipgod2022::17de7db85fce0f3a",
+    "ipgod2022::1a4ba19103a1e6d1",
+    "ipgod2022::1ec40099b543b56f",
+    "ipgod2022::1fbb853eb338f458",
+    "ipgod2022::2fea1623775e0b56",
+    "ipgod2022::60942668b96b3d95",
+    "ipgod2022::625ac2c561d1946b",
+    "ipgod2022::6e23021bd4b56797",
+    "ipgod2022::737444cdeb5a5905",
+    "ipgod2022::758f964d5d9486cb",
+    "ipgod2022::c8185ed0804d7ad9",
+    "ipgod2022::e4dc900065d44d7b",
+    "ipgod2022::e9091020c93148c6"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "corporate-transparency::BRADNAMS WINDOWS AND DOORS PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::BRADNAMS WINDOWS AND DOORS PTY LTD|2024-25",
+    "ipgod2022::36192b6a79562649",
+    "ipgod2022::fc79786807db55d5"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::BRIDGESTONE AUSTRALIA LTD|2024-25",
+   "members": [
+    "corporate-transparency::BRIDGESTONE AUSTRALIA LTD|2024-25",
+    "ipgod2022::5337fd495866be1f"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::CANTERBURY LEAGUE CLUB LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::CANTERBURY LEAGUE CLUB LIMITED|2024-25",
+    "ipgod2022::58947a6e1fb8ab5b",
+    "ipgod2022::8a80195e27038133"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::CAPRAL LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::CAPRAL LIMITED|2024-25",
+    "ipgod2022::0a800341d483e63c",
+    "ipgod2022::0c4c7d489606c045",
+    "ipgod2022::14f35807a215e9c6",
+    "ipgod2022::17dd196f6d51db99",
+    "ipgod2022::1f9ec0678d2ff1bf",
+    "ipgod2022::1fb423e396cc272f",
+    "ipgod2022::31fba60f51ec4cd6",
+    "ipgod2022::342fb893b2d51b44",
+    "ipgod2022::36739097a25be2f2",
+    "ipgod2022::3be43d579c420823",
+    "ipgod2022::3fa64451b3613872",
+    "ipgod2022::423593932b926076",
+    "ipgod2022::46d0224f5dac96e8",
+    "ipgod2022::488b3f8433423be4",
+    "ipgod2022::4ada6cd7534280bf",
+    "ipgod2022::4b5f9af773f1d523",
+    "ipgod2022::530c240819f983ee",
+    "ipgod2022::5ac93bd3be106cbf",
+    "ipgod2022::624707616a1a055b",
+    "ipgod2022::6639c6189b492548",
+    "ipgod2022::69e049cb2de172e2",
+    "ipgod2022::69f6fe2a369527e7",
+    "ipgod2022::76314e47766a071f",
+    "ipgod2022::76834ff6143a6034",
+    "ipgod2022::76e429d3cb53f607",
+    "ipgod2022::7974882bfeaf7e11",
+    "ipgod2022::7cf13c8b2470e595",
+    "ipgod2022::7d3e4d9986db17af",
+    "ipgod2022::7f2ebaad8e4a455d",
+    "ipgod2022::82a6582a303df91c",
+    "ipgod2022::857ed53d491f8881",
+    "ipgod2022::90df2a301cea4787",
+    "ipgod2022::93951bb196993b32",
+    "ipgod2022::95e1afbef5259da0",
+    "ipgod2022::9cdcbe00b49c2d83",
+    "ipgod2022::9e164873905ca1eb",
+    "ipgod2022::ab35f542999a60c5",
+    "ipgod2022::b0f63dd742250f71",
+    "ipgod2022::be0202a91deb3b13",
+    "ipgod2022::e2f0384f8e3638b8",
+    "ipgod2022::e486f71bf17875ba",
+    "ipgod2022::ee902cd6679ba58a",
+    "ipgod2022::ef9545126455ee36",
+    "ipgod2022::f016e3666fad707f",
+    "ipgod2022::fb6e2b74135de469"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "corporate-transparency::CLEVERTRONICS PTY. LTD.|2024-25",
+   "members": [
+    "corporate-transparency::CLEVERTRONICS PTY. LTD.|2024-25",
+    "ipgod2022::74e047302c79a73c",
+    "ipgod2022::8cf30f1dc866b392"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::COLGATE-PALMOLIVE PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::COLGATE-PALMOLIVE PTY LTD|2024-25",
+    "ipgod2022::00072ea82ce628a6",
+    "ipgod2022::021ebf22b7b0379d",
+    "ipgod2022::03d62bab2d406636",
+    "ipgod2022::03eafd4e7ad8a2ea",
+    "ipgod2022::042c07da6791f571",
+    "ipgod2022::05f7f6562dc1793b",
+    "ipgod2022::072a6d45f9c0a632",
+    "ipgod2022::09605a7a26dfc798",
+    "ipgod2022::0b32d78946d64176",
+    "ipgod2022::0c1ab678e69c3e42",
+    "ipgod2022::0db468ca827e4a21",
+    "ipgod2022::1000058b2ecab11e",
+    "ipgod2022::150f437ce35c1d35",
+    "ipgod2022::167fd663b66979e4",
+    "ipgod2022::1aa3591ce82c6af1",
+    "ipgod2022::1b86df5589443423",
+    "ipgod2022::1ddab01bf655f4ac",
+    "ipgod2022::1f3ed9f906a6c7bb",
+    "ipgod2022::1fb5ccb73ab17962",
+    "ipgod2022::2129c0870a52a380",
+    "ipgod2022::22de6ce01eafc374",
+    "ipgod2022::2a1a462c17dce6a6",
+    "ipgod2022::2a389ffdae20073c",
+    "ipgod2022::2aaa5062bc2bc304",
+    "ipgod2022::31239fd1ce88d76c",
+    "ipgod2022::3150ec562e25e6a0",
+    "ipgod2022::32fd5d2737f934c5",
+    "ipgod2022::349af342c6c715a6",
+    "ipgod2022::3b66232a4bfe1285",
+    "ipgod2022::3b82723e9f97829f",
+    "ipgod2022::3d6455292a67d7df",
+    "ipgod2022::41369d92635cbda6",
+    "ipgod2022::42e204ae0b368c3f",
+    "ipgod2022::44bd3bb594ba3521",
+    "ipgod2022::46fff2bd95f787ce",
+    "ipgod2022::484ebba3c3568a3f",
+    "ipgod2022::4b2d845dc44f0479",
+    "ipgod2022::4bc4754ab2bf2ed3",
+    "ipgod2022::4cd2b0c01caa4cfd",
+    "ipgod2022::4dc8d5308c90e2ec",
+    "ipgod2022::4e52d87c0313db66",
+    "ipgod2022::4e8ad781e4121a5a",
+    "ipgod2022::5043398310f1a22f",
+    "ipgod2022::51e7cf6769538eaf",
+    "ipgod2022::5208616cb9f2ec6b",
+    "ipgod2022::54e328b70aae1019",
+    "ipgod2022::5643a539b9b39a56",
+    "ipgod2022::5656106581af75c4",
+    "ipgod2022::572d05722daa4e65",
+    "ipgod2022::5777a5400abeaa8c",
+    "ipgod2022::5b52e2addf514d16",
+    "ipgod2022::5b5abdcc3cb411bb",
+    "ipgod2022::5c07b76769e23e44",
+    "ipgod2022::5d2f65bf85258dcb",
+    "ipgod2022::5ee895dcf41ab0ce",
+    "ipgod2022::5f94201bb2a8a65d",
+    "ipgod2022::5fd6a191dad1ff27",
+    "ipgod2022::6399426f78769f3b",
+    "ipgod2022::63c8aabd4a6803c2",
+    "ipgod2022::64e54296018cb5fa",
+    "ipgod2022::6a78146b6dd5e3ec",
+    "ipgod2022::74ba4b3b889b0ad5",
+    "ipgod2022::790db770d0e7f16e",
+    "ipgod2022::7b71e5c12be6f221",
+    "ipgod2022::7e7b5955b72e3a4d",
+    "ipgod2022::82bb227d856aa5cd",
+    "ipgod2022::82e272beeb338d2a",
+    "ipgod2022::842ceeda4cceec68",
+    "ipgod2022::894fc783cab6982e",
+    "ipgod2022::8ce0f52b0bf4e775",
+    "ipgod2022::8d78e093e04eecaa",
+    "ipgod2022::90903d580b83c6ac",
+    "ipgod2022::9689f368f22d06b6",
+    "ipgod2022::9860ecff6ec650f1",
+    "ipgod2022::9b9ab75dee55d335",
+    "ipgod2022::9c322e19ac967278",
+    "ipgod2022::a0fed688f2484509",
+    "ipgod2022::a7c733076cc3b705",
+    "ipgod2022::abfdcd8d12dedfda",
+    "ipgod2022::ae0893f3878ce417",
+    "ipgod2022::aeaffb083a68f45a",
+    "ipgod2022::b039d38bd71d92b1",
+    "ipgod2022::b2aae3e9ad185d40",
+    "ipgod2022::b3b7f24c7410ccb6",
+    "ipgod2022::b4544f5239736cf1",
+    "ipgod2022::b48ac1b71198f50d",
+    "ipgod2022::b562904ce341cc75",
+    "ipgod2022::b69a5eab86894c79",
+    "ipgod2022::b834a8033321eabf",
+    "ipgod2022::bd613bc398c5559d",
+    "ipgod2022::be62db1f76bd9d4a",
+    "ipgod2022::bec0e75570509808",
+    "ipgod2022::bf0425cfe1529501",
+    "ipgod2022::c04948a766fa5934",
+    "ipgod2022::c2a6bc7f2351c58f",
+    "ipgod2022::c2afabaf13f30342",
+    "ipgod2022::c3650f5af3cd9d03",
+    "ipgod2022::c4250cd7790b4fe0",
+    "ipgod2022::c45a113a13f2f8a6",
+    "ipgod2022::c4b34fe10f74898c",
+    "ipgod2022::c6831626bb35a857",
+    "ipgod2022::c80305345c095cf6",
+    "ipgod2022::ca51724d0982761b",
+    "ipgod2022::cb1cd9772e403213",
+    "ipgod2022::cd5f4824e86502c0",
+    "ipgod2022::ce2fffc811388525",
+    "ipgod2022::ce37c8e859371fa0",
+    "ipgod2022::d058787979f5ac7d",
+    "ipgod2022::d19dd84016237621",
+    "ipgod2022::d1cd752fd2e88653",
+    "ipgod2022::d1e2040eeee57cd1",
+    "ipgod2022::d1e908f2ae90356f",
+    "ipgod2022::d31236ef9e45ca9b",
+    "ipgod2022::d3a53febf8acdedb",
+    "ipgod2022::d49032f91b3e2d0e",
+    "ipgod2022::d5102e78cc374efd",
+    "ipgod2022::d59325ca4b45c2f8",
+    "ipgod2022::d69f7d020232f65c",
+    "ipgod2022::d77414bb3a21020d",
+    "ipgod2022::d936596a7ec56a8e",
+    "ipgod2022::da40f7c87d75a88a",
+    "ipgod2022::dbcc5be98be6ec59",
+    "ipgod2022::dc0a5faf5ff0e425",
+    "ipgod2022::de1b8d99d2bf6ead",
+    "ipgod2022::dff81cdc3d7c94a7",
+    "ipgod2022::e29b2943d7f5842f",
+    "ipgod2022::e37d3a895b5588e8",
+    "ipgod2022::e9ae2f5345bd46c0",
+    "ipgod2022::ec5bd6f4103435c3",
+    "ipgod2022::ed11e1c8fa17e867",
+    "ipgod2022::ed1a222671065e65",
+    "ipgod2022::eef21cd32ec0c444",
+    "ipgod2022::f09601e4f66a21c7",
+    "ipgod2022::f190138ea024b7a6",
+    "ipgod2022::f26aa37ee664a5d6",
+    "ipgod2022::f41b7faeee81a0cb",
+    "ipgod2022::f76419d01a98e3d6",
+    "ipgod2022::f7cae12f48d8b03c",
+    "ipgod2022::fed22364e76f5c3e",
+    "ipgod2022::ff01718b38fc1b17"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "corporate-transparency::COLIN, BIGGERS & PAISLEY PTY LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::COLIN, BIGGERS & PAISLEY PTY LIMITED|2024-25",
+    "ipgod2022::10ef87d400d565eb",
+    "ipgod2022::4af1a3324b1d81e2",
+    "ipgod2022::4c605c01f2dec39a",
+    "ipgod2022::594d8a65b6cbcc4b",
+    "ipgod2022::976452c11c8333ba",
+    "ipgod2022::c037a21f41ab9966",
+    "ipgod2022::df9b85253c50ad52",
+    "ipgod2022::e7e3abdc190d07ff"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::CSL LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::CSL LIMITED|2024-25",
+    "ipgod2022::507692b31b96595e"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::DOWELL WINDOWS PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::DOWELL WINDOWS PTY LTD|2024-25",
+    "ipgod2022::570d1006cdc6ec32",
+    "ipgod2022::a5f69036cca4e96a"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::ELECTROLUX HOME PRODUCTS PTY LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::ELECTROLUX HOME PRODUCTS PTY LIMITED|2024-25",
+    "ipgod2022::6d499ae0c1666798"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::ETIHAD AIRWAYS PJSC|2024-25",
+   "members": [
+    "corporate-transparency::ETIHAD AIRWAYS PJSC|2024-25",
+    "ipgod2022::7be2c45b24939930"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::FORD MOTOR COMPANY OF AUSTRALIA PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::FORD MOTOR COMPANY OF AUSTRALIA PTY LTD|2024-25",
+    "ipgod2022::1fc06e8d902ca591",
+    "ipgod2022::8b781548907b3f44",
+    "ipgod2022::df0e989a8a834835",
+    "ipgod2022::eea652b5f6854860"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::FREEDMAN ELECTRONICS PTY LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::FREEDMAN ELECTRONICS PTY LIMITED|2024-25",
+    "ipgod2022::d251d7be93ce0a6f"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::FUJITSU GENERAL (AUST) PTY LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::FUJITSU GENERAL (AUST) PTY LIMITED|2024-25",
+    "ipgod2022::3dba41c60956a0fb",
+    "ipgod2022::3f823eed7206b970",
+    "ipgod2022::413a9d61ec4ca691",
+    "ipgod2022::54624f2625ec4d29",
+    "ipgod2022::981213cdbf73c440",
+    "ipgod2022::99d8a874682ca694"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::G JAMES PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::G JAMES PTY LTD|2024-25",
+    "ipgod2022::45e959a37a322efd",
+    "ipgod2022::4c778ddb231a69d1",
+    "ipgod2022::8b8b2713a77489d0",
+    "ipgod2022::d2367489ed99c29e"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::GILBARCO AUSTRALIA PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::GILBARCO AUSTRALIA PTY LTD|2024-25",
+    "ipgod2022::035d7245371c0ec2"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::HAGER ELECTRO PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::HAGER ELECTRO PTY LTD|2024-25",
+    "ipgod2022::2b576dd80320441b",
+    "ipgod2022::361c8b2911e44e75",
+    "ipgod2022::40aed266479d1fa5",
+    "ipgod2022::9cf441bcd7c8e317"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::HALEON AUSTRALIA PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::HALEON AUSTRALIA PTY LTD|2024-25",
+    "ipgod2022::2288b9c67ab0c758",
+    "ipgod2022::25ca8902fd8a61c4",
+    "ipgod2022::42cb5cd581441ecd",
+    "ipgod2022::550cc7f31018d495",
+    "ipgod2022::775288190cc2f3c3",
+    "ipgod2022::999ccf3a0aa93ec3",
+    "ipgod2022::b30c8209d26f49f4",
+    "ipgod2022::cddbc63894cc2e5d",
+    "ipgod2022::ffe2d525b5c750dd"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::HITACHI CONSTRUCTION MACHINERY (AUSTRALIA) PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::HITACHI CONSTRUCTION MACHINERY (AUSTRALIA) PTY LTD|2024-25",
+    "ipgod2022::7e49a7b13136ae48"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::IPD GROUP LTD|2024-25",
+   "members": [
+    "corporate-transparency::IPD GROUP LTD|2024-25",
+    "ipgod2022::6fe3af6877e6cb7f"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::JOHNSON AND JOHNSON PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::JOHNSON AND JOHNSON PTY LTD|2024-25",
+    "ipgod2022::7045a1b8ec072d86",
+    "ipgod2022::cb9c4df8f7880110"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::KING FURNITURE AUSTRALIA PTY. LTD.|2024-25",
+   "members": [
+    "corporate-transparency::KING FURNITURE AUSTRALIA PTY. LTD.|2024-25",
+    "ipgod2022::0549f87d15d1d113",
+    "ipgod2022::083bbfb00de0ae93",
+    "ipgod2022::1036c36813333c97",
+    "ipgod2022::14e8ed18e4fbe270",
+    "ipgod2022::1fe74d29374bfe08",
+    "ipgod2022::22af8befdaa5e1df",
+    "ipgod2022::289374e4fd9ee5d9",
+    "ipgod2022::2f1c9e9b47f61b46",
+    "ipgod2022::3944759c996a3382",
+    "ipgod2022::46ffe849731c41ee",
+    "ipgod2022::4cd1fbadb7423d8e",
+    "ipgod2022::570921caabd2b88e",
+    "ipgod2022::5fe3012d700adeb5",
+    "ipgod2022::6ddd50c1fd014829",
+    "ipgod2022::6f2fa27b91509ab6",
+    "ipgod2022::719c7d7538d6f13a",
+    "ipgod2022::76e7e92a9f50d16c",
+    "ipgod2022::788720fd395660cc",
+    "ipgod2022::7c36626be2c3b0b9",
+    "ipgod2022::7ed2a809fdae9bb2",
+    "ipgod2022::83969202c44b906d",
+    "ipgod2022::9811dce427d9731a",
+    "ipgod2022::99ed69315f6b46ef",
+    "ipgod2022::bf303e58d309f14e",
+    "ipgod2022::c23f41ebc5c5fa4b",
+    "ipgod2022::cb3d2f2bc69cb63e",
+    "ipgod2022::d73c2465955bd8a3",
+    "ipgod2022::f9562b531bc446ab"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "corporate-transparency::KNAUF GYPSUM PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::KNAUF GYPSUM PTY LTD|2024-25",
+    "ipgod2022::1660d1dd7a7d2e26",
+    "ipgod2022::1d1e860542a0e944",
+    "ipgod2022::296b93556b62f1ed",
+    "ipgod2022::80ebf4b2e2d2115a",
+    "ipgod2022::8e51c528a8f99bda",
+    "ipgod2022::f24705efef1c0ac5"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::LION PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::LION PTY LTD|2024-25",
+    "ipgod2022::b129a85496ddd47a"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::LORNA JANE PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::LORNA JANE PTY LTD|2024-25",
+    "ipgod2022::2fdef58f15ad5f1d",
+    "ipgod2022::61d7f39f1903c114"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::LVMH PERFUMES & COSMETICS GROUP PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::LVMH PERFUMES & COSMETICS GROUP PTY LTD|2024-25",
+    "ipgod2022::46ad2546665b8c90",
+    "ipgod2022::4b3a44334b0b3435",
+    "ipgod2022::92cf79900ac22405",
+    "ipgod2022::f6b2764964cbe8ba"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::MADAD PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::MADAD PTY LTD|2024-25",
+    "ipgod2022::a1dd35740b3af76e",
+    "ipgod2022::c06c9aa4fbc94119"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::MAGI ENTERPRISES PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::MAGI ENTERPRISES PTY LTD|2024-25",
+    "ipgod2022::1bcf2eb6851cf50c",
+    "ipgod2022::1c82b84678f7d1d9",
+    "ipgod2022::21226f47428d70da",
+    "ipgod2022::26b9b64382f649c6",
+    "ipgod2022::33878646e0e9367e",
+    "ipgod2022::360a4e942883da56",
+    "ipgod2022::4aad9c16eed8cb6d",
+    "ipgod2022::4b4f1504e2b1a0eb",
+    "ipgod2022::4ca867c5803a5621",
+    "ipgod2022::61a34e21419d3c21",
+    "ipgod2022::679f66d5ba540664",
+    "ipgod2022::6d45039769dee7bf",
+    "ipgod2022::8244393fab1c45a4",
+    "ipgod2022::9743432df62ad872",
+    "ipgod2022::98c0410d9e155fc9",
+    "ipgod2022::9eb1f191805a70d5",
+    "ipgod2022::a330683f6c486147",
+    "ipgod2022::b4cf01b7ae739cbe",
+    "ipgod2022::d5b419afd07695b1",
+    "ipgod2022::e1b09dc6c8d10dfe",
+    "ipgod2022::e8c495d930a00296",
+    "ipgod2022::f88f5a08a637b08c"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "corporate-transparency::MARINE POWER INTERNATIONAL LLC|2024-25",
+   "members": [
+    "corporate-transparency::MARINE POWER INTERNATIONAL LLC|2024-25",
+    "ipgod2022::24bc57e94aa8253f",
+    "ipgod2022::e4bc2f44346c763e"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::MCCAIN FOODS (AUST) PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::MCCAIN FOODS (AUST) PTY LTD|2024-25",
+    "ipgod2022::d56624c7a39c1bd9"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::MCPHERSON'S LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::MCPHERSON'S LIMITED|2024-25",
+    "ipgod2022::18e2f916f3d79d20",
+    "ipgod2022::1f15fc155080455d",
+    "ipgod2022::23d54185484a6cdc",
+    "ipgod2022::3062a6a2229c88c1",
+    "ipgod2022::33c3b02390856969",
+    "ipgod2022::3bd1402b1a435841",
+    "ipgod2022::61d0f5725617e2bc",
+    "ipgod2022::72bb5c797df6e2e8",
+    "ipgod2022::7be7124c540c5b4b",
+    "ipgod2022::88ae0018decbcd0f",
+    "ipgod2022::b6e4f3239f5c425b",
+    "ipgod2022::d4be2f03ba0a0440",
+    "ipgod2022::ee390cb2d292bf1d",
+    "ipgod2022::f5dd0b26adacd52a"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": true
+  },
+  {
+   "entity_id": "corporate-transparency::MITEK AUSTRALIA LTD|2024-25",
+   "members": [
+    "corporate-transparency::MITEK AUSTRALIA LTD|2024-25",
+    "ipgod2022::02c3531e8fb1200a",
+    "ipgod2022::411c401e09796061"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::MTD PRODUCTS AUSTRALIA PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::MTD PRODUCTS AUSTRALIA PTY LTD|2024-25",
+    "ipgod2022::31feefa7c87e8ff2",
+    "ipgod2022::d2d59114604ed840"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::MULTIGATE MEDICAL PRODUCTS PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::MULTIGATE MEDICAL PRODUCTS PTY LTD|2024-25",
+    "ipgod2022::09d2740dce52b2d0"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::NATIONAL CAN INDUSTRIES PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::NATIONAL CAN INDUSTRIES PTY LTD|2024-25",
+    "ipgod2022::63681a3c0607bec7"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::NEC AUSTRALIA PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::NEC AUSTRALIA PTY LTD|2024-25",
+    "ipgod2022::f1ff291d6d3ac0a6"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::NESTLE AUSTRALIA LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::NESTLE AUSTRALIA LIMITED|2024-25",
+    "ipgod2022::09d1ee42d3cc9af4",
+    "ipgod2022::263ea5f91c175cf4",
+    "ipgod2022::6f44757c2e49b2fb",
+    "ipgod2022::8ada8e9b3769eb3e",
+    "ipgod2022::b25324745b34c65f",
+    "ipgod2022::d931a0bdae70b0bf",
+    "ipgod2022::dded0e8f4c4a399f",
+    "ipgod2022::e9cb706ea09fcbfd"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::NETCOMM WIRELESS PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::NETCOMM WIRELESS PTY LTD|2024-25",
+    "ipgod2022::0aa9972d195065cc",
+    "ipgod2022::5ff4d789f4ac0607",
+    "ipgod2022::d4d91bd57e5488a3"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::NEUMANN STEEL PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::NEUMANN STEEL PTY LTD|2024-25",
+    "ipgod2022::91a4f51f06d525ff"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::NICK SCALI LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::NICK SCALI LIMITED|2024-25",
+    "ipgod2022::0a6ec2cf0df8891e",
+    "ipgod2022::87d8254d738606f2",
+    "ipgod2022::9d8532b14ac7d915",
+    "ipgod2022::d85f243cad6ce164",
+    "ipgod2022::ffabf19b7fa97af2"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::PACCAR AUSTRALIA PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::PACCAR AUSTRALIA PTY LTD|2024-25",
+    "ipgod2022::85ec8050612469a8"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::PANDROL AUSTRALIA PTY LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::PANDROL AUSTRALIA PTY LIMITED|2024-25",
+    "ipgod2022::5006775e2e801ca9",
+    "ipgod2022::58fd50ef9dd1c58e",
+    "ipgod2022::645a857ff575c831",
+    "ipgod2022::9ff568721d175cd2"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::PAPER AUSTRALIA PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::PAPER AUSTRALIA PTY LTD|2024-25",
+    "ipgod2022::0a33e4dc61ec53f4",
+    "ipgod2022::6ba457ceee7e93c5"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::POLARIS SALES AUSTRALIA PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::POLARIS SALES AUSTRALIA PTY LTD|2024-25",
+    "ipgod2022::417cddb373c083f7",
+    "ipgod2022::5f119f1fcc89c438",
+    "ipgod2022::7c7c5729bf86ca58",
+    "ipgod2022::9e2fefc40a914e90",
+    "ipgod2022::f81c4c993451e330"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::SANOFI-AVENTIS AUSTRALIA PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::SANOFI-AVENTIS AUSTRALIA PTY LTD|2024-25",
+    "ipgod2022::0e413f962a4fc939",
+    "ipgod2022::129277ea260053d2",
+    "ipgod2022::707463462477266c",
+    "ipgod2022::7fb36b0f8387f7f7",
+    "ipgod2022::93a1c0c9040b5352"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::SCHREDER AUSTRALIA PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::SCHREDER AUSTRALIA PTY LTD|2024-25",
+    "ipgod2022::22597bc04987cffd",
+    "ipgod2022::6b7ddbbc11360cdf"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::SHELDON & HAMMOND PTY LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::SHELDON & HAMMOND PTY LIMITED|2024-25",
+    "ipgod2022::bdbf5d7430a05d87"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::SIEMENS LTD.|2024-25",
+   "members": [
+    "corporate-transparency::SIEMENS LTD.|2024-25",
+    "ipgod2022::59d5188b73917da8",
+    "ipgod2022::94e7d79c330d7f6c",
+    "ipgod2022::96b6d1648475a5b8"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::SUTTON TOOLS PTY LTD|2024-25",
+   "members": [
+    "corporate-transparency::SUTTON TOOLS PTY LTD|2024-25",
+    "ipgod2022::24e2d46e5621ab55",
+    "ipgod2022::842ec9937edf37ac",
+    "ipgod2022::a7a288e19b7d8d82",
+    "ipgod2022::e5fbc781e63016ac"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::TOYOTA MOTOR CORPORATION AUSTRALIA LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::TOYOTA MOTOR CORPORATION AUSTRALIA LIMITED|2024-25",
+    "ipgod2022::3f943c5f8712f923"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  },
+  {
+   "entity_id": "corporate-transparency::WATERCO LIMITED|2024-25",
+   "members": [
+    "corporate-transparency::WATERCO LIMITED|2024-25",
+    "ipgod2022::041b3c4828f2da33",
+    "ipgod2022::87e027ec35a10015",
+    "ipgod2022::c1b5d218bac7b41f"
+   ],
+   "sources": [
+    "corporate-transparency",
+    "ipgod2022"
+   ],
+   "cluster_support": 0.98,
+   "flag_large": false
+  }
+ ]
+}

@@ -4,20 +4,21 @@
   "extractor_version": "cfg-8a916ff7254b+engine-0.1",
   "input_path": "/Users/yc/Desktop/firmable_test/data/raw/asic-credit-licensee/credit_lic_202610.csv",
   "input_bytes": 6898801,
-  "row_limit": 1000,
-  "rows_read": 1000,
-  "observations_written": 1000,
+  "row_limit": 4400,
+  "seeded_sampling": false,
+  "rows_read": 4308,
+  "observations_written": 4308,
   "claim_counts": {
-    "entity.legal_name": 1000,
-    "entity.abn": 889,
-    "address.locality": 1000,
-    "address.state": 1000,
-    "address.postcode": 1000,
-    "entity.trading_name": 428,
-    "entity.acn": 73
+    "entity.legal_name": 4308,
+    "entity.abn": 3846,
+    "address.locality": 4308,
+    "address.state": 4308,
+    "address.postcode": 4308,
+    "entity.trading_name": 1471,
+    "entity.acn": 345
   },
   "flag_counts": {},
   "output_path": "/Users/yc/Desktop/firmable_test/outputs/observations/asic-credit-licensee.jsonl",
-  "ingested_at": "2026-10-17T09:24:07+00:00",
+  "ingested_at": "2026-10-17T10:05:41+00:00",
   "api_cost_usd": 0.0
 }

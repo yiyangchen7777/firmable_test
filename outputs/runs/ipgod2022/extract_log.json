@@ -1,0 +1,24 @@
+{
+  "source_id": "ipgod2022",
+  "config_path": "/Users/yc/Desktop/firmable_test/configs/ipgod2022.yaml",
+  "extractor_version": "cfg-4893bac25a07+engine-0.1",
+  "input_path": "/Users/yc/Desktop/firmable_test/data/raw/ipgod2022/design-party-activity.csv",
+  "input_bytes": 68628498,
+  "row_limit": 1000,
+  "seeded_sampling": true,
+  "rows_read": 1000,
+  "observations_written": 1000,
+  "claim_counts": {
+    "entity.legal_name": 1000,
+    "entity.abn": 815,
+    "address.state": 621,
+    "address.postcode": 746,
+    "address.country": 971
+  },
+  "flag_counts": {
+    "duplicate_record_id": 9
+  },
+  "output_path": "/Users/yc/Desktop/firmable_test/outputs/observations/ipgod2022.jsonl",
+  "ingested_at": "2026-10-17T10:06:34+00:00",
+  "api_cost_usd": 0.0
+}

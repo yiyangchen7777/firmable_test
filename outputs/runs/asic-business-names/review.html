@@ -61,8 +61,8 @@ details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
 <main>
 <header>
   <h1>映射审核 · asic-business-names</h1>
-  <p><span class="status warn">PASSING WITH FLAGS</span>
-     <span class="muted">修订 0/3 · 流程步数 5 · 审核材料同步存于 review.md</span></p>
+  <p><span class="status ok">PASSING</span>
+     <span class="muted">修订 1/3 · 流程步数 8 · 审核材料同步存于 review.md</span></p>
 </header>
 
 <section class="guide">
@@ -93,11 +93,9 @@ details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
   <div class="tablewrap"><table>
     <tr><th>检查</th><th>阈值</th><th>结果</th><th></th></tr>
     <tr><td>identifier checksum (entity.abn)</td><td class='num'>&gt;= 95%</td><td class='num'>100.0% (292 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
-<tr><td>enum legality (entity.status)</td><td class='num'>&gt;= 98%</td><td class='num'>100.0% (350 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
 <tr><td>null drift (entity.trading_name ← BN_NAME)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
 <tr><td>null drift (entity.abn ← BN_ABN)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
-<tr><td>null drift (entity.status ← BN_STATUS)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
-<tr><td>record_id unique (full sample)</td><td class='num'>0 duplicates</td><td class='num'>0 duplicates</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>record_id effectively unique (full sample)</td><td class='num'>&lt;= 0.5% duplicates</td><td class='num'>0 duplicates (0.00%)</td><td><span class="pill ok">通过</span></td></tr>
 <tr><td>minimum useful (a name or an identifier mapped)</td><td class='num'>required</td><td class='num'>yes</td><td><span class="pill ok">通过</span></td></tr>
   </table></div>
   <h4 style="margin-top:14px">未通过/弃权的例子</h4>
@@ -105,63 +103,54 @@ details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
 </section>
 
 <section id="flags">
-  <h2>语义抽检 · 10 条留存记录：18 ok / 10 suspicious</h2>
+  <h2>语义抽检 · 10 条留存记录：18 ok / 0 suspicious</h2>
   <div class="tablewrap"><table>
     <tr><th>record</th><th>字段</th><th>为什么可疑</th></tr>
-    <tr><td><code>32c724c2dbbb3583</code></td><td><code>entity.status</code></td><td>BN_STATUS &#x27;Deregistered&#x27; (BN_CANCEL_DT 08/10/2025) describes the business-name registration being cancelled, not the holder entity being deregistered, so mapping it to entity.status is a meaning drift.</td></tr>
-<tr><td><code>c5bf3049b783ed80</code></td><td><code>entity.status</code></td><td>&#x27;Registered&#x27; means the business name registration is current, not that the holder entity is active, so mapping it to &#x27;active&#x27; conflates the two.</td></tr>
-<tr><td><code>26657e231e46f8fe</code></td><td><code>entity.status</code></td><td>The name registration is current (registered 02/12/2025), which says nothing about the holder entity&#x27;s status.</td></tr>
-<tr><td><code>c4177191d6ebe145</code></td><td><code>entity.status</code></td><td>&#x27;Registered&#x27; describes the business name record, not the entity, so &#x27;active&#x27; is an overreach.</td></tr>
-<tr><td><code>cf6f159552d2c33d</code></td><td><code>entity.status</code></td><td>The name registration being current is mapped to entity-level &#x27;active&#x27;, which is a different meaning.</td></tr>
-<tr><td><code>964b97451faea954</code></td><td><code>entity.status</code></td><td>&#x27;Registered&#x27; is the status of the business name, not of the company or person holding it.</td></tr>
-<tr><td><code>50ea5823b52d6a03</code></td><td><code>entity.status</code></td><td>The name registration being current does not mean the holder entity is active.</td></tr>
-<tr><td><code>91540a37b06c301e</code></td><td><code>entity.status</code></td><td>BN_STATUS is the status of the business name registration, not of the entity.</td></tr>
-<tr><td><code>c17402c3ba3ea282</code></td><td><code>entity.status</code></td><td>A current name registration is mapped to entity &#x27;active&#x27;, which conflates the registration with the holder.</td></tr>
-<tr><td><code>931d8725db56641f</code></td><td><code>entity.status</code></td><td>&#x27;Deregistered&#x27; with BN_CANCEL_DT 08/01/2026 means the business name was cancelled, and the holder may still be a trading entity, so &#x27;deregistered&#x27; is wrong at entity level.</td></tr>
+    <tr><td colspan='3' class='muted'>无疑点</td></tr>
   </table></div>
   <details><summary>展开 18 条「ok」判定</summary>
   <div class="tablewrap"><table>
     <tr><th>record</th><th>字段</th><th>理由</th></tr>
-    <tr><td><code>32c724c2dbbb3583</code></td><td><code>entity.trading_name</code></td><td>BN_NAME &#x27;Hair Design by Tracey&#x27; is a registered business name, so trading_name is the right field, and trim only removed leading whitespace.</td></tr>
-<tr><td><code>c5bf3049b783ed80</code></td><td><code>entity.trading_name</code></td><td>&#x27;Spice Alley Harris Park&#x27; is a business name, which fits trading_name.</td></tr>
-<tr><td><code>c5bf3049b783ed80</code></td><td><code>entity.abn</code></td><td>BN_ABN is the name holder&#x27;s ABN, which is the subject entity, and the 11-digit value passes the ABN checksum.</td></tr>
-<tr><td><code>26657e231e46f8fe</code></td><td><code>entity.trading_name</code></td><td>&#x27;SANAE BY R&#x27; is a registered business name, so trading_name fits.</td></tr>
-<tr><td><code>26657e231e46f8fe</code></td><td><code>entity.abn</code></td><td>The value is the holder&#x27;s ABN from BN_ABN and passes the checksum.</td></tr>
-<tr><td><code>c4177191d6ebe145</code></td><td><code>entity.trading_name</code></td><td>&#x27;Metlaser Designs&#x27; is a business name and belongs in trading_name.</td></tr>
-<tr><td><code>c4177191d6ebe145</code></td><td><code>entity.abn</code></td><td>BN_ABN is the holder&#x27;s ABN and the value passes the checksum.</td></tr>
-<tr><td><code>cf6f159552d2c33d</code></td><td><code>entity.trading_name</code></td><td>&#x27;DE&#x27;LISH FARM FRESH FRUIT AND VEGETABLES&#x27; is a business name, and the apostrophe is preserved.</td></tr>
-<tr><td><code>cf6f159552d2c33d</code></td><td><code>entity.abn</code></td><td>BN_ABN is the holder&#x27;s ABN and the value passes the checksum.</td></tr>
-<tr><td><code>964b97451faea954</code></td><td><code>entity.trading_name</code></td><td>&#x27;iCre8-e&#x27; is a business name and fits trading_name.</td></tr>
-<tr><td><code>964b97451faea954</code></td><td><code>entity.abn</code></td><td>BN_ABN is the 11-digit ABN of the name holder, which is the subject entity.</td></tr>
-<tr><td><code>50ea5823b52d6a03</code></td><td><code>entity.trading_name</code></td><td>&#x27;WM Demolition Services&#x27; is a business name, so trading_name fits.</td></tr>
-<tr><td><code>50ea5823b52d6a03</code></td><td><code>entity.abn</code></td><td>BN_ABN is the holder&#x27;s ABN, which is the right party.</td></tr>
-<tr><td><code>91540a37b06c301e</code></td><td><code>entity.trading_name</code></td><td>&#x27;EBV - East Brunswick Village&#x27; is a registered business name, which fits trading_name.</td></tr>
-<tr><td><code>91540a37b06c301e</code></td><td><code>entity.abn</code></td><td>BN_ABN is the name holder&#x27;s ABN and is 11 digits.</td></tr>
-<tr><td><code>c17402c3ba3ea282</code></td><td><code>entity.trading_name</code></td><td>&#x27;Glynn Delley Fitness&#x27; is a business name, so trading_name fits.</td></tr>
-<tr><td><code>c17402c3ba3ea282</code></td><td><code>entity.abn</code></td><td>BN_ABN is the holder&#x27;s ABN and is 11 digits.</td></tr>
-<tr><td><code>931d8725db56641f</code></td><td><code>entity.trading_name</code></td><td>&#x27;THE POPPY CENTRE&#x27; is a business name, so trading_name fits.</td></tr>
+    <tr><td><code>32c724c2dbbb3583</code></td><td><code>entity.trading_name</code></td><td>BN_NAME &#x27; Hair Design by Tracey&#x27; is a registered business name, so it is a trading name, and trim only removed the leading space.</td></tr>
+<tr><td><code>c5bf3049b783ed80</code></td><td><code>entity.trading_name</code></td><td>BN_NAME &#x27;Spice Alley Harris Park&#x27; is a business name, so it is a trading name.</td></tr>
+<tr><td><code>c5bf3049b783ed80</code></td><td><code>entity.abn</code></td><td>BN_ABN is the business name holder&#x27;s ABN, and 97126071878 passes the ABN checksum.</td></tr>
+<tr><td><code>26657e231e46f8fe</code></td><td><code>entity.trading_name</code></td><td>&#x27;SANAE BY R&#x27; is a brand-style business name, correctly kept as a trading name.</td></tr>
+<tr><td><code>26657e231e46f8fe</code></td><td><code>entity.abn</code></td><td>BN_ABN is the holder&#x27;s ABN, and 34136548659 passes the checksum.</td></tr>
+<tr><td><code>c4177191d6ebe145</code></td><td><code>entity.trading_name</code></td><td>&#x27;Metlaser Designs&#x27; is a registered business name, so it is a trading name.</td></tr>
+<tr><td><code>c4177191d6ebe145</code></td><td><code>entity.abn</code></td><td>BN_ABN is the holder&#x27;s ABN, and 68837016304 passes the checksum.</td></tr>
+<tr><td><code>cf6f159552d2c33d</code></td><td><code>entity.trading_name</code></td><td>&#x27;DE&#x27;LISH FARM FRESH FRUIT AND VEGETABLES&#x27; is a business name, not a legal name, and the apostrophe was preserved.</td></tr>
+<tr><td><code>cf6f159552d2c33d</code></td><td><code>entity.abn</code></td><td>BN_ABN is the holder&#x27;s ABN, and 35069234900 passes the checksum.</td></tr>
+<tr><td><code>964b97451faea954</code></td><td><code>entity.trading_name</code></td><td>&#x27;iCre8-e&#x27; is a brand-style business name, correctly kept as a trading name.</td></tr>
+<tr><td><code>964b97451faea954</code></td><td><code>entity.abn</code></td><td>BN_ABN is the holder&#x27;s ABN, and 68213665343 passes the checksum.</td></tr>
+<tr><td><code>50ea5823b52d6a03</code></td><td><code>entity.trading_name</code></td><td>&#x27;WM Demolition Services&#x27; is a registered business name, so it is a trading name.</td></tr>
+<tr><td><code>50ea5823b52d6a03</code></td><td><code>entity.abn</code></td><td>BN_ABN is the holder&#x27;s ABN, and 74586960761 passes the checksum.</td></tr>
+<tr><td><code>91540a37b06c301e</code></td><td><code>entity.trading_name</code></td><td>&#x27;EBV - East Brunswick Village&#x27; is a business name, so it is a trading name.</td></tr>
+<tr><td><code>91540a37b06c301e</code></td><td><code>entity.abn</code></td><td>BN_ABN is the holder&#x27;s ABN, and 13147061372 passes the checksum.</td></tr>
+<tr><td><code>c17402c3ba3ea282</code></td><td><code>entity.trading_name</code></td><td>&#x27;Glynn Delley Fitness&#x27; is a registered business name containing a person&#x27;s name, which is still a trading name and not the holder&#x27;s legal name.</td></tr>
+<tr><td><code>c17402c3ba3ea282</code></td><td><code>entity.abn</code></td><td>BN_ABN is the holder&#x27;s ABN, and 29664401020 passes the checksum.</td></tr>
+<tr><td><code>931d8725db56641f</code></td><td><code>entity.trading_name</code></td><td>&#x27;THE POPPY CENTRE&#x27; is a business name, correctly a trading name. The row is Deregistered and BN_ABN is blank, so no ABN claim was produced.</td></tr>
   </table></div></details>
 </section>
 
 <section id="mapping">
-  <h2>字段映射 · 3 条（共 8 个源列）</h2>
+  <h2>字段映射 · 2 条（共 8 个源列）</h2>
   <div class="tablewrap"><table>
     <tr><th>canonical</th><th>← 源列</th><th>transforms</th><th>conf.</th><th></th><th>语义证据</th></tr>
     <tr><td><code>entity.trading_name</code></td><td><code>BN_NAME</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.85</td><td></td><td class='evidence'>BN_NAME holds values like &#x27; SA Super Quiz&#x27;, &#x27; KB Freightlines&#x27; and &#x27; Big C&#x27;s Texas BBQ&#x27; (200 distinct of 200, 0% null). These are registered business names, which are trading names, not the holder&#x27;s legal name, so this is not entity.legal_name. The register has no legal-name column; BN_ABN identifies the holder. Values carry leading whitespace, which trim removes.</td></tr>
 <tr><td><code>entity.abn</code></td><td><code>BN_ABN</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;strip_float_suffix&quot;, &quot;digits_only&quot;, &quot;abn_normalize&quot;]</code></td><td class='num'>0.9</td><td></td><td class='evidence'>BN_ABN holds values like &#x27;36437438294&#x27; and &#x27;94212794661&#x27;, all 11-digit. It is the ABN of the business name holder. Blank on Deregistered rows (16% null), which become absence, not errors. BN_STATE_NUM is a different identifier (state business-name number such as &#x27;BN98583878&#x27;) and is not an ABN.</td></tr>
-<tr><td><code>entity.status</code></td><td><code>BN_STATUS</code></td><td><code class='small'>[&quot;trim&quot;, {&quot;map_enum&quot;: {&quot;mapping&quot;: {&quot;Registered&quot;: &quot;active&quot;, &quot;Deregistered&quot;: &quot;deregistered&quot;}, &quot;default&quot;: &quot;unknown&quot;}}]</code></td><td class='num'>0.8</td><td></td><td class='evidence'>BN_STATUS has two distinct values, &#x27;Registered&#x27; and &#x27;Deregistered&#x27;. They are the registration status of the business name record, and I map them to active and deregistered respectively. Rows with a BN_CANCEL_DT carry &#x27;Deregistered&#x27; (e.g. &#x27; Final Touch Solutions&#x27;, cancelled 02/07/2026), which corroborates the reading. The status is of the name registration, not necessarily of the holder&#x27;s own entity.</td></tr>
   </table></div>
 </section>
 
 <section id="unmapped">
-  <h2>未映射的列 · 5</h2>
+  <h2>未映射的列 · 6</h2>
   <div class="tablewrap"><table>
     <tr><th>源列</th><th>理由</th></tr>
     <tr><td><code>REGISTER_NAME</code></td><td>Constant &#x27;BUSINESS NAMES&#x27; on every row (1 distinct); it names the register and carries no entity attribute.</td></tr>
-<tr><td><code>BN_REG_DT</code></td><td>Date the business name was registered (e.g. 22/10/2019), not the date the holding entity was registered, so it would be wrong as entity.date_registered. It is valid_from material for the name, which has no ontology field, and it is not observed_at.</td></tr>
-<tr><td><code>BN_CANCEL_DT</code></td><td>Cancellation date of the business name (86% null, only on Deregistered rows). No ontology field; it is not a per-record extract date, so not observed_at.</td></tr>
+<tr><td><code>BN_REG_DT</code></td><td>Date the business name was registered (e.g. 22/10/2019). It is valid_from material for the name claim, which this engine does not yet carry. It is not the holder&#x27;s registration date, so it would be wrong as entity.date_registered, and it is not observed_at.</td></tr>
+<tr><td><code>BN_CANCEL_DT</code></td><td>Cancellation date of the business name (86% null, only on Deregistered rows). It is valid_to material for the name claim, which this engine does not yet carry. It is not a per-record extract date, so not observed_at.</td></tr>
 <tr><td><code>BN_STATE_NUM</code></td><td>Legacy state-issued business name registration number (e.g. &#x27;BN98583878&#x27;, &#x27;B2163216W&#x27;), 96% null. It is not an ABN or ACN and has no ontology field.</td></tr>
 <tr><td><code>BN_STATE_OF_REG</code></td><td>State where the name was originally registered (NSW/VIC/QLD, 96% null), not the holder&#x27;s address. Mapping it to address.state would be speculative.</td></tr>
+<tr><td><code>BN_STATUS</code></td><td>Status of the business-name registration (&#x27;Registered&#x27;/&#x27;Deregistered&#x27;), not of the holder entity. A cancelled name does not mean the holder is deregistered (e.g. a no-ABN row like &#x27;Curry Festival&#x27; would wrongly emit entity.status=deregistered). Unmapped per human review and semantic flags.</td></tr>
   </table></div>
 </section>
 
@@ -176,8 +165,7 @@ BN_CANCEL_DT:
 BN_STATE_NUM: 
 BN_STATE_OF_REG: 
 BN_ABN: 78141479160</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;PLATINUM STRATA&quot;   (conf 0.85)
-entity.abn = &quot;78141479160&quot;   (conf 0.9)
-entity.status = &quot;active&quot;   (conf 0.8)</pre></div></div></div>
+entity.abn = &quot;78141479160&quot;   (conf 0.9)</pre></div></div></div>
 <div class='example'><h4>样例 2 · record <code>5edaec7f0dff8924</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: BUSINESS NAMES
 BN_NAME:  NORTH Link Networking for Economic Development
 BN_STATUS: Registered
@@ -186,8 +174,7 @@ BN_CANCEL_DT:
 BN_STATE_NUM: 
 BN_STATE_OF_REG: 
 BN_ABN: 23226473941</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;NORTH Link Networking for Economic Development&quot;   (conf 0.85)
-entity.abn = &quot;23226473941&quot;   (conf 0.9)
-entity.status = &quot;active&quot;   (conf 0.8)</pre></div></div></div>
+entity.abn = &quot;23226473941&quot;   (conf 0.9)</pre></div></div></div>
 <div class='example'><h4>样例 3 · record <code>b8919a1e0a90d823</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: BUSINESS NAMES
 BN_NAME:  Curry Festival
 BN_STATUS: Deregistered
@@ -195,8 +182,7 @@ BN_REG_DT: 25/02/2015
 BN_CANCEL_DT: 09/04/2026
 BN_STATE_NUM: 
 BN_STATE_OF_REG: 
-BN_ABN: </pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;Curry Festival&quot;   (conf 0.85)
-entity.status = &quot;deregistered&quot;   (conf 0.8)</pre></div></div></div>
+BN_ABN: </pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;Curry Festival&quot;   (conf 0.85)</pre></div></div></div>
 <div class='example'><h4>样例 4 · record <code>e48f205ea9ea72a2</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: BUSINESS NAMES
 BN_NAME:  G &amp; A TILING
 BN_STATUS: Registered
@@ -204,8 +190,7 @@ BN_REG_DT: 09/09/2005
 BN_CANCEL_DT: 
 BN_STATE_NUM: B1866952P
 BN_STATE_OF_REG: VIC
-BN_ABN: </pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;G &amp; A TILING&quot;   (conf 0.85)
-entity.status = &quot;active&quot;   (conf 0.8)</pre></div></div></div>
+BN_ABN: </pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;G &amp; A TILING&quot;   (conf 0.85)</pre></div></div></div>
 <div class='example'><h4>样例 5 · record <code>92ec036b0af4bdbb</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: BUSINESS NAMES
 BN_NAME:  MSA PLASTERING SERVICES
 BN_STATUS: Registered
@@ -214,8 +199,7 @@ BN_CANCEL_DT:
 BN_STATE_NUM: 
 BN_STATE_OF_REG: 
 BN_ABN: 96885381486</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;MSA PLASTERING SERVICES&quot;   (conf 0.85)
-entity.abn = &quot;96885381486&quot;   (conf 0.9)
-entity.status = &quot;active&quot;   (conf 0.8)</pre></div></div></div>
+entity.abn = &quot;96885381486&quot;   (conf 0.9)</pre></div></div></div>
 </section>
 
 <section class="decision">

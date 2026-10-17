@@ -62,7 +62,7 @@ details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
 <header>
   <h1>映射审核 · business-discount-directory</h1>
   <p><span class="status warn">PASSING WITH FLAGS</span>
-     <span class="muted">修订 0/3 · 流程步数 5 · 审核材料同步存于 review.md</span></p>
+     <span class="muted">修订 1/3 · 流程步数 8 · 审核材料同步存于 review.md</span></p>
 </header>
 
 <section class="guide">
@@ -93,6 +93,7 @@ details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
   <div class="tablewrap"><table>
     <tr><th>检查</th><th>阈值</th><th>结果</th><th></th></tr>
     <tr><td>null drift (entity.trading_name ← Trading Name)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.trading_name ← Outlet Name)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
 <tr><td>null drift (entity.website ← Website)</td><td class='num'>&lt;= +2pp</td><td class='num'>-0.0%</td><td><span class="pill ok">通过</span></td></tr>
 <tr><td>null drift (address.full ← Outlet Address)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
 <tr><td>null drift (address.locality ← Outlet Suburb)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
@@ -105,82 +106,92 @@ details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
 </section>
 
 <section id="flags">
-  <h2>语义抽检 · 10 条留存记录：41 ok / 7 suspicious</h2>
+  <h2>语义抽检 · 10 条留存记录：49 ok / 9 suspicious</h2>
   <div class="tablewrap"><table>
     <tr><th>record</th><th>字段</th><th>为什么可疑</th></tr>
-    <tr><td><code>a8ad7ecfb0ece669</code></td><td><code>entity.website</code></td><td>The source URL is malformed (&#x27;http://https://...&#x27;) and the canonical value ends &#x27;...AUORG1PKAVT6A00&#x27;, which does not match the raw cell, so the value was altered or truncated and carries a tracking query string.</td></tr>
-<tr><td><code>3373db45d8d72436</code></td><td><code>address.full</code></td><td>&#x27;Castletown Shp Cnt&#x27; is a shopping centre name, not a street address, and it is mapped to address.full.</td></tr>
-<tr><td><code>414de081d51ecd99</code></td><td><code>address.full</code></td><td>&#x27;Central Highlands Market Place&#x27; is a centre or venue name, not a street address.</td></tr>
-<tr><td><code>8797e54e37a80189</code></td><td><code>entity.trading_name</code></td><td>&#x27;ADPA Ltd&#x27; carries a company suffix and looks like a legal or organisation name, while the outlet name is &#x27;ADPAQ&#x27;, so the party type is uncertain.</td></tr>
-<tr><td><code>86f9d51258089cb6</code></td><td><code>entity.trading_name</code></td><td>&#x27;Ali Baba Lebanese Cuisine Pty Ltd&#x27; includes &#x27;Pty Ltd&#x27;, so it is a registered company name placed in trading_name; it probably belongs in legal_name.</td></tr>
-<tr><td><code>86f9d51258089cb6</code></td><td><code>address.full</code></td><td>&#x27;Sunshine Plaza&#x27; is a shopping centre name, not a street address.</td></tr>
-<tr><td><code>7655e30afe549885</code></td><td><code>address.full</code></td><td>&#x27;Caneland Central Shp Cnt&#x27; is a shopping centre name, not a street address.</td></tr>
+    <tr><td><code>a8ad7ecfb0ece669</code></td><td><code>entity.trading_name</code></td><td>&#x27;Amplifon Cleveland&#x27; is a brand plus location label for one outlet, not a name the business trades under, so Outlet Name may not mean trading_name.</td></tr>
+<tr><td><code>a8ad7ecfb0ece669</code></td><td><code>entity.website</code></td><td>The canonical value ends in &#x27;...AUORG1PKAVT6A00&#x27;, but the raw cell ends at &#x27;...AUORG1PKAVT&#x27;, so the output has text the source lacks. It also keeps the malformed &#x27;http://https://&#x27; double scheme and a tracking query string.</td></tr>
+<tr><td><code>3373db45d8d72436</code></td><td><code>address.full</code></td><td>&#x27;Castletown Shp Cnt&#x27; is a shopping-centre name with no street address, so it is a venue label rather than an address.</td></tr>
+<tr><td><code>414de081d51ecd99</code></td><td><code>address.full</code></td><td>&#x27;Central Highlands Market Place&#x27; is a venue name with no street number or street, so it is not a street address.</td></tr>
+<tr><td><code>8797e54e37a80189</code></td><td><code>entity.trading_name</code></td><td>&#x27;ADPA Ltd&#x27; carries a company suffix and looks like a registered or association name rather than a trading name, so it may belong in legal_name.</td></tr>
+<tr><td><code>86f9d51258089cb6</code></td><td><code>entity.trading_name</code></td><td>&#x27;Ali Baba Lebanese Cuisine Pty Ltd&#x27; includes a company suffix, so it looks like a registered name rather than a trading name.</td></tr>
+<tr><td><code>86f9d51258089cb6</code></td><td><code>entity.trading_name</code></td><td>Outlet Name repeats the same Pty Ltd registered-style name. The suffix suggests a legal name in a trading_name field, and the claim is a duplicate.</td></tr>
+<tr><td><code>86f9d51258089cb6</code></td><td><code>address.full</code></td><td>&#x27;Sunshine Plaza&#x27; is a shopping-centre name with no street address.</td></tr>
+<tr><td><code>7655e30afe549885</code></td><td><code>address.full</code></td><td>&#x27;Caneland Central Shp Cnt&#x27; is a shopping-centre name with no street address.</td></tr>
   </table></div>
-  <details><summary>展开 41 条「ok」判定</summary>
+  <details><summary>展开 49 条「ok」判定</summary>
   <div class="tablewrap"><table>
     <tr><th>record</th><th>字段</th><th>理由</th></tr>
-    <tr><td><code>a8ad7ecfb0ece669</code></td><td><code>entity.trading_name</code></td><td>&#x27;Amplifon&#x27; is the brand name from the Trading Name column and is not a registered legal name.</td></tr>
-<tr><td><code>a8ad7ecfb0ece669</code></td><td><code>address.full</code></td><td>&#x27;U 4, 107-111 Queen St&#x27; is a genuine street line for the Cleveland outlet, but it has no suburb, state or postcode, so it is a partial address.</td></tr>
-<tr><td><code>a8ad7ecfb0ece669</code></td><td><code>address.locality</code></td><td>&#x27;CLEVELAND&#x27; is the outlet suburb and fits postcode 4163.</td></tr>
-<tr><td><code>a8ad7ecfb0ece669</code></td><td><code>address.postcode</code></td><td>4163 is a valid Cleveland QLD postcode and matches the Outlet Postcode column.</td></tr>
-<tr><td><code>3373db45d8d72436</code></td><td><code>entity.trading_name</code></td><td>&#x27;Angus &amp; Coote&#x27; is the brand name and matches the Outlet Name.</td></tr>
-<tr><td><code>3373db45d8d72436</code></td><td><code>entity.website</code></td><td>It is a clean brand website URL copied from the Website column.</td></tr>
-<tr><td><code>3373db45d8d72436</code></td><td><code>address.locality</code></td><td>&#x27;HYDE PARK&#x27; is the outlet suburb (Townsville) and is consistent with postcode 4812.</td></tr>
-<tr><td><code>3373db45d8d72436</code></td><td><code>address.postcode</code></td><td>4812 matches Hyde Park QLD.</td></tr>
-<tr><td><code>414de081d51ecd99</code></td><td><code>entity.trading_name</code></td><td>It is the brand name from the Trading Name column.</td></tr>
-<tr><td><code>414de081d51ecd99</code></td><td><code>entity.website</code></td><td>It is a valid brand website URL.</td></tr>
-<tr><td><code>414de081d51ecd99</code></td><td><code>address.locality</code></td><td>&#x27;EMERALD&#x27; is the outlet suburb and fits postcode 4720.</td></tr>
-<tr><td><code>414de081d51ecd99</code></td><td><code>address.postcode</code></td><td>4720 matches Emerald QLD.</td></tr>
-<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>entity.trading_name</code></td><td>It is a trading name for the brand, though the outlet-level name is &#x27;Andersens Carpets&#x27;, so the brand-level value was chosen over the outlet-specific one.</td></tr>
-<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>entity.website</code></td><td>It is a valid brand website URL.</td></tr>
-<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>address.full</code></td><td>&#x27;36 Duke St&#x27; is a real street address for the Gympie outlet.</td></tr>
-<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>address.locality</code></td><td>&#x27;GYMPIE&#x27; is the outlet suburb.</td></tr>
+    <tr><td><code>a8ad7ecfb0ece669</code></td><td><code>entity.trading_name</code></td><td>&#x27;Amplifon&#x27; is a brand trading name copied verbatim from the Trading Name column.</td></tr>
+<tr><td><code>a8ad7ecfb0ece669</code></td><td><code>address.full</code></td><td>&#x27;U 4, 107-111 Queen St&#x27; is a genuine street address for the outlet, copied verbatim.</td></tr>
+<tr><td><code>a8ad7ecfb0ece669</code></td><td><code>address.locality</code></td><td>CLEVELAND is a suburb name and matches postcode 4163.</td></tr>
+<tr><td><code>a8ad7ecfb0ece669</code></td><td><code>address.postcode</code></td><td>4163 is a valid Cleveland QLD postcode, copied verbatim.</td></tr>
+<tr><td><code>3373db45d8d72436</code></td><td><code>entity.trading_name</code></td><td>&#x27;Angus &amp; Coote&#x27; is the brand trading name.</td></tr>
+<tr><td><code>3373db45d8d72436</code></td><td><code>entity.trading_name</code></td><td>Outlet Name is the same brand name, so this is a valid trading name but a duplicate observation.</td></tr>
+<tr><td><code>3373db45d8d72436</code></td><td><code>entity.website</code></td><td>This is the brand&#x27;s website, copied verbatim.</td></tr>
+<tr><td><code>3373db45d8d72436</code></td><td><code>address.locality</code></td><td>HYDE PARK is a suburb (Townsville) and fits postcode 4812.</td></tr>
+<tr><td><code>3373db45d8d72436</code></td><td><code>address.postcode</code></td><td>4812 is a plausible QLD postcode and matches the suburb.</td></tr>
+<tr><td><code>414de081d51ecd99</code></td><td><code>entity.trading_name</code></td><td>This is the brand trading name.</td></tr>
+<tr><td><code>414de081d51ecd99</code></td><td><code>entity.trading_name</code></td><td>Outlet Name is identical to the brand name, so it is valid but a duplicate.</td></tr>
+<tr><td><code>414de081d51ecd99</code></td><td><code>entity.website</code></td><td>This is the brand&#x27;s website, copied verbatim.</td></tr>
+<tr><td><code>414de081d51ecd99</code></td><td><code>address.locality</code></td><td>EMERALD is a QLD town and fits postcode 4720.</td></tr>
+<tr><td><code>414de081d51ecd99</code></td><td><code>address.postcode</code></td><td>4720 matches Emerald.</td></tr>
+<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>entity.trading_name</code></td><td>&#x27;Andersens Floor Coverings&#x27; is the brand trading name.</td></tr>
+<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>entity.trading_name</code></td><td>&#x27;Andersens Carpets&#x27; is a plausible alternate trading name for the outlet.</td></tr>
+<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>entity.website</code></td><td>This is the brand&#x27;s website, copied verbatim.</td></tr>
+<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>address.full</code></td><td>&#x27;36 Duke St&#x27; is a real street address.</td></tr>
+<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>address.locality</code></td><td>GYMPIE is a suburb/town and fits postcode 4570.</td></tr>
 <tr><td><code>f8f6df06cafb6d3b</code></td><td><code>address.postcode</code></td><td>4570 matches Gympie.</td></tr>
-<tr><td><code>9bf76a92aa7e1a75</code></td><td><code>entity.trading_name</code></td><td>&#x27;Aksa Home Decor&#x27; is the trading name and also matches the Outlet Name.</td></tr>
-<tr><td><code>9bf76a92aa7e1a75</code></td><td><code>entity.website</code></td><td>It is a valid website URL for an online-capable business.</td></tr>
-<tr><td><code>9bf76a92aa7e1a75</code></td><td><code>address.locality</code></td><td>&#x27;KILLARA&#x27; is the outlet suburb.</td></tr>
+<tr><td><code>9bf76a92aa7e1a75</code></td><td><code>entity.trading_name</code></td><td>&#x27;Aksa Home Decor&#x27; is a trading-style name.</td></tr>
+<tr><td><code>9bf76a92aa7e1a75</code></td><td><code>entity.trading_name</code></td><td>Outlet Name is identical to Trading Name, so this is a duplicate observation.</td></tr>
+<tr><td><code>9bf76a92aa7e1a75</code></td><td><code>entity.website</code></td><td>This is the business&#x27;s own website, copied verbatim.</td></tr>
+<tr><td><code>9bf76a92aa7e1a75</code></td><td><code>address.locality</code></td><td>KILLARA is a Sydney suburb and fits postcode 2071. The business is an online or mobile operator with no street address.</td></tr>
 <tr><td><code>9bf76a92aa7e1a75</code></td><td><code>address.postcode</code></td><td>2071 matches Killara NSW.</td></tr>
-<tr><td><code>f9aad4867a42037c</code></td><td><code>entity.trading_name</code></td><td>It is the brand-level trading name, while the outlet name is &#x27;Andersens Carpets&#x27;.</td></tr>
-<tr><td><code>f9aad4867a42037c</code></td><td><code>entity.website</code></td><td>It is a valid brand website URL.</td></tr>
-<tr><td><code>f9aad4867a42037c</code></td><td><code>address.full</code></td><td>&#x27;Shop 4 1 Greenway Dr&#x27; is a street address, with a double space collapsed.</td></tr>
-<tr><td><code>f9aad4867a42037c</code></td><td><code>address.locality</code></td><td>&#x27;TWEED HEADS&#x27; is the outlet suburb.</td></tr>
-<tr><td><code>f9aad4867a42037c</code></td><td><code>address.postcode</code></td><td>2485 matches Tweed Heads.</td></tr>
-<tr><td><code>ab772061675d9a9d</code></td><td><code>entity.trading_name</code></td><td>&#x27;Arthurs Autoglass&#x27; is the brand trading name, while the outlet trades as &#x27;Morayfield Discount Autoglass&#x27;, so it is acceptable but not outlet-specific.</td></tr>
-<tr><td><code>ab772061675d9a9d</code></td><td><code>entity.website</code></td><td>It is an outlet-specific website URL and is a valid web address.</td></tr>
+<tr><td><code>f9aad4867a42037c</code></td><td><code>entity.trading_name</code></td><td>This is the brand trading name.</td></tr>
+<tr><td><code>f9aad4867a42037c</code></td><td><code>entity.trading_name</code></td><td>&#x27;Andersens Carpets&#x27; is a plausible alternate trading name.</td></tr>
+<tr><td><code>f9aad4867a42037c</code></td><td><code>entity.website</code></td><td>This is the brand&#x27;s website, copied verbatim.</td></tr>
+<tr><td><code>f9aad4867a42037c</code></td><td><code>address.full</code></td><td>This is a street address. The source&#x27;s double space (where a comma was likely dropped) became a single space, giving &#x27;Shop 4 1 Greenway Dr&#x27;, which is slightly ambiguous but acceptable.</td></tr>
+<tr><td><code>f9aad4867a42037c</code></td><td><code>address.locality</code></td><td>TWEED HEADS is a suburb and fits postcode 2485.</td></tr>
+<tr><td><code>f9aad4867a42037c</code></td><td><code>address.postcode</code></td><td>2485 matches Tweed Heads NSW.</td></tr>
+<tr><td><code>ab772061675d9a9d</code></td><td><code>entity.trading_name</code></td><td>&#x27;Arthurs Autoglass&#x27; is a trading name.</td></tr>
+<tr><td><code>ab772061675d9a9d</code></td><td><code>entity.trading_name</code></td><td>&#x27;Morayfield Discount Autoglass&#x27; is a distinct outlet-level trading style. It is acceptable as a second trading name, but it differs from the brand name.</td></tr>
+<tr><td><code>ab772061675d9a9d</code></td><td><code>entity.website</code></td><td>This is an outlet-specific site, copied verbatim, and consistent with the outlet name.</td></tr>
 <tr><td><code>ab772061675d9a9d</code></td><td><code>address.full</code></td><td>&#x27;125 Morayfield Rd&#x27; is a street address.</td></tr>
-<tr><td><code>ab772061675d9a9d</code></td><td><code>address.locality</code></td><td>&#x27;CABOOLTURE SOUTH&#x27; is the outlet suburb.</td></tr>
-<tr><td><code>ab772061675d9a9d</code></td><td><code>address.postcode</code></td><td>4510 is consistent with Caboolture South.</td></tr>
-<tr><td><code>8797e54e37a80189</code></td><td><code>entity.website</code></td><td>It is a valid website URL.</td></tr>
-<tr><td><code>8797e54e37a80189</code></td><td><code>address.full</code></td><td>&#x27;Shop 109 137 Laver Dr&#x27; is a street address.</td></tr>
-<tr><td><code>8797e54e37a80189</code></td><td><code>address.locality</code></td><td>&#x27;ROBINA&#x27; is the outlet suburb.</td></tr>
-<tr><td><code>8797e54e37a80189</code></td><td><code>address.postcode</code></td><td>4226 matches Robina QLD.</td></tr>
-<tr><td><code>86f9d51258089cb6</code></td><td><code>address.locality</code></td><td>&#x27;MAROOCHYDORE&#x27; is the outlet suburb.</td></tr>
+<tr><td><code>ab772061675d9a9d</code></td><td><code>address.locality</code></td><td>CABOOLTURE SOUTH is a suburb and fits postcode 4510.</td></tr>
+<tr><td><code>ab772061675d9a9d</code></td><td><code>address.postcode</code></td><td>4510 matches the Caboolture area.</td></tr>
+<tr><td><code>8797e54e37a80189</code></td><td><code>entity.trading_name</code></td><td>&#x27;ADPAQ&#x27; is an abbreviated outlet label, likely the Queensland branch, and is plausible as a trading name.</td></tr>
+<tr><td><code>8797e54e37a80189</code></td><td><code>entity.website</code></td><td>This is the organisation&#x27;s website, copied verbatim.</td></tr>
+<tr><td><code>8797e54e37a80189</code></td><td><code>address.full</code></td><td>This is a shop and street address. The double space became a single space, which is fine.</td></tr>
+<tr><td><code>8797e54e37a80189</code></td><td><code>address.locality</code></td><td>ROBINA is a Gold Coast suburb and fits postcode 4226.</td></tr>
+<tr><td><code>8797e54e37a80189</code></td><td><code>address.postcode</code></td><td>4226 matches Robina.</td></tr>
+<tr><td><code>86f9d51258089cb6</code></td><td><code>address.locality</code></td><td>MAROOCHYDORE is a suburb and fits postcode 4558.</td></tr>
 <tr><td><code>86f9d51258089cb6</code></td><td><code>address.postcode</code></td><td>4558 matches Maroochydore.</td></tr>
-<tr><td><code>7655e30afe549885</code></td><td><code>entity.trading_name</code></td><td>It is the brand trading name and matches the Outlet Name.</td></tr>
-<tr><td><code>7655e30afe549885</code></td><td><code>entity.website</code></td><td>It is a valid brand website URL.</td></tr>
-<tr><td><code>7655e30afe549885</code></td><td><code>address.locality</code></td><td>&#x27;MACKAY&#x27; is the outlet suburb.</td></tr>
+<tr><td><code>7655e30afe549885</code></td><td><code>entity.trading_name</code></td><td>This is the brand trading name.</td></tr>
+<tr><td><code>7655e30afe549885</code></td><td><code>entity.trading_name</code></td><td>Outlet Name is identical to the brand name, so this is a valid duplicate.</td></tr>
+<tr><td><code>7655e30afe549885</code></td><td><code>entity.website</code></td><td>This is the brand&#x27;s website, copied verbatim.</td></tr>
+<tr><td><code>7655e30afe549885</code></td><td><code>address.locality</code></td><td>MACKAY is a city and fits postcode 4740.</td></tr>
 <tr><td><code>7655e30afe549885</code></td><td><code>address.postcode</code></td><td>4740 matches Mackay.</td></tr>
   </table></div></details>
 </section>
 
 <section id="mapping">
-  <h2>字段映射 · 5 条（共 18 个源列）</h2>
+  <h2>字段映射 · 6 条（共 18 个源列）</h2>
   <div class="tablewrap"><table>
     <tr><th>canonical</th><th>← 源列</th><th>transforms</th><th>conf.</th><th></th><th>语义证据</th></tr>
-    <tr><td><code>entity.trading_name</code></td><td><code>Trading Name</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.9</td><td></td><td class='evidence'>Column &#x27;Trading Name&#x27; holds values like &#x27;Amplifon&#x27;, &#x27;Andersens Floor Coverings&#x27; and &#x27;Access Dental Services Pty Ltd&#x27;. These are the names the businesses trade under in the discount directory, repeated across their outlets. It is not entity.legal_name because it is not labelled as a registered name and no register confirms it. &#x27;Outlet Name&#x27; is the nearer outlet-level label and is left unmapped.</td></tr>
-<tr><td><code>entity.website</code></td><td><code>Website</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;url_normalize&quot;]</code></td><td class='num'>0.8</td><td></td><td class='evidence'>Column &#x27;Website&#x27; holds values like &#x27;http://www.andersens.com.au&#x27;, &#x27;http://adpa.com.au&#x27; and &#x27;https://andrewsairportpark.com.au&#x27;. They are the business&#x27;s web address. Some are malformed at source, e.g. &#x27;http://https://www.amplifon.com/au/&#x27;. Blank for about 8.5% of rows, which empty_to_null turns into no claim.</td></tr>
-<tr><td><code>address.full</code></td><td><code>Outlet Address</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.7</td><td></td><td class='evidence'>Column &#x27;Outlet Address&#x27; holds values like &#x27;10 Herberton St&#x27;, &#x27;179 Nicklin Way&#x27; and &#x27;Shop 124, Mount Pleasant Shopping Centre&#x27;. It is the street-level address of the outlet, so it is the physical address and not a postal or head-office address. It excludes suburb, state and postcode, which are in separate columns. A few values are not street addresses, e.g. &#x27;A1 Exhausts &amp; Mechanical Petrie&#x27;, hence the lower confidence. Blank in about 11% of rows.</td></tr>
+    <tr><td><code>entity.trading_name</code></td><td><code>Trading Name</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.85</td><td></td><td class='evidence'>Column &#x27;Trading Name&#x27; holds values like &#x27;Amplifon&#x27;, &#x27;Andersens Floor Coverings&#x27; and &#x27;Access Dental Services Pty Ltd&#x27;. These are the names the businesses trade under in the discount directory, repeated across their outlets. Some carry a company suffix (e.g. &#x27;Ali Baba Lebanese Cuisine Pty Ltd&#x27;, &#x27;ADPA Ltd&#x27;); the reviewer confirmed this is source dirt carried faithfully, so the values are left as they are. It is not mapped to entity.legal_name because the column is not labelled as a registered name and no register confirms it.</td></tr>
+<tr><td><code>entity.trading_name</code></td><td><code>Outlet Name</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.7</td><td></td><td class='evidence'>Column &#x27;Outlet Name&#x27; holds outlet-level labels such as &#x27;Amplifon Mackay&#x27;, &#x27;ADPAQ&#x27; and &#x27;Allcracft Sewing Machines&#x27; (a typo of the trading name). Per the reviewer, the ontology allows multiple trading names, one observation each, and outlet-level names are this source&#x27;s main value for downstream name matching, so it is mapped as a second entity.trading_name claim. Confidence is lower than for &#x27;Trading Name&#x27; because some labels are location-suffixed or contain typos.</td></tr>
+<tr><td><code>entity.website</code></td><td><code>Website</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;url_normalize&quot;]</code></td><td class='num'>0.8</td><td></td><td class='evidence'>Column &#x27;Website&#x27; holds values like &#x27;http://www.andersens.com.au&#x27;, &#x27;http://adpa.com.au&#x27; and &#x27;https://andrewsairportpark.com.au&#x27;. They are the business&#x27;s web address. Some are malformed at source, e.g. &#x27;http://https://www.amplifon.com/au/&#x27;; the reviewer confirmed these double-scheme values are source dirt carried faithfully, so they are left as they are. The semantic flag on a tracking query string is likewise source content. Blank for about 8.5% of rows, which empty_to_null turns into no claim.</td></tr>
+<tr><td><code>address.full</code></td><td><code>Outlet Address</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.6</td><td></td><td class='evidence'>Column &#x27;Outlet Address&#x27; holds values like &#x27;10 Herberton St&#x27;, &#x27;179 Nicklin Way&#x27; and &#x27;Shop 124, Mount Pleasant Shopping Centre&#x27;, but the values are often shopping-centre or venue names rather than street addresses, e.g. &#x27;Castletown Shp Cnt&#x27;, &#x27;Sunshine Plaza&#x27;, &#x27;Caneland Central Shp Cnt&#x27; and &#x27;Central Highlands Market Place&#x27;. Some are not addresses at all, e.g. &#x27;A1 Exhausts &amp; Mechanical Petrie&#x27;. It is still the best available location text for the outlet. It excludes suburb, state and postcode, which are in separate columns. Blank in about 11% of rows.</td></tr>
 <tr><td><code>address.locality</code></td><td><code>Outlet Suburb</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.92</td><td></td><td class='evidence'>Column &#x27;Outlet Suburb&#x27; holds values like &#x27;MACKAY&#x27;, &#x27;TWEED HEADS SOUTH&#x27; and &#x27;MAROOCHYDORE&#x27;. These are suburb or town names of the outlet, so address.locality. The rest of the address is in separate columns.</td></tr>
 <tr><td><code>address.postcode</code></td><td><code>Outlet Postcode</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;postcode_normalize&quot;]</code></td><td class='num'>0.93</td><td></td><td class='evidence'>Column &#x27;Outlet Postcode&#x27; holds values like &#x27;4740&#x27;, &#x27;2486&#x27; and &#x27;3216&#x27;. They are all 4-digit Australian postcodes of the outlet. postcode_normalize zero-pads any that lost a leading zero.</td></tr>
   </table></div>
 </section>
 
 <section id="unmapped">
-  <h2>未映射的列 · 13</h2>
+  <h2>未映射的列 · 12</h2>
   <div class="tablewrap"><table>
     <tr><th>源列</th><th>理由</th></tr>
-    <tr><td><code>Outlet Name</code></td><td>Outlet-level label such as &#x27;Amplifon Mackay&#x27;, &#x27;ADPAQ&#x27; or &#x27;Allcracft Sewing Machines&#x27; (a typo of the trading name). It is neither the registered legal name nor clearly a trading name, so it is not mapped.</td></tr>
-<tr><td><code>Telephone Number</code></td><td>No telephone field in the ontology.</td></tr>
+    <tr><td><code>Telephone Number</code></td><td>No telephone field in the ontology.</td></tr>
 <tr><td><code>Online Mail Order Flag</code></td><td>Scheme attribute (Yes/No) with no ontology field.</td></tr>
 <tr><td><code>Australia Wide Flag</code></td><td>Scheme attribute (Yes/No) describing offer coverage, with no ontology field.</td></tr>
 <tr><td><code>Overseas Flag</code></td><td>Scheme attribute (Yes/No) with no ontology field.</td></tr>
@@ -215,9 +226,10 @@ Discount: 15% off ticketed price. Not valid with any other offer.
 Latitude: -27.60793
 Longitude: 152.81166
 Mobile Business Flag: No
-Parent Business Category: Trade Services</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;Andersens Floor Coverings&quot;   (conf 0.9)
+Parent Business Category: Trade Services</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;Andersens Floor Coverings&quot;   (conf 0.85)
+entity.trading_name = &quot;Andersens Carpets&quot;   (conf 0.7)
 entity.website = &quot;http://www.andersens.com.au&quot;   (conf 0.8)
-address.full = &quot;36 Brisbane Rd&quot;   (conf 0.7)
+address.full = &quot;36 Brisbane Rd&quot;   (conf 0.6)
 address.locality = &quot;BUNDAMBA&quot;   (conf 0.92)
 address.postcode = &quot;4305&quot;   (conf 0.93)</pre></div></div></div>
 <div class='example'><h4>样例 2 · record <code>b827ba0529931ac0</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Trading Name: Andersens Floor Coverings
@@ -237,9 +249,10 @@ Discount: 15% off ticketed price. Not valid with any other offer.
 Latitude: -17.26435
 Longitude: 145.47777
 Mobile Business Flag: No
-Parent Business Category: House and Home</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;Andersens Floor Coverings&quot;   (conf 0.9)
+Parent Business Category: House and Home</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;Andersens Floor Coverings&quot;   (conf 0.85)
+entity.trading_name = &quot;Andersens Carpets&quot;   (conf 0.7)
 entity.website = &quot;http://www.andersens.com.au&quot;   (conf 0.8)
-address.full = &quot;17 Mabel St&quot;   (conf 0.7)
+address.full = &quot;17 Mabel St&quot;   (conf 0.6)
 address.locality = &quot;ATHERTON&quot;   (conf 0.92)
 address.postcode = &quot;4883&quot;   (conf 0.93)</pre></div></div></div>
 <div class='example'><h4>样例 3 · record <code>c6645fe59dc7c286</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Trading Name: ADPA Ltd
@@ -259,9 +272,10 @@ Discount: Complimentary consultation for denture assessment.
 Latitude: -27.34823
 Longitude: 153.02756
 Mobile Business Flag: No
-Parent Business Category: Health and Medical</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;ADPA Ltd&quot;   (conf 0.9)
+Parent Business Category: Health and Medical</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;ADPA Ltd&quot;   (conf 0.85)
+entity.trading_name = &quot;ADPAQ&quot;   (conf 0.7)
 entity.website = &quot;http://adpa.com.au&quot;   (conf 0.8)
-address.full = &quot;U 9 521 Beams Rd&quot;   (conf 0.7)
+address.full = &quot;U 9 521 Beams Rd&quot;   (conf 0.6)
 address.locality = &quot;CARSELDINE&quot;   (conf 0.92)
 address.postcode = &quot;4034&quot;   (conf 0.93)</pre></div></div></div>
 <div class='example'><h4>样例 4 · record <code>571a3fb647cda1d6</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Trading Name: ADPA Ltd
@@ -281,9 +295,10 @@ Discount: Complimentary consultation for denture assessment.
 Latitude: -26.18987
 Longitude: 152.66159
 Mobile Business Flag: No
-Parent Business Category: Health and Medical</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;ADPA Ltd&quot;   (conf 0.9)
+Parent Business Category: Health and Medical</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;ADPA Ltd&quot;   (conf 0.85)
+entity.trading_name = &quot;ADPAQ&quot;   (conf 0.7)
 entity.website = &quot;http://adpa.com.au&quot;   (conf 0.8)
-address.full = &quot;29 Mary St&quot;   (conf 0.7)
+address.full = &quot;29 Mary St&quot;   (conf 0.6)
 address.locality = &quot;GYMPIE&quot;   (conf 0.92)
 address.postcode = &quot;4570&quot;   (conf 0.93)</pre></div></div></div>
 <div class='example'><h4>样例 5 · record <code>450af831b5c638df</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Trading Name: Andersens Floor Coverings
@@ -303,9 +318,10 @@ Discount: 15% off ticketed price. Not valid with any other offer.
 Latitude: -25.28592
 Longitude: 152.82546
 Mobile Business Flag: No
-Parent Business Category: House and Home</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;Andersens Floor Coverings&quot;   (conf 0.9)
+Parent Business Category: House and Home</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;Andersens Floor Coverings&quot;   (conf 0.85)
+entity.trading_name = &quot;Andersens Carpets&quot;   (conf 0.7)
 entity.website = &quot;http://www.andersens.com.au&quot;   (conf 0.8)
-address.full = &quot;60 Boat Harbour Dr&quot;   (conf 0.7)
+address.full = &quot;60 Boat Harbour Dr&quot;   (conf 0.6)
 address.locality = &quot;HERVEY BAY&quot;   (conf 0.92)
 address.postcode = &quot;4655&quot;   (conf 0.93)</pre></div></div></div>
 </section>

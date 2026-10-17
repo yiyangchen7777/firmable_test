@@ -1,0 +1,24 @@
+{
+  "source_id": "business-discount-directory",
+  "config_path": "/Users/yc/Desktop/firmable_test/configs/business-discount-directory.yaml",
+  "extractor_version": "cfg-3959ccb1dfcd+engine-0.1",
+  "input_path": "/Users/yc/Desktop/firmable_test/data/raw/business-discount-directory/opendata-discount-offers-20260917170016.csv",
+  "input_bytes": 2105247,
+  "row_limit": 8000,
+  "seeded_sampling": false,
+  "rows_read": 7834,
+  "observations_written": 7834,
+  "claim_counts": {
+    "entity.trading_name": 15668,
+    "entity.website": 7203,
+    "address.full": 7103,
+    "address.locality": 7772,
+    "address.postcode": 7772
+  },
+  "flag_counts": {
+    "duplicate_record_id": 6
+  },
+  "output_path": "/Users/yc/Desktop/firmable_test/outputs/observations/business-discount-directory.jsonl",
+  "ingested_at": "2026-10-17T10:05:42+00:00",
+  "api_cost_usd": 0.0
+}
