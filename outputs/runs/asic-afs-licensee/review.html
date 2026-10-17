@@ -1,0 +1,301 @@
+<title>映射审核 · asic-afs-licensee</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: single reading column, status-led; data tables full width */
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --fg: #1d2129; --muted: #6b7280;
+  --line: #e3e4e0; --accent: #1f6f54;
+  --ok-bg: #e4f2ea; --ok-fg: #19613f; --warn-bg: #fdf0d7; --warn-fg: #8a5a0a;
+  --bad-bg: #fbe5e3; --bad-fg: #a02c21; --code-bg: #f0f0ed;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97;
+  --ok-bg: #173527; --ok-fg: #7fd7ab; --warn-bg: #3a2d10; --warn-fg: #ecbf63;
+  --bad-bg: #40201d; --bad-fg: #f1988e; --code-bg: #272b31; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97;
+  --ok-bg: #173527; --ok-fg: #7fd7ab; --warn-bg: #3a2d10; --warn-fg: #ecbf63;
+  --bad-bg: #40201d; --bad-fg: #f1988e; --code-bg: #272b31; color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--fg);
+  font: 15px/1.6 -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+main { max-width: 980px; margin: 0 auto; display: grid; gap: 28px; }
+h1 { font-size: 1.45rem; margin: 0; text-wrap: balance; }
+h2 { font-size: 1.05rem; margin: 0 0 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+h4, h5 { margin: 0 0 6px; }
+section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; letter-spacing: 0.02em; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tablewrap { overflow-x: auto; }
+code { background: var(--code-bg); border-radius: 4px; padding: 1px 5px; font-size: 0.85em; }
+pre { background: var(--code-bg); border-radius: 6px; padding: 10px 12px; overflow-x: auto; font-size: 0.8rem; line-height: 1.5; margin: 0; }
+.pill { border-radius: 99px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+.pill.ok, .ok { background: var(--ok-bg); color: var(--ok-fg); }
+.pill.warn, .warn { background: var(--warn-bg); color: var(--warn-fg); }
+.pill.bad, .bad { background: var(--bad-bg); color: var(--bad-fg); }
+.status { display: inline-block; border-radius: 6px; padding: 4px 14px; font-weight: 700; }
+.chip { background: var(--code-bg); border-radius: 99px; padding: 1px 8px; font-size: 0.75rem; }
+.muted { color: var(--muted); }
+.evidence { min-width: 260px; }
+.metagrid { display: grid; grid-template-columns: 9em 1fr; gap: 4px 14px; font-size: 0.9rem; }
+.metagrid dt { color: var(--muted); } .metagrid dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.guide ol { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pair > div { min-width: 0; }
+@media (max-width: 720px) { .pair { grid-template-columns: 1fr; } }
+.example { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+.example:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+.decision pre { user-select: all; }
+details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
+</style>
+<main>
+<header>
+  <h1>映射审核 · asic-afs-licensee</h1>
+  <p><span class="status ok">PASSING</span>
+     <span class="muted">修订 0/3 · 流程步数 5 · 审核材料同步存于 review.md</span></p>
+</header>
+
+<section class="guide">
+  <h2>怎么审（约 5 分钟）</h2>
+  <ol>
+    <li><strong>看硬指标</strong>（<a href="#checks">校验结果</a>）：有没有 ❌。校验位、枚举、唯一性是代码算的，不会说谎。</li>
+    <li><strong>看语义疑点</strong>（<a href="#flags">语义抽检</a>）：这是最需要人的部分——模型挑出「解析没错但含义可能错」的字段，你判断同不同意。</li>
+    <li><strong>抽看对照样例</strong>（<a href="#examples">原始 vs 输出</a>）：随手挑两条，问自己「左边这列的意思，真的是右边那个字段吗？」</li>
+    <li><strong>扫一眼未映射清单</strong>（<a href="#unmapped">unmapped</a>）：理由是否诚实，有没有本该映射却被偷懒放弃的列。</li>
+  </ol>
+  <p class="muted">你只有三个动作：approve / reject + 意见 / abandon。你不能直接改配置文件——人一改，配置就成了「手写的」，作业的核心主张（agent 独立完成映射）就不成立了。</p>
+</section>
+
+<section>
+  <h2>来源与关键决定</h2>
+  <dl class="metagrid">
+    <dt>数据集</dt><dd>ASIC - Australian Financial Services Licensee Dataset（asic-afs-licensee）</dd>
+    <dt>发布方 / 许可</dt><dd>Australian Securities and Investments Commission (ASIC) / cc-by</dd>
+    <dt>读取方式</dt><dd><code>{&quot;format&quot;: &quot;csv&quot;, &quot;delimiter&quot;: &quot;,&quot;, &quot;encoding&quot;: &quot;utf-8-sig&quot;, &quot;header_row&quot;: 0, &quot;sheet&quot;: null}</code></dd>
+    <dt>source_reliability</dt><dd>0.92 — ASIC is the national regulator and this is its own AFS licensee register, published under CC-BY, so it is authoritative for licensee names, identifiers and registered addresses.</dd>
+    <dt>record_id</dt><dd><code>column [&#x27;AFS_LIC_NUM&#x27;]</code> — AFS_LIC_NUM is ASIC&#x27;s own licence number. It has 200 distinct values across 200 profiled rows and 0% null, so it is unique per record. The ABN could repeat if an entity held several licences, so it is not used.</dd>
+    <dt>observed_at</dt><dd><code>dataset_modified</code>（basis: proxy，值 2026-10-14）— No column holds a per-record extract or last-updated date. AFS_LIC_START_DT is the licence start date, which is valid_from material and not when ASIC asserted the record. I therefore use the catalogue modified date (2026-10-14) as a weak dataset-level proxy.</dd>
+  </dl>
+</section>
+
+<section id="checks">
+  <h2>校验结果 · 350 行留存数据（循环集；最终验收在批准后跑一次）</h2>
+  <div class="tablewrap"><table>
+    <tr><th>检查</th><th>阈值</th><th>结果</th><th></th></tr>
+    <tr><td>identifier checksum (entity.abn)</td><td class='num'>&gt;= 95%</td><td class='num'>100.0% (345 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>identifier checksum (entity.acn)</td><td class='num'>&gt;= 95%</td><td class='num'>100.0% (5 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>enum legality (address.state)</td><td class='num'>&gt;= 98%</td><td class='num'>100.0% (350 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.legal_name ← AFS_LIC_NAME)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.locality ← AFS_LIC_ADD_LOCAL)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.state ← AFS_LIC_ADD_STATE)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.postcode ← AFS_LIC_ADD_PCODE)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.country ← AFS_LIC_ADD_COUNTRY)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>conditional pair coverage (AFS_LIC_ABN_ACN → entity.abn + entity.acn)</td><td class='num'>&gt;= 95% of non-null</td><td class='num'>100.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>record_id effectively unique (full sample)</td><td class='num'>&lt;= 0.5% duplicates</td><td class='num'>0 duplicates (0.00%)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>minimum useful (a name or an identifier mapped)</td><td class='num'>required</td><td class='num'>yes</td><td><span class="pill ok">通过</span></td></tr>
+  </table></div>
+  <h4 style="margin-top:14px">未通过/弃权的例子</h4>
+  <p class='muted'>无</p>
+</section>
+
+<section id="flags">
+  <h2>语义抽检 · 10 条留存记录：60 ok / 0 suspicious</h2>
+  <div class="tablewrap"><table>
+    <tr><th>record</th><th>字段</th><th>为什么可疑</th></tr>
+    <tr><td colspan='3' class='muted'>无疑点</td></tr>
+  </table></div>
+  <details><summary>展开 60 条「ok」判定</summary>
+  <div class="tablewrap"><table>
+    <tr><th>record</th><th>字段</th><th>理由</th></tr>
+    <tr><td><code>233713</code></td><td><code>entity.legal_name</code></td><td>AFS_LIC_NAME is the licensee name &#x27;GROVE SECURITIES PTY LTD&#x27;, a registered company name with a legal suffix.</td></tr>
+<tr><td><code>233713</code></td><td><code>entity.abn</code></td><td>AFS_LIC_ABN_ACN is the licensee&#x27;s own 11-digit ABN, and it passes the ABN checksum.</td></tr>
+<tr><td><code>233713</code></td><td><code>address.locality</code></td><td>ALBANY is a suburb or town name and is consistent with WA 6330.</td></tr>
+<tr><td><code>233713</code></td><td><code>address.state</code></td><td>WA is a valid state code and matches the locality.</td></tr>
+<tr><td><code>233713</code></td><td><code>address.postcode</code></td><td>6330 is a 4-digit postcode that matches Albany, WA.</td></tr>
+<tr><td><code>233713</code></td><td><code>address.country</code></td><td>Australia is the country of the address block.</td></tr>
+<tr><td><code>237757</code></td><td><code>entity.legal_name</code></td><td>&#x27;ELDERS RURAL SERVICES AUSTRALIA LIMITED&#x27; is the licensee&#x27;s registered company name.</td></tr>
+<tr><td><code>237757</code></td><td><code>entity.abn</code></td><td>It is an 11-digit ABN in the licensee&#x27;s own column and passes the checksum.</td></tr>
+<tr><td><code>237757</code></td><td><code>address.locality</code></td><td>ADELAIDE is a locality and is consistent with SA 5000.</td></tr>
+<tr><td><code>237757</code></td><td><code>address.state</code></td><td>SA is a valid state code and matches Adelaide.</td></tr>
+<tr><td><code>237757</code></td><td><code>address.postcode</code></td><td>5000 is the Adelaide postcode.</td></tr>
+<tr><td><code>237757</code></td><td><code>address.country</code></td><td>Australia is the country of the address block.</td></tr>
+<tr><td><code>237556</code></td><td><code>entity.legal_name</code></td><td>&#x27;IRONBRIDGE CAPITAL MANAGEMENT PTY LIMITED&#x27; is the licensee&#x27;s company name.</td></tr>
+<tr><td><code>237556</code></td><td><code>entity.abn</code></td><td>It is the licensee&#x27;s 11-digit ABN and passes the checksum.</td></tr>
+<tr><td><code>237556</code></td><td><code>address.locality</code></td><td>SYDNEY is a locality and is consistent with NSW 2000.</td></tr>
+<tr><td><code>237556</code></td><td><code>address.state</code></td><td>NSW is a valid state code and matches Sydney.</td></tr>
+<tr><td><code>237556</code></td><td><code>address.postcode</code></td><td>2000 is the Sydney postcode.</td></tr>
+<tr><td><code>237556</code></td><td><code>address.country</code></td><td>Australia is the country of the address block.</td></tr>
+<tr><td><code>235017</code></td><td><code>entity.legal_name</code></td><td>&#x27;METROPOLIS PTY. LTD.&#x27; is the licensee&#x27;s registered name with a legal suffix, not a brand name.</td></tr>
+<tr><td><code>235017</code></td><td><code>entity.abn</code></td><td>It is the licensee&#x27;s 11-digit ABN from the ABN/ACN column.</td></tr>
+<tr><td><code>235017</code></td><td><code>address.locality</code></td><td>PORT MELBOURNE is a suburb and is consistent with VIC 3207.</td></tr>
+<tr><td><code>235017</code></td><td><code>address.state</code></td><td>VIC is a valid state code and matches the locality.</td></tr>
+<tr><td><code>235017</code></td><td><code>address.postcode</code></td><td>3207 is the Port Melbourne postcode.</td></tr>
+<tr><td><code>235017</code></td><td><code>address.country</code></td><td>Australia is the country of the address block.</td></tr>
+<tr><td><code>230251</code></td><td><code>entity.legal_name</code></td><td>&#x27;YARRA FUNDS MANAGEMENT LIMITED&#x27; is the licensee&#x27;s company name.</td></tr>
+<tr><td><code>230251</code></td><td><code>entity.abn</code></td><td>It is an 11-digit ABN in the licensee&#x27;s own column.</td></tr>
+<tr><td><code>230251</code></td><td><code>address.locality</code></td><td>MELBOURNE is a locality and is consistent with VIC 3000.</td></tr>
+<tr><td><code>230251</code></td><td><code>address.state</code></td><td>VIC is a valid state code and matches Melbourne.</td></tr>
+<tr><td><code>230251</code></td><td><code>address.postcode</code></td><td>3000 is the Melbourne postcode.</td></tr>
+<tr><td><code>230251</code></td><td><code>address.country</code></td><td>Australia is the country of the address block.</td></tr>
+<tr><td><code>236776</code></td><td><code>entity.legal_name</code></td><td>&#x27;AUSTRALIAN PRIVATE CAPITAL ADVISORY SERVICES PTY. LTD.&#x27; is the licensee&#x27;s registered company name.</td></tr>
+<tr><td><code>236776</code></td><td><code>entity.abn</code></td><td>It is the licensee&#x27;s 11-digit ABN from the ABN/ACN column.</td></tr>
+<tr><td><code>236776</code></td><td><code>address.locality</code></td><td>MELBOURNE is a locality and is consistent with VIC 3000.</td></tr>
+<tr><td><code>236776</code></td><td><code>address.state</code></td><td>VIC is a valid state code and matches the locality.</td></tr>
+<tr><td><code>236776</code></td><td><code>address.postcode</code></td><td>3000 is the Melbourne postcode.</td></tr>
+<tr><td><code>236776</code></td><td><code>address.country</code></td><td>Australia is the country of the address block.</td></tr>
+<tr><td><code>238268</code></td><td><code>entity.legal_name</code></td><td>&#x27;ANZ STAFF SUPERANNUATION (AUSTRALIA) PTY. LIMITED&#x27; is the licensee entity name. It is a distinct company, not the parent bank.</td></tr>
+<tr><td><code>238268</code></td><td><code>entity.abn</code></td><td>It is an 11-digit ABN in the licensee&#x27;s own column.</td></tr>
+<tr><td><code>238268</code></td><td><code>address.locality</code></td><td>DOCKLANDS is a Melbourne suburb and is consistent with VIC 3008.</td></tr>
+<tr><td><code>238268</code></td><td><code>address.state</code></td><td>VIC is a valid state code and matches Docklands.</td></tr>
+<tr><td><code>238268</code></td><td><code>address.postcode</code></td><td>3008 is the Docklands postcode.</td></tr>
+<tr><td><code>238268</code></td><td><code>address.country</code></td><td>Australia is the country of the address block.</td></tr>
+<tr><td><code>229170</code></td><td><code>entity.legal_name</code></td><td>&#x27;INTERFINANZ PTY LTD&#x27; is the licensee&#x27;s registered name with a legal suffix.</td></tr>
+<tr><td><code>229170</code></td><td><code>entity.abn</code></td><td>It is an 11-digit ABN from the licensee&#x27;s ABN/ACN column.</td></tr>
+<tr><td><code>229170</code></td><td><code>address.locality</code></td><td>COLLINGWOOD is a Melbourne suburb and is consistent with VIC 3066.</td></tr>
+<tr><td><code>229170</code></td><td><code>address.state</code></td><td>VIC is a valid state code and matches Collingwood.</td></tr>
+<tr><td><code>229170</code></td><td><code>address.postcode</code></td><td>3066 is the Collingwood postcode.</td></tr>
+<tr><td><code>229170</code></td><td><code>address.country</code></td><td>Australia is the country of the address block.</td></tr>
+<tr><td><code>230557</code></td><td><code>entity.legal_name</code></td><td>&#x27;TFS AUSTRALIA PTY. LIMITED&#x27; is the licensee&#x27;s company name.</td></tr>
+<tr><td><code>230557</code></td><td><code>entity.abn</code></td><td>It is an 11-digit ABN in the licensee&#x27;s own column.</td></tr>
+<tr><td><code>230557</code></td><td><code>address.locality</code></td><td>SYDNEY is a locality and is consistent with NSW 2000.</td></tr>
+<tr><td><code>230557</code></td><td><code>address.state</code></td><td>NSW is a valid state code and matches Sydney.</td></tr>
+<tr><td><code>230557</code></td><td><code>address.postcode</code></td><td>2000 is the Sydney postcode.</td></tr>
+<tr><td><code>230557</code></td><td><code>address.country</code></td><td>Australia is the country of the address block.</td></tr>
+<tr><td><code>237848</code></td><td><code>entity.legal_name</code></td><td>&#x27;TAL LIFE LIMITED&#x27; is the licensee&#x27;s registered company name.</td></tr>
+<tr><td><code>237848</code></td><td><code>entity.abn</code></td><td>It is the licensee&#x27;s 11-digit ABN from the ABN/ACN column.</td></tr>
+<tr><td><code>237848</code></td><td><code>address.locality</code></td><td>SYDNEY is a locality and is consistent with NSW 2000.</td></tr>
+<tr><td><code>237848</code></td><td><code>address.state</code></td><td>NSW is a valid state code and matches Sydney.</td></tr>
+<tr><td><code>237848</code></td><td><code>address.postcode</code></td><td>2000 is the Sydney postcode.</td></tr>
+<tr><td><code>237848</code></td><td><code>address.country</code></td><td>Australia is the country of the address block.</td></tr>
+  </table></div></details>
+</section>
+
+<section id="mapping">
+  <h2>字段映射 · 7 条（共 11 个源列）</h2>
+  <div class="tablewrap"><table>
+    <tr><th>canonical</th><th>← 源列</th><th>transforms</th><th>conf.</th><th></th><th>语义证据</th></tr>
+    <tr><td><code>entity.legal_name</code></td><td><code>AFS_LIC_NAME</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.93</td><td></td><td class='evidence'>AFS_LIC_NAME holds values such as &#x27;ROXBURGH SECURITIES PTY LTD&#x27;, &#x27;ACORN CAPITAL LIMITED&#x27; and &#x27;NETWEALTH INVESTMENTS LIMITED&#x27;. These are registered company names with legal suffixes (PTY LTD, LIMITED), so they are the licensee&#x27;s legal name and not a trading name. The column is 0% null with 200 distinct values.</td></tr>
+<tr><td><code>entity.abn</code></td><td><code>AFS_LIC_ABN_ACN</code></td><td><code class='small'>[&quot;strip_float_suffix&quot;, &quot;digits_only&quot;, {&quot;keep_if_length&quot;: 11}, &quot;abn_normalize&quot;]</code></td><td class='num'>0.9</td><td><span class="chip">conditional</span></td><td class='evidence'>AFS_LIC_ABN_ACN holds values such as &#x27;33004739655&#x27;, &#x27;83009199740&#x27; and &#x27;52089240513&#x27;, all 11 digits. That is the ABN shape and not the 9-digit ACN shape. The column name says ABN or ACN, so the mapping is gated to 11-digit values and any 9-digit values go to the paired ACN mapping. The licensee is the entity the record is about, so this is the entity&#x27;s own identifier.</td></tr>
+<tr><td><code>entity.acn</code></td><td><code>AFS_LIC_ABN_ACN</code></td><td><code class='small'>[&quot;strip_float_suffix&quot;, &quot;digits_only&quot;, {&quot;keep_if_length&quot;: 9}, &quot;acn_normalize&quot;]</code></td><td class='num'>0.85</td><td><span class="chip">conditional</span></td><td class='evidence'>The column name AFS_LIC_ABN_ACN allows ACNs. Any 9-digit value such as a stripped-zero ACN would be captured here, and the 11-digit samples (&#x27;33004739655&#x27;, &#x27;83009199740&#x27;) yield no claim. Absence on most rows is intended, so this is the conditional pair of the ABN mapping.</td></tr>
+<tr><td><code>address.locality</code></td><td><code>AFS_LIC_ADD_LOCAL</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.93</td><td></td><td class='evidence'>AFS_LIC_ADD_LOCAL holds suburb or city names such as &#x27;MELBOURNE&#x27;, &#x27;DALKEITH&#x27; and &#x27;NORTH FREMANTLE&#x27;, and each is consistent with its adjacent state and postcode columns. These are localities in the licensee&#x27;s address.</td></tr>
+<tr><td><code>address.state</code></td><td><code>AFS_LIC_ADD_STATE</code></td><td><code class='small'>[&quot;trim&quot;, &quot;state_normalize&quot;]</code></td><td class='num'>0.95</td><td></td><td class='evidence'>AFS_LIC_ADD_STATE has 5 distinct values (&#x27;VIC&#x27;, &#x27;WA&#x27;, &#x27;NSW&#x27;, &#x27;SA&#x27;, &#x27;QLD&#x27;), all standard Australian state abbreviations in the licensee&#x27;s address block.</td></tr>
+<tr><td><code>address.postcode</code></td><td><code>AFS_LIC_ADD_PCODE</code></td><td><code class='small'>[&quot;trim&quot;, &quot;postcode_normalize&quot;]</code></td><td class='num'>0.93</td><td></td><td class='evidence'>AFS_LIC_ADD_PCODE holds 4-digit codes such as &#x27;3000&#x27;, &#x27;6009&#x27; and &#x27;2000&#x27;. They match the paired locality (MELBOURNE 3000, DALKEITH 6009, SYDNEY 2000), so they are postcodes. Zero-padding protects NT codes like 0800.</td></tr>
+<tr><td><code>address.country</code></td><td><code>AFS_LIC_ADD_COUNTRY</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.92</td><td></td><td class='evidence'>AFS_LIC_ADD_COUNTRY is &#x27;Australia&#x27; on every row and sits in the address block alongside locality, state and postcode, so it is the country of the licensee&#x27;s address.</td></tr>
+  </table></div>
+</section>
+
+<section id="unmapped">
+  <h2>未映射的列 · 5</h2>
+  <div class="tablewrap"><table>
+    <tr><th>源列</th><th>理由</th></tr>
+    <tr><td><code>REGISTER_NAME</code></td><td>Constant &#x27;AFS Licence&#x27; on every row (1 distinct value). It names the register and describes no entity, so there is no ontology field.</td></tr>
+<tr><td><code>AFS_LIC_NUM</code></td><td>The licence number is the record key, used for record_id. It is not an entity identifier such as ABN, ACN or NZBN, so no ontology field exists.</td></tr>
+<tr><td><code>AFS_LIC_START_DT</code></td><td>dd/mm/yyyy dates such as &#x27;24/04/2003&#x27; and &#x27;13/08/2003&#x27; (day above 12 confirms day-first) are the licence start date. They are not entity.date_registered, which would be the company&#x27;s incorporation date, and they are valid_from material, so mapping would be wrong.</td></tr>
+<tr><td><code>AFS_LIC_PRE_FSR</code></td><td>Holds the pre-Financial Services Reform licence type and number as a quoted string, e.g. &#x27;&quot;Securities dealer&quot;,&quot;000191662&quot;&#x27;. It is a licence relationship attribute with no ontology field, and it is 28.5% null.</td></tr>
+<tr><td><code>AFS_LIC_CONDITION</code></td><td>Free-text licence authorisation or conditions (&#x27;This licence authorises the licensee to carry on a financial services business...&#x27;). This is licence detail with no ontology field.</td></tr>
+  </table></div>
+</section>
+
+<section id="examples">
+  <h2>对照样例 · 5 条原始行 vs 标准化输出</h2>
+  <p class="muted">读含义，别读通过率：日期是注册日还是牌照日？名字是本人还是代理人？ABN 是这一行主体自己的吗？</p>
+  <div class='example'><h4>样例 1 · record <code>234599</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: AFS Licence
+AFS_LIC_NUM: 234599
+AFS_LIC_NAME: UTILITIES OF AUSTRALIA PTY LTD
+AFS_LIC_ABN_ACN: 55063384127
+AFS_LIC_START_DT: 03/03/2004
+AFS_LIC_PRE_FSR: 
+AFS_LIC_ADD_LOCAL: SYDNEY
+AFS_LIC_ADD_STATE: NSW
+AFS_LIC_ADD_PCODE: 2000
+AFS_LIC_ADD_COUNTRY: Australia
+AFS_LIC_CONDITION: &quot;This licence authorises the licensee to carry on a financial services</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;UTILITIES OF AUSTRALIA PTY LTD&quot;   (conf 0.93)
+entity.abn = &quot;55063384127&quot;   (conf 0.9)
+address.locality = &quot;SYDNEY&quot;   (conf 0.93)
+address.state = &quot;NSW&quot;   (conf 0.95)
+address.postcode = &quot;2000&quot;   (conf 0.93)
+address.country = &quot;Australia&quot;   (conf 0.92)</pre></div></div></div>
+<div class='example'><h4>样例 2 · record <code>234536</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: AFS Licence
+AFS_LIC_NUM: 234536
+AFS_LIC_NAME: MOVEBANK LTD
+AFS_LIC_ABN_ACN: 91087651090
+AFS_LIC_START_DT: 01/12/2003
+AFS_LIC_PRE_FSR: 
+AFS_LIC_ADD_LOCAL: BRISBANE
+AFS_LIC_ADD_STATE: QLD
+AFS_LIC_ADD_PCODE: 4000
+AFS_LIC_ADD_COUNTRY: Australia
+AFS_LIC_CONDITION: &quot;This licence authorises the licensee to carry on a financial services</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;MOVEBANK LTD&quot;   (conf 0.93)
+entity.abn = &quot;91087651090&quot;   (conf 0.9)
+address.locality = &quot;BRISBANE&quot;   (conf 0.93)
+address.state = &quot;QLD&quot;   (conf 0.95)
+address.postcode = &quot;4000&quot;   (conf 0.93)
+address.country = &quot;Australia&quot;   (conf 0.92)</pre></div></div></div>
+<div class='example'><h4>样例 3 · record <code>227163</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: AFS Licence
+AFS_LIC_NUM: 227163
+AFS_LIC_NAME: JACANDA CAPITAL PTY. LIMITED
+AFS_LIC_ABN_ACN: 14094254690
+AFS_LIC_START_DT: 16/04/2003
+AFS_LIC_PRE_FSR: &quot;Securities dealer&quot;,&quot;000201897&quot;
+AFS_LIC_ADD_LOCAL: SYDNEY
+AFS_LIC_ADD_STATE: NSW
+AFS_LIC_ADD_PCODE: 2000
+AFS_LIC_ADD_COUNTRY: Australia
+AFS_LIC_CONDITION: &quot;This licence authorises the licensee to carry on a financial services</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;JACANDA CAPITAL PTY. LIMITED&quot;   (conf 0.93)
+entity.abn = &quot;14094254690&quot;   (conf 0.9)
+address.locality = &quot;SYDNEY&quot;   (conf 0.93)
+address.state = &quot;NSW&quot;   (conf 0.95)
+address.postcode = &quot;2000&quot;   (conf 0.93)
+address.country = &quot;Australia&quot;   (conf 0.92)</pre></div></div></div>
+<div class='example'><h4>样例 4 · record <code>227675</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: AFS Licence
+AFS_LIC_NUM: 227675
+AFS_LIC_NAME: CHOICE PRIVATE CLIENTS PTY LTD
+AFS_LIC_ABN_ACN: 46050199338
+AFS_LIC_START_DT: 01/07/2003
+AFS_LIC_PRE_FSR: 
+AFS_LIC_ADD_LOCAL: SOUTH MELBOURNE
+AFS_LIC_ADD_STATE: VIC
+AFS_LIC_ADD_PCODE: 3205
+AFS_LIC_ADD_COUNTRY: Australia
+AFS_LIC_CONDITION: &quot;This licence authorises the licensee to carry on a financial services</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;CHOICE PRIVATE CLIENTS PTY LTD&quot;   (conf 0.93)
+entity.abn = &quot;46050199338&quot;   (conf 0.9)
+address.locality = &quot;SOUTH MELBOURNE&quot;   (conf 0.93)
+address.state = &quot;VIC&quot;   (conf 0.95)
+address.postcode = &quot;3205&quot;   (conf 0.93)
+address.country = &quot;Australia&quot;   (conf 0.92)</pre></div></div></div>
+<div class='example'><h4>样例 5 · record <code>235130</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>REGISTER_NAME: AFS Licence
+AFS_LIC_NUM: 235130
+AFS_LIC_NAME: BREEZE UNDERWRITING PTY LTD
+AFS_LIC_ABN_ACN: 65003922487
+AFS_LIC_START_DT: 23/09/2003
+AFS_LIC_PRE_FSR: &quot;General insurance broker&quot;,&quot;000020577&quot;
+AFS_LIC_ADD_LOCAL: EAST MELBOURNE
+AFS_LIC_ADD_STATE: VIC
+AFS_LIC_ADD_PCODE: 3002
+AFS_LIC_ADD_COUNTRY: Australia
+AFS_LIC_CONDITION: &quot;This licence authorises the licensee to carry on a financial services</pre></div><div><h5>标准化输出</h5><pre>entity.legal_name = &quot;BREEZE UNDERWRITING PTY LTD&quot;   (conf 0.93)
+entity.abn = &quot;65003922487&quot;   (conf 0.9)
+address.locality = &quot;EAST MELBOURNE&quot;   (conf 0.93)
+address.state = &quot;VIC&quot;   (conf 0.95)
+address.postcode = &quot;3002&quot;   (conf 0.93)
+address.country = &quot;Australia&quot;   (conf 0.92)</pre></div></div></div>
+</section>
+
+<section class="decision">
+  <h2>你的决定（在终端运行其一）</h2>
+  <pre>uv run firm onboard asic-afs-licensee --decide "approve"</pre>
+  <pre>uv run firm onboard asic-afs-licensee --decide "reject: &lt;哪里不对、应该用哪个列/含义&gt;"</pre>
+  <pre>uv run firm onboard asic-afs-licensee --decide "abandon"</pre>
+  <p class="muted">reject 的意见会原文交给 agent 的 revise 节点，它自己改完会再生成一份新的审核材料。</p>
+</section>
+</main>

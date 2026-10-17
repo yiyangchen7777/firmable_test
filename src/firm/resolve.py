@@ -29,7 +29,12 @@ from rapidfuzz import fuzz
 from .config import OUTPUTS, ROOT
 from .names import name_key
 
-MATCHER_VERSION = "matcher-0.1"
+# 0.2: identifier links are refused when either record's own country claim is
+# non-AU. Measured on matcher-0.1: 19 of 50 hand-checked links were foreign
+# parent companies carrying a local subsidiary's ABN (source-asserted), all
+# with country_code us/ch in the raw rows. An Australian identifier on a
+# non-Australian party is evidence of agency, not identity.
+MATCHER_VERSION = "matcher-0.2"
 ABN_CONFIDENCE = 0.98
 ACN_CONFIDENCE = 0.95
 NAME_CONFIDENCE = 0.75
@@ -48,7 +53,7 @@ def load_records(drop_source: str | None = None) -> dict[str, dict]:
             key = f"{obs['source_id']}::{obs['source_record_id']}"
             summary = {
                 "key": key, "source": obs["source_id"],
-                "abn": None, "acn": None, "names": [], "state": None,
+                "abn": None, "acn": None, "names": [], "state": None, "country": None,
             }
             for claim in obs["claims"]:
                 if claim["field"] == "entity.abn":
@@ -59,6 +64,8 @@ def load_records(drop_source: str | None = None) -> dict[str, dict]:
                     summary["names"].append(claim["value"])
                 elif claim["field"] == "address.state":
                     summary["state"] = claim["value"]
+                elif claim["field"] == "address.country":
+                    summary["country"] = str(claim["value"]).upper()
             records[key] = summary
     return records
 
@@ -73,10 +80,30 @@ def propose_links(records: dict[str, dict]) -> tuple[list[dict], list[dict]]:
     links: list[dict] = []
     queue: list[dict] = []
     seen_pairs: set[tuple[str, str]] = set()
+    queued_pairs: set[tuple[str, str]] = set()
+
+    def is_australian(rec: dict) -> bool:
+        # no country claim counts as Australian (every source here is an AU register)
+        return rec["country"] is None or rec["country"] == "AU"
+
+    def add_to_queue(a: dict, b: dict, reason: str, evidence: str) -> None:
+        pair = tuple(sorted([a["key"], b["key"]]))
+        if pair in seen_pairs or pair in queued_pairs:
+            return  # never queue a pair that is already linked, or queued twice
+        queued_pairs.add(pair)
+        queue.append({"record_a": pair[0], "record_b": pair[1], "reason": reason, "evidence": evidence})
 
     def add_link(a: dict, b: dict, confidence: float, evidence: str, tier: str) -> None:
         pair = tuple(sorted([a["key"], b["key"]]))
         if pair in seen_pairs or a["source"] == b["source"]:
+            return
+        if tier == "id" and (not is_australian(a) or not is_australian(b)):
+            add_to_queue(
+                a, b,
+                "matcher-0.2 country gate: Australian identifier asserted on a "
+                "non-AU party record (agency, not identity); refused",
+                f"{evidence} | countries {a['country']},{b['country']}",
+            )
             return
         seen_pairs.add(pair)
         links.append(
@@ -115,10 +142,10 @@ def propose_links(records: dict[str, dict]) -> tuple[list[dict], list[dict]]:
                 if a["state"] and b["state"] and a["state"] == b["state"]:
                     add_link(a, b, NAME_CONFIDENCE, f"name_exact+state:{key}|{a['state']}", "name")
                 elif a["key"] != b["key"] and a["source"] != b["source"]:
-                    queue.append(
-                        {"record_a": a["key"], "record_b": b["key"],
-                         "reason": "name matches but state missing or different; refused to link",
-                         "evidence": f"name_exact:{key} states={a['state']},{b['state']}"}
+                    add_to_queue(
+                        a, b,
+                        "name matches but state missing or different; refused to link",
+                        f"name_exact:{key} states={a['state']},{b['state']}",
                     )
 
     # tier 4: fuzzy names → queue only. Blocked by state + first letter to keep
@@ -141,10 +168,10 @@ def propose_links(records: dict[str, dict]) -> tuple[list[dict], list[dict]]:
                     continue
                 score = fuzz.token_sort_ratio(key_a, key_b)
                 if low <= score < high:
-                    queue.append(
-                        {"record_a": rec_a["key"], "record_b": rec_b["key"],
-                         "reason": f"fuzzy name similarity {score:.0f} in grey zone [{low},{high}); deliberately not linked",
-                         "evidence": f"fuzzy:{key_a!r} vs {key_b!r}"}
+                    add_to_queue(
+                        rec_a, rec_b,
+                        f"fuzzy name similarity {score:.0f} in grey zone [{low},{high}); deliberately not linked",
+                        f"fuzzy:{key_a!r} vs {key_b!r}",
                     )
     return links, queue
 
@@ -265,7 +292,10 @@ def run_resolve(drop_source: str | None = None, handcheck_seed: int = 99) -> dic
                     "clusters": clusters}, indent=1)
     )
 
-    if drop_source is None:  # hand-check sheet only for the main run
+    handcheck_path = ROOT / "review" / "part3_handcheck.csv"
+    if drop_source is None and not handcheck_path.exists():
+        # hand-check sheet only for the main run — and never overwrite one that
+        # may already carry human verdicts (delete the file to resample)
         review_dir = ROOT / "review"
         review_dir.mkdir(exist_ok=True)
         sample = random.Random(handcheck_seed).sample(accepted, min(50, len(accepted)))

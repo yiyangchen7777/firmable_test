@@ -3,9 +3,9 @@
 from firm.resolve import UnionFind, derive_clusters, name_key, propose_links
 
 
-def rec(key, source, abn=None, acn=None, names=(), state=None):
+def rec(key, source, abn=None, acn=None, names=(), state=None, country=None):
     return {"key": key, "source": source, "abn": abn, "acn": acn,
-            "names": list(names), "state": state}
+            "names": list(names), "state": state, "country": country}
 
 
 def test_name_key_strips_suffixes_and_punctuation():
@@ -66,6 +66,32 @@ def test_name_link_attaches_record_without_abn():
     accepted, conflicts, clusters = derive_clusters(records, links)
     assert conflicts == []
     assert any(set(c["members"]) == {"a::1", "b::1"} for c in clusters)
+
+
+def test_country_gate_refuses_foreign_party_id_links():
+    # an AU subsidiary's ABN asserted on a foreign parent's record must not link
+    records = {r["key"]: r for r in [
+        rec("a::1", "a", abn="51824753556", names=["Haleon Australia Pty Ltd"], country="AU"),
+        rec("b::1", "b", abn="51824753556", names=["GSK CH Holdings US LLC"], country="US"),
+        rec("c::1", "c", abn="51824753556", names=["HALEON AUSTRALIA"]),  # no country claim
+    ]}
+    links, queue = propose_links(records)
+    linked_pairs = {(l["record_a"], l["record_b"]) for l in links}
+    assert ("a::1", "c::1") in linked_pairs  # AU + no-claim still links
+    assert not any("b::1" in p for p in linked_pairs)  # the US record never links
+    assert any("country gate" in q["reason"] for q in queue)
+
+
+def test_queue_never_duplicates_an_accepted_pair():
+    # same pair matches by ABN (accepted) and by name with state mismatch:
+    # the queue must not also "refuse" the pair that was already linked
+    records = {r["key"]: r for r in [
+        rec("a::1", "a", abn="51824753556", names=["Sunrise Bakery"], state="VIC"),
+        rec("b::1", "b", abn="51824753556", names=["Sunrise Bakery"], state=None),
+    ]}
+    links, queue = propose_links(records)
+    assert len(links) == 1
+    assert queue == []
 
 
 def test_union_find_basics():

@@ -1,0 +1,128 @@
+# Mapping config written by the schema-inference agent (not by hand).
+# dataset: asic-afs-licensee | revisions used: 0/3
+# status at review: PASSING
+# approved by a human reviewer at 2026-10-17T10:17:31+00:00
+source_reliability:
+  value: 0.92
+  rationale: ASIC is the national regulator and this is its own AFS licensee register,
+    published under CC-BY, so it is authoritative for licensee names, identifiers
+    and registered addresses.
+reliability_overrides: {}
+record_id:
+  strategy: column
+  columns:
+  - AFS_LIC_NUM
+observed_at:
+  strategy: dataset_modified
+  basis: proxy
+  column: null
+  format: null
+  value: '2026-10-14'
+fields:
+- canonical: entity.legal_name
+  source: AFS_LIC_NAME
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.93
+  evidence: AFS_LIC_NAME holds values such as 'ROXBURGH SECURITIES PTY LTD', 'ACORN
+    CAPITAL LIMITED' and 'NETWEALTH INVESTMENTS LIMITED'. These are registered company
+    names with legal suffixes (PTY LTD, LIMITED), so they are the licensee's legal
+    name and not a trading name. The column is 0% null with 200 distinct values.
+  conditional: false
+- canonical: entity.abn
+  source: AFS_LIC_ABN_ACN
+  transforms:
+  - strip_float_suffix
+  - digits_only
+  - keep_if_length: 11
+  - abn_normalize
+  confidence: 0.9
+  evidence: AFS_LIC_ABN_ACN holds values such as '33004739655', '83009199740' and
+    '52089240513', all 11 digits. That is the ABN shape and not the 9-digit ACN shape.
+    The column name says ABN or ACN, so the mapping is gated to 11-digit values and
+    any 9-digit values go to the paired ACN mapping. The licensee is the entity the
+    record is about, so this is the entity's own identifier.
+  conditional: true
+- canonical: entity.acn
+  source: AFS_LIC_ABN_ACN
+  transforms:
+  - strip_float_suffix
+  - digits_only
+  - keep_if_length: 9
+  - acn_normalize
+  confidence: 0.85
+  evidence: The column name AFS_LIC_ABN_ACN allows ACNs. Any 9-digit value such as
+    a stripped-zero ACN would be captured here, and the 11-digit samples ('33004739655',
+    '83009199740') yield no claim. Absence on most rows is intended, so this is the
+    conditional pair of the ABN mapping.
+  conditional: true
+- canonical: address.locality
+  source: AFS_LIC_ADD_LOCAL
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.93
+  evidence: AFS_LIC_ADD_LOCAL holds suburb or city names such as 'MELBOURNE', 'DALKEITH'
+    and 'NORTH FREMANTLE', and each is consistent with its adjacent state and postcode
+    columns. These are localities in the licensee's address.
+  conditional: false
+- canonical: address.state
+  source: AFS_LIC_ADD_STATE
+  transforms:
+  - trim
+  - state_normalize
+  confidence: 0.95
+  evidence: AFS_LIC_ADD_STATE has 5 distinct values ('VIC', 'WA', 'NSW', 'SA', 'QLD'),
+    all standard Australian state abbreviations in the licensee's address block.
+  conditional: false
+- canonical: address.postcode
+  source: AFS_LIC_ADD_PCODE
+  transforms:
+  - trim
+  - postcode_normalize
+  confidence: 0.93
+  evidence: AFS_LIC_ADD_PCODE holds 4-digit codes such as '3000', '6009' and '2000'.
+    They match the paired locality (MELBOURNE 3000, DALKEITH 6009, SYDNEY 2000), so
+    they are postcodes. Zero-padding protects NT codes like 0800.
+  conditional: false
+- canonical: address.country
+  source: AFS_LIC_ADD_COUNTRY
+  transforms:
+  - trim
+  - empty_to_null
+  confidence: 0.92
+  evidence: AFS_LIC_ADD_COUNTRY is 'Australia' on every row and sits in the address
+    block alongside locality, state and postcode, so it is the country of the licensee's
+    address.
+  conditional: false
+unmapped:
+- source: REGISTER_NAME
+  reason: Constant 'AFS Licence' on every row (1 distinct value). It names the register
+    and describes no entity, so there is no ontology field.
+- source: AFS_LIC_NUM
+  reason: The licence number is the record key, used for record_id. It is not an entity
+    identifier such as ABN, ACN or NZBN, so no ontology field exists.
+- source: AFS_LIC_START_DT
+  reason: dd/mm/yyyy dates such as '24/04/2003' and '13/08/2003' (day above 12 confirms
+    day-first) are the licence start date. They are not entity.date_registered, which
+    would be the company's incorporation date, and they are valid_from material, so
+    mapping would be wrong.
+- source: AFS_LIC_PRE_FSR
+  reason: Holds the pre-Financial Services Reform licence type and number as a quoted
+    string, e.g. '"Securities dealer","000191662"'. It is a licence relationship attribute
+    with no ontology field, and it is 28.5% null.
+- source: AFS_LIC_CONDITION
+  reason: Free-text licence authorisation or conditions ('This licence authorises
+    the licensee to carry on a financial services business...'). This is licence detail
+    with no ontology field.
+source_id: asic-afs-licensee
+dataset_id: asic-afs-licensee
+resource_url: https://data.gov.au/data/dataset/ab7eddce-84df-4098-bc8f-500d0d9776d1/resource/d98a113d-6b50-40e6-b65f-2612efc877f4/download/afs_lic_202610.csv
+licence: cc-by
+reader:
+  format: csv
+  delimiter: ','
+  encoding: utf-8-sig
+  header_row: 0
+  sheet: null
