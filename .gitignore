@@ -3,3 +3,4 @@
 __pycache__/
 data/raw/
 data/llm_cache/
+outputs/agent_checkpoints.sqlite
