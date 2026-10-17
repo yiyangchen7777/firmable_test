@@ -1,7 +1,7 @@
 """Part 1 — deterministic triage of data.gov.au datasets.
 
 Deliberately not agentic: the assignment allows cheap deterministic filtering
-ahead of any model call at this stage, and with ~600 catalogue records the
+ahead of any model call at this stage, and with ~800 catalogue records the
 signals below (identifier vocabulary, publisher, format, register-vs-statistics
 wording) separate the pool well without spending tokens. The agentic
 requirement applies to Part 2.
@@ -42,12 +42,31 @@ REGULATOR = re.compile(r"\basic\b|taxation|\bato\b|\bacnc\b|fair trading|consume
 MACHINE_FORMATS = {"CSV", "TSV", "XLSX", "XLS", "JSON", "ZIP"}
 
 
+def package_formats(pkg: dict) -> set[str]:
+    """The set of resource formats a dataset offers, normalised to upper case."""
+    formats = set()
+    for resource in pkg.get("resources", []):
+        fmt = (resource.get("format") or "").upper()  # format can be missing or null
+        fmt = fmt.replace("EXCEL (.XLSX)", "XLSX")  # data.gov.au's label for Excel
+        formats.add(fmt)
+    return formats
+
+
+def package_org(pkg: dict) -> str:
+    """Publishing organisation title, or '' when CKAN has none."""
+    org_info = pkg.get("organization")
+    if org_info is None:
+        org_info = {}
+    return org_info.get("title", "")
+
+
 def score_package(pkg: dict) -> tuple[float, str]:
     text = f"{pkg.get('title', '')} {pkg.get('notes', '')}".lower()
-    org = (pkg.get("organization") or {}).get("title", "")
-    formats = {(r.get("format") or "").upper().replace("EXCEL (.XLSX)", "XLSX") for r in pkg.get("resources", [])}
+    org = package_org(pkg)
+    formats = package_formats(pkg)
 
-    score, reasons = 0.0, []
+    score = 0.0
+    reasons = []
     for points, label, rx in POSITIVE + NEGATIVE:
         if rx.search(text):
             score += points
@@ -55,7 +74,9 @@ def score_package(pkg: dict) -> tuple[float, str]:
     if REGULATOR.search(org):
         score += 2.0
         reasons.append(f"regulator publisher ({org})")
-    if formats & MACHINE_FORMATS:
+
+    machine_readable = formats.intersection(MACHINE_FORMATS)
+    if len(machine_readable) > 0:
         score += 1.0
         reasons.append("machine-readable format")
     else:
@@ -75,18 +96,18 @@ def run_triage(sample_seed: int = 42) -> None:
         for pkg in package_search(q, rows=100):
             pool[pkg["id"]] = pkg
     print(f"pool: {len(pool)} unique datasets from {len(QUERIES)} queries")
-    assert len(pool) >= 200, "assignment requires a pool of at least 200 records"
+    if len(pool) < 200:
+        raise RuntimeError("assignment requires a pool of at least 200 records")
 
     scored = []
     for pkg in pool.values():
         s, reason = score_package(pkg)
-        formats = sorted({(r.get("format") or "?").upper() for r in pkg.get("resources", [])})
         scored.append(
             {
                 "dataset_id": pkg["name"],
                 "title": pkg.get("title", ""),
-                "organisation": (pkg.get("organization") or {}).get("title", ""),
-                "formats": "|".join(formats),
+                "organisation": package_org(pkg),
+                "formats": "|".join(sorted(package_formats(pkg))),
                 "licence": pkg.get("license_id") or "unknown",
                 "score": round(s, 1),
                 "confidence": confidence(s),
@@ -116,6 +137,15 @@ def run_triage(sample_seed: int = 42) -> None:
         )
         writer.writeheader()
         for row in sample:
-            writer.writerow({k: row[k] for k in ("dataset_id", "title", "organisation", "confidence", "reason")} | {"contains_business_entities": "", "note": ""})
+            out = {
+                "dataset_id": row["dataset_id"],
+                "title": row["title"],
+                "organisation": row["organisation"],
+                "confidence": row["confidence"],
+                "reason": row["reason"],
+                "contains_business_entities": "",
+                "note": "",
+            }
+            writer.writerow(out)
 
     print(f"shortlist: {out_csv} (50 rows); hand-check sheet: review/part1_handcheck.csv (20 rows, seed={sample_seed})")
