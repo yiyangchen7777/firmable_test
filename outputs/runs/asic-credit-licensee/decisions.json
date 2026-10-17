@@ -1,0 +1,19 @@
+{
+  "source": "asic-credit-licensee",
+  "review_events": [
+    {
+      "decision": "reject",
+      "rejection_comment": "entity.status is mapped from CRED_LIC_STATUS, but values like APPR describe the licence approval, not the company's existence. Unmap entity.status with that reason. The locality street-text contamination is acceptable, leave it.",
+      "approval_note": "",
+      "status_at_decision": "PASSING WITH FLAGS",
+      "revisions_used": 0
+    },
+    {
+      "decision": "approve",
+      "rejection_comment": "",
+      "approval_note": "",
+      "status_at_decision": "PASSING WITH FLAGS",
+      "revisions_used": 1
+    }
+  ]
+}

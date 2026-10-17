@@ -1,0 +1,12 @@
+{
+  "source": "asic-afs-licensee",
+  "review_events": [
+    {
+      "decision": "approve",
+      "rejection_comment": "",
+      "approval_note": "",
+      "status_at_decision": "PASSING",
+      "revisions_used": 0
+    }
+  ]
+}

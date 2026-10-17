@@ -1,0 +1,19 @@
+{
+  "source": "asic-business-names",
+  "review_events": [
+    {
+      "decision": "reject",
+      "rejection_comment": "entity.status <- BN_STATUS is the status of the business-name registration, not the holder entity. A cancelled name does not mean a deregistered holder (e.g. a no-ABN row like 'Curry Festival' would emit entity.status=deregistered and could kill a live company downstream). Unmap entity.status with that reason. Also correct the unmap reason for BN_REG_DT/BN_CANCEL_DT: they are valid_from/valid_to material for the name claim, which this engine does not yet carry - say that, not 'no ontology field'.",
+      "approval_note": "",
+      "status_at_decision": "PASSING WITH FLAGS",
+      "revisions_used": 0
+    },
+    {
+      "decision": "approve",
+      "rejection_comment": "",
+      "approval_note": "",
+      "status_at_decision": "PASSING",
+      "revisions_used": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "source": "corporate-transparency",
+  "review_events": [
+    {
+      "decision": "reject",
+      "rejection_comment": "change record_id to the composite ['Name','Income year'] so a future year's data in the same source cannot collide with this year's records. Keep everything else exactly as it is.",
+      "approval_note": "",
+      "status_at_decision": "PASSING",
+      "revisions_used": 0
+    },
+    {
+      "decision": "approve",
+      "rejection_comment": "",
+      "approval_note": "",
+      "status_at_decision": "PASSING",
+      "revisions_used": 1
+    }
+  ]
+}
