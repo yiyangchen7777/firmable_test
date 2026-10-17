@@ -1,0 +1,22 @@
+{
+  "status": "NOT USEFUL",
+  "validation": {
+    "checks": [
+      {
+        "check": "record_id unique (full sample)",
+        "threshold": "0 duplicates",
+        "result": "0 duplicates",
+        "pass": true
+      },
+      {
+        "check": "minimum useful (a name or an identifier mapped)",
+        "threshold": "required",
+        "result": "NO",
+        "pass": false
+      }
+    ],
+    "failing_examples": [],
+    "all_pass": false,
+    "useful": false
+  }
+}

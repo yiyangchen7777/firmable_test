@@ -1,0 +1,696 @@
+<title>映射审核 · acnc-register</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: single reading column, status-led; data tables full width */
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --fg: #1d2129; --muted: #6b7280;
+  --line: #e3e4e0; --accent: #1f6f54;
+  --ok-bg: #e4f2ea; --ok-fg: #19613f; --warn-bg: #fdf0d7; --warn-fg: #8a5a0a;
+  --bad-bg: #fbe5e3; --bad-fg: #a02c21; --code-bg: #f0f0ed;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97;
+  --ok-bg: #173527; --ok-fg: #7fd7ab; --warn-bg: #3a2d10; --warn-fg: #ecbf63;
+  --bad-bg: #40201d; --bad-fg: #f1988e; --code-bg: #272b31; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97;
+  --ok-bg: #173527; --ok-fg: #7fd7ab; --warn-bg: #3a2d10; --warn-fg: #ecbf63;
+  --bad-bg: #40201d; --bad-fg: #f1988e; --code-bg: #272b31; color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--fg);
+  font: 15px/1.6 -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+main { max-width: 980px; margin: 0 auto; display: grid; gap: 28px; }
+h1 { font-size: 1.45rem; margin: 0; text-wrap: balance; }
+h2 { font-size: 1.05rem; margin: 0 0 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+h4, h5 { margin: 0 0 6px; }
+section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; letter-spacing: 0.02em; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tablewrap { overflow-x: auto; }
+code { background: var(--code-bg); border-radius: 4px; padding: 1px 5px; font-size: 0.85em; }
+pre { background: var(--code-bg); border-radius: 6px; padding: 10px 12px; overflow-x: auto; font-size: 0.8rem; line-height: 1.5; margin: 0; }
+.pill { border-radius: 99px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+.pill.ok, .ok { background: var(--ok-bg); color: var(--ok-fg); }
+.pill.warn, .warn { background: var(--warn-bg); color: var(--warn-fg); }
+.pill.bad, .bad { background: var(--bad-bg); color: var(--bad-fg); }
+.status { display: inline-block; border-radius: 6px; padding: 4px 14px; font-weight: 700; }
+.chip { background: var(--code-bg); border-radius: 99px; padding: 1px 8px; font-size: 0.75rem; }
+.muted { color: var(--muted); }
+.evidence { min-width: 260px; }
+.metagrid { display: grid; grid-template-columns: 9em 1fr; gap: 4px 14px; font-size: 0.9rem; }
+.metagrid dt { color: var(--muted); } .metagrid dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.guide ol { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pair > div { min-width: 0; }
+@media (max-width: 720px) { .pair { grid-template-columns: 1fr; } }
+.example { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+.example:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+.decision pre { user-select: all; }
+details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
+</style>
+<main>
+<header>
+  <h1>映射审核 · acnc-register</h1>
+  <p><span class="status warn">PASSING WITH FLAGS</span>
+     <span class="muted">修订 0/3 · 流程步数 5 · 审核材料同步存于 review.md</span></p>
+</header>
+
+<section class="guide">
+  <h2>怎么审（约 5 分钟）</h2>
+  <ol>
+    <li><strong>看硬指标</strong>（<a href="#checks">校验结果</a>）：有没有 ❌。校验位、枚举、唯一性是代码算的，不会说谎。</li>
+    <li><strong>看语义疑点</strong>（<a href="#flags">语义抽检</a>）：这是最需要人的部分——模型挑出「解析没错但含义可能错」的字段，你判断同不同意。</li>
+    <li><strong>抽看对照样例</strong>（<a href="#examples">原始 vs 输出</a>）：随手挑两条，问自己「左边这列的意思，真的是右边那个字段吗？」</li>
+    <li><strong>扫一眼未映射清单</strong>（<a href="#unmapped">unmapped</a>）：理由是否诚实，有没有本该映射却被偷懒放弃的列。</li>
+  </ol>
+  <p class="muted">你只有三个动作：approve / reject + 意见 / abandon。你不能直接改配置文件——人一改，配置就成了「手写的」，作业的核心主张（agent 独立完成映射）就不成立了。</p>
+</section>
+
+<section>
+  <h2>来源与关键决定</h2>
+  <dl class="metagrid">
+    <dt>数据集</dt><dd>ACNC Registered Charities（acnc-register）</dd>
+    <dt>发布方 / 许可</dt><dd>Australian Charities and Not-for-profits Commission (ACNC) / cc-by</dd>
+    <dt>读取方式</dt><dd><code>{&quot;format&quot;: &quot;csv&quot;, &quot;delimiter&quot;: &quot;,&quot;, &quot;encoding&quot;: &quot;utf-8-sig&quot;, &quot;header_row&quot;: 0, &quot;sheet&quot;: null}</code></dd>
+    <dt>source_reliability</dt><dd>0.9 — ACNC is the national charity regulator and this is its own Charity Register published under CC-BY, so identity, name and registration claims are authoritative.</dd>
+    <dt>record_id</dt><dd><code>composite [&#x27;ABN&#x27;, &#x27;Charity_Legal_Name&#x27;]</code> — ABN alone is not safe: it has about 2% blanks and some rows (e.g. 859701-Y9K2G5 PAF) have none. Charity_Legal_Name is 200 distinct over 200 rows with no nulls. The composite of ABN and Charity_Legal_Name is therefore unique per register row even when ABN is blank. The source has no explicit record key column.</dd>
+    <dt>observed_at</dt><dd><code>dataset_modified</code>（basis: proxy，值 2026-10-11）— No per-record extract or last-updated column exists. Registration_Date and Date_Organisation_Established are historical facts (valid_from material), not assertion times. The dataset is refreshed weekly, so the catalogue modified date is used as a weak proxy.</dd>
+  </dl>
+</section>
+
+<section id="checks">
+  <h2>校验结果 · 350 行留存数据（循环集；最终验收在批准后跑一次）</h2>
+  <div class="tablewrap"><table>
+    <tr><th>检查</th><th>阈值</th><th>结果</th><th></th></tr>
+    <tr><td>identifier checksum (entity.abn)</td><td class='num'>&gt;= 95%</td><td class='num'>100.0% (345 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>enum legality (address.state)</td><td class='num'>&gt;= 98%</td><td class='num'>100.0% (306 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>date parse (entity.date_registered)</td><td class='num'>&gt;= 95%</td><td class='num'>100.0% (349 ok / 0 failed)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.abn ← ABN)</td><td class='num'>&lt;= +2pp</td><td class='num'>-0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.legal_name ← Charity_Legal_Name)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.trading_name ← Other_Organisation_Names)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.full ← Address_Line_1)</td><td class='num'>&lt;= +2pp</td><td class='num'>-0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.locality ← Town_City)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.state ← State)</td><td class='num'>&lt;= +2pp</td><td class='num'>-0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.postcode ← Postcode)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.country ← Country)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.website ← Charity_Website)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.date_registered ← Registration_Date)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>record_id unique (full sample)</td><td class='num'>0 duplicates</td><td class='num'>0 duplicates</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>minimum useful (a name or an identifier mapped)</td><td class='num'>required</td><td class='num'>yes</td><td><span class="pill ok">通过</span></td></tr>
+  </table></div>
+  <h4 style="margin-top:14px">未通过/弃权的例子</h4>
+  <p class='muted'>无</p>
+</section>
+
+<section id="flags">
+  <h2>语义抽检 · 10 条留存记录：79 ok / 13 suspicious</h2>
+  <div class="tablewrap"><table>
+    <tr><th>record</th><th>字段</th><th>为什么可疑</th></tr>
+    <tr><td><code>90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD</code></td><td><code>address.full</code></td><td>Address_Line_1 is only the institution name &#x27;Holy Trinity Lutheran College&#x27;; the actual street line &#x27;25 Trinity Drive&#x27; is in the unmapped Address_Line_2.</td></tr>
+<tr><td><code>60684006102|IP INSIDERS LIMITED</code></td><td><code>entity.date_registered</code></td><td>Registration_Date (04/02/2025) is the ACNC charity registration date and differs from Date_Organisation_Established (28/01/2025), so it is not the entity&#x27;s own registration or incorporation date.</td></tr>
+<tr><td><code>65351615350|Biyani House Revesby Women&#x27;s Shelter Incorporated</code></td><td><code>address.full</code></td><td>&#x27;PO BOX 105&#x27; is a postal address, not a street or premises address, yet the mapping presents it as the business address.</td></tr>
+<tr><td><code>65351615350|Biyani House Revesby Women&#x27;s Shelter Incorporated</code></td><td><code>entity.date_registered</code></td><td>Registration_Date (28/04/2021) is the ACNC registration date and differs from Date_Organisation_Established (21/04/2021), so it is not the entity&#x27;s own registration date.</td></tr>
+<tr><td><code>59646048320|YADAH SUS FOUNDATION LIMITED</code></td><td><code>entity.trading_name</code></td><td>Other_Organisation_Names holds &#x27;Geofrey Osawa&#x27;, which is a person&#x27;s name (likely a director or contact), not a trading or alternative organisation name.</td></tr>
+<tr><td><code>59646048320|YADAH SUS FOUNDATION LIMITED</code></td><td><code>entity.date_registered</code></td><td>Registration_Date (19/12/2020) is the ACNC registration date and differs from Date_Organisation_Established (20/11/2020), so it is not the entity&#x27;s own registration date.</td></tr>
+<tr><td><code>84337084591|Aboriginal children on Country Incorporated</code></td><td><code>entity.date_registered</code></td><td>Registration_Date (31/07/2025) is the ACNC registration date and differs from Date_Organisation_Established (30/07/2025), so it is not the entity&#x27;s own registration date.</td></tr>
+<tr><td><code>37690427467|North East Arnhem Land Aboriginal Corporation</code></td><td><code>entity.date_registered</code></td><td>Registration_Date (21/09/2021) is the ACNC registration date; the organisation was established 21/04/2020, so the mapped value is not the entity&#x27;s own registration date.</td></tr>
+<tr><td><code>90686129629|Ngarigo Nation Indigenous Corporation. 8749</code></td><td><code>entity.legal_name</code></td><td>The name carries a trailing &#x27;. 8749&#x27;, which looks like an ORIC/ICN registration number appended to the name rather than part of the registered name.</td></tr>
+<tr><td><code>90686129629|Ngarigo Nation Indigenous Corporation. 8749</code></td><td><code>entity.date_registered</code></td><td>Registration_Date (01/07/2021) is the ACNC registration date; the organisation was established 12/12/2017, so the mapped value is not the entity&#x27;s own registration date.</td></tr>
+<tr><td><code>85763061657|The Trustee for HOME BEYOND HOME</code></td><td><code>entity.abn</code></td><td>The name is a trustee-style name, so the ABN may belong to the trustee or trust rather than the charity &#x27;Home Beyond Home&#x27;; ownership is unclear.</td></tr>
+<tr><td><code>85763061657|The Trustee for HOME BEYOND HOME</code></td><td><code>entity.legal_name</code></td><td>&#x27;The Trustee for HOME BEYOND HOME&#x27; describes the trustee role, not the charity or trust itself; the party in legal_name may be the wrong one.</td></tr>
+<tr><td><code>85763061657|The Trustee for HOME BEYOND HOME</code></td><td><code>entity.date_registered</code></td><td>Registration_Date (20/12/2024) is the ACNC registration date and differs from Date_Organisation_Established (15/12/2024), so it is not the entity&#x27;s own registration date.</td></tr>
+  </table></div>
+  <details><summary>展开 79 条「ok」判定</summary>
+  <div class="tablewrap"><table>
+    <tr><th>record</th><th>字段</th><th>理由</th></tr>
+    <tr><td><code>90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD</code></td><td><code>entity.abn</code></td><td>The ABN is in the charity&#x27;s own ABN column and matches the charity named on the row.</td></tr>
+<tr><td><code>90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD</code></td><td><code>entity.legal_name</code></td><td>Charity_Legal_Name holds the registered company name, with the LTD suffix.</td></tr>
+<tr><td><code>90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD</code></td><td><code>address.locality</code></td><td>Horsham is a town and matches postcode 3400 and state VIC.</td></tr>
+<tr><td><code>90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD</code></td><td><code>address.state</code></td><td>VIC is consistent with Horsham 3400.</td></tr>
+<tr><td><code>90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD</code></td><td><code>address.postcode</code></td><td>3400 is the Horsham postcode.</td></tr>
+<tr><td><code>90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD</code></td><td><code>address.country</code></td><td>Australia is the country of the business address.</td></tr>
+<tr><td><code>90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD</code></td><td><code>entity.website</code></td><td>The URL is the school&#x27;s own website.</td></tr>
+<tr><td><code>90649930049|HOLY TRINITY LUTHERAN COLLEGE LTD</code></td><td><code>entity.date_registered</code></td><td>Registration_Date equals Date_Organisation_Established (04/05/2021), so the value is the same under either reading.</td></tr>
+<tr><td><code>60684006102|IP INSIDERS LIMITED</code></td><td><code>entity.abn</code></td><td>The ABN is in the charity&#x27;s own ABN column on the row for IP INSIDERS LIMITED.</td></tr>
+<tr><td><code>60684006102|IP INSIDERS LIMITED</code></td><td><code>entity.legal_name</code></td><td>Charity_Legal_Name holds the registered company name, with the LIMITED suffix.</td></tr>
+<tr><td><code>60684006102|IP INSIDERS LIMITED</code></td><td><code>address.full</code></td><td>Address_Line_1 is the full street line, and Lines 2 and 3 are empty.</td></tr>
+<tr><td><code>60684006102|IP INSIDERS LIMITED</code></td><td><code>address.locality</code></td><td>Hamilton (Brisbane) is consistent with postcode 4007 and QLD.</td></tr>
+<tr><td><code>60684006102|IP INSIDERS LIMITED</code></td><td><code>address.state</code></td><td>QLD is consistent with postcode 4007; the VIC operating flag is a separate unmapped column.</td></tr>
+<tr><td><code>60684006102|IP INSIDERS LIMITED</code></td><td><code>address.postcode</code></td><td>4007 matches Hamilton QLD.</td></tr>
+<tr><td><code>60684006102|IP INSIDERS LIMITED</code></td><td><code>address.country</code></td><td>Australia is the country of the business address.</td></tr>
+<tr><td><code>60684006102|IP INSIDERS LIMITED</code></td><td><code>entity.website</code></td><td>The domain matches the organisation name, and http:// was added to a scheme-less value.</td></tr>
+<tr><td><code>77105390237|National Capital Containers</code></td><td><code>entity.abn</code></td><td>The ABN is in the charity&#x27;s own ABN column on this row.</td></tr>
+<tr><td><code>77105390237|National Capital Containers</code></td><td><code>entity.legal_name</code></td><td>It is copied from Charity_Legal_Name; the lack of a company suffix is plausible for an ACNC-listed entity.</td></tr>
+<tr><td><code>77105390237|National Capital Containers</code></td><td><code>address.full</code></td><td>Address_Line_1 is a complete street line, and Lines 2 and 3 are empty.</td></tr>
+<tr><td><code>77105390237|National Capital Containers</code></td><td><code>address.locality</code></td><td>Ngunnawal is an ACT suburb and matches postcode 2913.</td></tr>
+<tr><td><code>77105390237|National Capital Containers</code></td><td><code>address.state</code></td><td>ACT matches Ngunnawal 2913; the NSW operating flag is a separate column.</td></tr>
+<tr><td><code>77105390237|National Capital Containers</code></td><td><code>address.postcode</code></td><td>2913 is the Ngunnawal postcode.</td></tr>
+<tr><td><code>77105390237|National Capital Containers</code></td><td><code>address.country</code></td><td>Australia is the country of the business address.</td></tr>
+<tr><td><code>77105390237|National Capital Containers</code></td><td><code>entity.website</code></td><td>It is the declared charity website, with http:// prepended to a scheme-less value.</td></tr>
+<tr><td><code>77105390237|National Capital Containers</code></td><td><code>entity.date_registered</code></td><td>Registration_Date equals Date_Organisation_Established (06/08/2025), so the value is the same under either reading.</td></tr>
+<tr><td><code>65351615350|Biyani House Revesby Women&#x27;s Shelter Incorporated</code></td><td><code>entity.abn</code></td><td>The ABN is in the charity&#x27;s own ABN column on this row.</td></tr>
+<tr><td><code>65351615350|Biyani House Revesby Women&#x27;s Shelter Incorporated</code></td><td><code>entity.legal_name</code></td><td>Charity_Legal_Name holds the registered name, with the Incorporated suffix.</td></tr>
+<tr><td><code>65351615350|Biyani House Revesby Women&#x27;s Shelter Incorporated</code></td><td><code>address.locality</code></td><td>Revesby North matches postcode 2212 and NSW.</td></tr>
+<tr><td><code>65351615350|Biyani House Revesby Women&#x27;s Shelter Incorporated</code></td><td><code>address.state</code></td><td>NSW is consistent with postcode 2212.</td></tr>
+<tr><td><code>65351615350|Biyani House Revesby Women&#x27;s Shelter Incorporated</code></td><td><code>address.postcode</code></td><td>2212 is the Revesby postcode.</td></tr>
+<tr><td><code>65351615350|Biyani House Revesby Women&#x27;s Shelter Incorporated</code></td><td><code>address.country</code></td><td>Australia is the country of the address.</td></tr>
+<tr><td><code>65351615350|Biyani House Revesby Women&#x27;s Shelter Incorporated</code></td><td><code>entity.website</code></td><td>The URL is the charity&#x27;s own website.</td></tr>
+<tr><td><code>59646048320|YADAH SUS FOUNDATION LIMITED</code></td><td><code>entity.abn</code></td><td>The ABN is in the charity&#x27;s own ABN column on this row.</td></tr>
+<tr><td><code>59646048320|YADAH SUS FOUNDATION LIMITED</code></td><td><code>entity.legal_name</code></td><td>Charity_Legal_Name holds the registered company name, with the LIMITED suffix.</td></tr>
+<tr><td><code>59646048320|YADAH SUS FOUNDATION LIMITED</code></td><td><code>address.full</code></td><td>Address_Line_1 is a complete street line, and Lines 2 and 3 are empty.</td></tr>
+<tr><td><code>59646048320|YADAH SUS FOUNDATION LIMITED</code></td><td><code>address.locality</code></td><td>Bennett Springs matches postcode 6063 and WA.</td></tr>
+<tr><td><code>59646048320|YADAH SUS FOUNDATION LIMITED</code></td><td><code>address.state</code></td><td>WA is consistent with postcode 6063.</td></tr>
+<tr><td><code>59646048320|YADAH SUS FOUNDATION LIMITED</code></td><td><code>address.postcode</code></td><td>6063 is the Bennett Springs postcode.</td></tr>
+<tr><td><code>59646048320|YADAH SUS FOUNDATION LIMITED</code></td><td><code>address.country</code></td><td>Australia is the business address country; the Kenya operating country is a separate column.</td></tr>
+<tr><td><code>59646048320|YADAH SUS FOUNDATION LIMITED</code></td><td><code>entity.website</code></td><td>The domain matches the foundation&#x27;s name, and http:// was added to a scheme-less value.</td></tr>
+<tr><td><code>84337084591|Aboriginal children on Country Incorporated</code></td><td><code>entity.abn</code></td><td>The ABN is in the charity&#x27;s own ABN column on this row.</td></tr>
+<tr><td><code>84337084591|Aboriginal children on Country Incorporated</code></td><td><code>entity.legal_name</code></td><td>Charity_Legal_Name holds the registered name, with the Incorporated suffix.</td></tr>
+<tr><td><code>84337084591|Aboriginal children on Country Incorporated</code></td><td><code>address.full</code></td><td>&#x27;U 2 210 Shellharbour Rd&#x27; is a complete street line, and Lines 2 and 3 are empty.</td></tr>
+<tr><td><code>84337084591|Aboriginal children on Country Incorporated</code></td><td><code>address.locality</code></td><td>Port Kembla matches postcode 2505 and NSW.</td></tr>
+<tr><td><code>84337084591|Aboriginal children on Country Incorporated</code></td><td><code>address.state</code></td><td>NSW is consistent with postcode 2505.</td></tr>
+<tr><td><code>84337084591|Aboriginal children on Country Incorporated</code></td><td><code>address.postcode</code></td><td>2505 is the Port Kembla postcode.</td></tr>
+<tr><td><code>84337084591|Aboriginal children on Country Incorporated</code></td><td><code>address.country</code></td><td>Australia is the country of the address.</td></tr>
+<tr><td><code>84337084591|Aboriginal children on Country Incorporated</code></td><td><code>entity.website</code></td><td>The URL is the charity&#x27;s own website.</td></tr>
+<tr><td><code>21482069281|Hamilton Field Naturalists Club Inc.</code></td><td><code>entity.abn</code></td><td>The ABN is in the charity&#x27;s own ABN column on this row.</td></tr>
+<tr><td><code>21482069281|Hamilton Field Naturalists Club Inc.</code></td><td><code>entity.legal_name</code></td><td>Charity_Legal_Name holds the registered name, with the Inc. suffix.</td></tr>
+<tr><td><code>21482069281|Hamilton Field Naturalists Club Inc.</code></td><td><code>entity.trading_name</code></td><td>Other_Organisation_Names is the same name without &#x27;Inc.&#x27;, a reasonable alternative name.</td></tr>
+<tr><td><code>21482069281|Hamilton Field Naturalists Club Inc.</code></td><td><code>address.full</code></td><td>Address_Line_1 is a complete street line, and Lines 2 and 3 are empty.</td></tr>
+<tr><td><code>21482069281|Hamilton Field Naturalists Club Inc.</code></td><td><code>address.locality</code></td><td>Hamilton VIC matches postcode 3300.</td></tr>
+<tr><td><code>21482069281|Hamilton Field Naturalists Club Inc.</code></td><td><code>address.state</code></td><td>VIC is consistent with postcode 3300.</td></tr>
+<tr><td><code>21482069281|Hamilton Field Naturalists Club Inc.</code></td><td><code>address.postcode</code></td><td>3300 is the Hamilton VIC postcode.</td></tr>
+<tr><td><code>21482069281|Hamilton Field Naturalists Club Inc.</code></td><td><code>address.country</code></td><td>Australia is the country of the address.</td></tr>
+<tr><td><code>21482069281|Hamilton Field Naturalists Club Inc.</code></td><td><code>entity.website</code></td><td>The URL is the club&#x27;s own website.</td></tr>
+<tr><td><code>21482069281|Hamilton Field Naturalists Club Inc.</code></td><td><code>entity.date_registered</code></td><td>Registration_Date equals Date_Organisation_Established (28/10/2024), so the value is the same under either reading.</td></tr>
+<tr><td><code>37690427467|North East Arnhem Land Aboriginal Corporation</code></td><td><code>entity.abn</code></td><td>The ABN is in the charity&#x27;s own ABN column on this row.</td></tr>
+<tr><td><code>37690427467|North East Arnhem Land Aboriginal Corporation</code></td><td><code>entity.legal_name</code></td><td>Charity_Legal_Name holds the registered corporation name.</td></tr>
+<tr><td><code>37690427467|North East Arnhem Land Aboriginal Corporation</code></td><td><code>address.full</code></td><td>&#x27;Melville Bay Road&#x27; is a street line with no number, which is a source limitation, and Lines 2 and 3 are empty.</td></tr>
+<tr><td><code>37690427467|North East Arnhem Land Aboriginal Corporation</code></td><td><code>address.locality</code></td><td>Nhulunbuy matches postcode 0880 and NT.</td></tr>
+<tr><td><code>37690427467|North East Arnhem Land Aboriginal Corporation</code></td><td><code>address.state</code></td><td>NT is consistent with postcode 0880.</td></tr>
+<tr><td><code>37690427467|North East Arnhem Land Aboriginal Corporation</code></td><td><code>address.postcode</code></td><td>0880 keeps its leading zero and is the Nhulunbuy postcode.</td></tr>
+<tr><td><code>37690427467|North East Arnhem Land Aboriginal Corporation</code></td><td><code>address.country</code></td><td>Australia is the country of the address.</td></tr>
+<tr><td><code>37690427467|North East Arnhem Land Aboriginal Corporation</code></td><td><code>entity.website</code></td><td>The domain matches the organisation, with http:// added to a scheme-less value.</td></tr>
+<tr><td><code>90686129629|Ngarigo Nation Indigenous Corporation. 8749</code></td><td><code>entity.abn</code></td><td>The ABN is in the charity&#x27;s own ABN column on this row.</td></tr>
+<tr><td><code>90686129629|Ngarigo Nation Indigenous Corporation. 8749</code></td><td><code>address.full</code></td><td>Address_Line_1 is a complete street line, and Lines 2 and 3 are empty.</td></tr>
+<tr><td><code>90686129629|Ngarigo Nation Indigenous Corporation. 8749</code></td><td><code>address.locality</code></td><td>Tumbarumba matches postcode 2653 and NSW; it is in upper case in the source.</td></tr>
+<tr><td><code>90686129629|Ngarigo Nation Indigenous Corporation. 8749</code></td><td><code>address.state</code></td><td>NSW is consistent with postcode 2653.</td></tr>
+<tr><td><code>90686129629|Ngarigo Nation Indigenous Corporation. 8749</code></td><td><code>address.postcode</code></td><td>2653 is the Tumbarumba postcode.</td></tr>
+<tr><td><code>90686129629|Ngarigo Nation Indigenous Corporation. 8749</code></td><td><code>address.country</code></td><td>Australia is the country of the address.</td></tr>
+<tr><td><code>90686129629|Ngarigo Nation Indigenous Corporation. 8749</code></td><td><code>entity.website</code></td><td>The URL is the organisation&#x27;s own website.</td></tr>
+<tr><td><code>85763061657|The Trustee for HOME BEYOND HOME</code></td><td><code>address.full</code></td><td>&#x27;U 14 1378 Lytton Rd&#x27; is a complete street line, and Lines 2 and 3 are empty.</td></tr>
+<tr><td><code>85763061657|The Trustee for HOME BEYOND HOME</code></td><td><code>address.locality</code></td><td>Hemmant matches postcode 4174 and QLD.</td></tr>
+<tr><td><code>85763061657|The Trustee for HOME BEYOND HOME</code></td><td><code>address.state</code></td><td>QLD is consistent with postcode 4174.</td></tr>
+<tr><td><code>85763061657|The Trustee for HOME BEYOND HOME</code></td><td><code>address.postcode</code></td><td>4174 is the Hemmant postcode.</td></tr>
+<tr><td><code>85763061657|The Trustee for HOME BEYOND HOME</code></td><td><code>address.country</code></td><td>Australia is the country of the address.</td></tr>
+<tr><td><code>85763061657|The Trustee for HOME BEYOND HOME</code></td><td><code>entity.website</code></td><td>The domain matches &#x27;Home Beyond Home&#x27;.</td></tr>
+  </table></div></details>
+</section>
+
+<section id="mapping">
+  <h2>字段映射 · 10 条（共 69 个源列）</h2>
+  <div class="tablewrap"><table>
+    <tr><th>canonical</th><th>← 源列</th><th>transforms</th><th>conf.</th><th></th><th>语义证据</th></tr>
+    <tr><td><code>entity.abn</code></td><td><code>ABN</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;strip_float_suffix&quot;, &quot;abn_normalize&quot;]</code></td><td class='num'>0.95</td><td></td><td class='evidence'>Column ABN holds 11-digit values such as 28679970527 and 80778454864. These are the charity&#x27;s Australian Business Number, not an ACN, since all are 11 digits. About 2% are blank (e.g. the row named 859701-Y9K2G5 PAF).</td></tr>
+<tr><td><code>entity.legal_name</code></td><td><code>Charity_Legal_Name</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.95</td><td></td><td class='evidence'>Charity_Legal_Name holds values like Caloola Union Church and ZAMZAM FOUNDATION INCORPORATED. These are the registered names of the charity, distinct from Other_Organisation_Names, which holds alternative names.</td></tr>
+<tr><td><code>entity.trading_name</code></td><td><code>Other_Organisation_Names</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, {&quot;split&quot;: &quot;,&quot;}]</code></td><td class='num'>0.75</td><td></td><td class='evidence'>Other_Organisation_Names holds comma-packed alternative names such as &#x27;ZamZam, ZamZam Foundation&#x27; and &#x27;Allergy Life, Allergy Life Australia&#x27;. These are names other than the legal name, so they map to trading_name, one claim per part. Some values are truncated in the source.</td></tr>
+<tr><td><code>address.full</code></td><td><code>Address_Line_1</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.7</td><td></td><td class='evidence'>Address_Line_1 holds street lines such as &#x27;2837 Trunkey Rd&#x27; and &#x27;18 California Road&#x27;. It is the primary street line of the Business address and is only partial, since Address_Line_2 and Address_Line_3 are sparse continuation lines. It is not a locality because Town_City holds that.</td></tr>
+<tr><td><code>address.locality</code></td><td><code>Town_City</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.92</td><td></td><td class='evidence'>Town_City holds suburbs and towns such as Caloola, Oxley and Croydon South, which is the locality of the address.</td></tr>
+<tr><td><code>address.state</code></td><td><code>State</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;state_normalize&quot;]</code></td><td class='num'>0.95</td><td></td><td class='evidence'>State holds Australian state abbreviations (NSW, QLD, VIC, SA, WA, NT, TAS, ACT) for the registered business address. It is not the Operates_in_* flags, which describe where the charity operates.</td></tr>
+<tr><td><code>address.postcode</code></td><td><code>Postcode</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;strip_float_suffix&quot;, &quot;postcode_normalize&quot;]</code></td><td class='num'>0.93</td><td></td><td class='evidence'>Postcode holds 4-digit values such as 2795, 4075 and 3134, which are the Australian postcodes of the business address.</td></tr>
+<tr><td><code>address.country</code></td><td><code>Country</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.92</td><td></td><td class='evidence'>Country has the single value Australia for the business address. This is not Operating_Countries, which lists ISO codes for where the charity operates.</td></tr>
+<tr><td><code>entity.website</code></td><td><code>Charity_Website</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;url_normalize&quot;]</code></td><td class='num'>0.9</td><td></td><td class='evidence'>Charity_Website holds URLs such as www.zamzam.org.au and https://www.warfrets.com.au. Some are Facebook pages, which are still the charity&#x27;s declared web presence. Scheme-less values get http:// prepended.</td></tr>
+<tr><td><code>entity.date_registered</code></td><td><code>Registration_Date</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, {&quot;parse_date&quot;: &quot;%d/%m/%Y&quot;}]</code></td><td class='num'>0.9</td><td></td><td class='evidence'>Registration_Date holds values such as 03/12/2012 and 26/02/2013. The format is day-first, proved by 26/02/2013, 14/11/2021 and 27/11/2020, where the day exceeds 12. 03/12/2012 matches the 3 Dec 2012 start of ACNC registration, so it is the date of ACNC registration. It is not Date_Organisation_Established, which has placeholders like 01/01/1900.</td></tr>
+  </table></div>
+</section>
+
+<section id="unmapped">
+  <h2>未映射的列 · 59</h2>
+  <div class="tablewrap"><table>
+    <tr><th>源列</th><th>理由</th></tr>
+    <tr><td><code>Address_Type</code></td><td>Constant value Business; describes the address kind, no ontology field.</td></tr>
+<tr><td><code>Address_Line_2</code></td><td>Sparse continuation line (89% null) that sometimes holds a suburb; address.full uses Address_Line_1 only.</td></tr>
+<tr><td><code>Address_Line_3</code></td><td>Very sparse continuation line (98.5% null); no separate ontology field.</td></tr>
+<tr><td><code>Date_Organisation_Established</code></td><td>Date the organisation was established, not registered with ACNC; contains placeholders such as 01/01/1900; no ontology field.</td></tr>
+<tr><td><code>Charity_Size</code></td><td>Size classification (Small/Medium/Large), no ontology field.</td></tr>
+<tr><td><code>Number_of_Responsible_Persons</code></td><td>Aggregate count, not an entity attribute in the ontology.</td></tr>
+<tr><td><code>Financial_Year_End</code></td><td>Reporting period end, no ontology field.</td></tr>
+<tr><td><code>Operates_in_ACT</code></td><td>Operating-jurisdiction flag, no ontology field; not the registered address state.</td></tr>
+<tr><td><code>Operates_in_NSW</code></td><td>Operating-jurisdiction flag, no ontology field.</td></tr>
+<tr><td><code>Operates_in_NT</code></td><td>Operating-jurisdiction flag, no ontology field.</td></tr>
+<tr><td><code>Operates_in_QLD</code></td><td>Operating-jurisdiction flag, no ontology field.</td></tr>
+<tr><td><code>Operates_in_SA</code></td><td>Operating-jurisdiction flag, no ontology field.</td></tr>
+<tr><td><code>Operates_in_TAS</code></td><td>Operating-jurisdiction flag, no ontology field.</td></tr>
+<tr><td><code>Operates_in_VIC</code></td><td>Operating-jurisdiction flag, no ontology field.</td></tr>
+<tr><td><code>Operates_in_WA</code></td><td>Operating-jurisdiction flag, no ontology field.</td></tr>
+<tr><td><code>Operating_Countries</code></td><td>List of ISO country codes where the charity operates, not the address country; no ontology field.</td></tr>
+<tr><td><code>PBI</code></td><td>Public benevolent institution status flag, no ontology field.</td></tr>
+<tr><td><code>HPC</code></td><td>Health promotion charity status flag, no ontology field.</td></tr>
+<tr><td><code>Preventing_or_relieving_suffering_of_animals</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Advancing_Culture</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Advancing_Education</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Advancing_Health</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Promote_or_oppose_a_change_to_law__government_poll_or_prac</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Advancing_natual_environment</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Promoting_or_protecting_human_rights</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Purposes_beneficial_to_ther_general_public_and_other_analogous</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Promoting_reconciliation__mutual_respect_and_tolerance</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Advancing_Religion</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Advancing_social_or_public_welfare</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Advancing_security_or_safety_of_Australia_or_Australian_public</code></td><td>Charitable purpose flag, no ontology field.</td></tr>
+<tr><td><code>Aboriginal_or_TSI</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Adults</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Aged_Persons</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Children</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Communities_Overseas</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Early_Childhood</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Ethnic_Groups</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Families</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Females</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Financially_Disadvantaged</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>LGBTIQA+</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>General_Community_in_Australia</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Males</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Migrants_Refugees_or_Asylum_Seekers</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Other_Beneficiaries</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Other_Charities</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>People_at_risk_of_homelessness</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>People_with_Chronic_Illness</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>People_with_Disabilities</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Pre_Post_Release_Offenders</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Rural_Regional_Remote_Communities</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Unemployed_Person</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Veterans_or_their_families</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Victims_of_crime</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Victims_of_Disasters</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>Youth</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+<tr><td><code>animals</code></td><td>Activity-tag flag, no ontology field.</td></tr>
+<tr><td><code>environment</code></td><td>Activity-tag flag, no ontology field.</td></tr>
+<tr><td><code>other_gender_identities</code></td><td>Beneficiary-group flag, no ontology field.</td></tr>
+  </table></div>
+</section>
+
+<section id="examples">
+  <h2>对照样例 · 5 条原始行 vs 标准化输出</h2>
+  <p class="muted">读含义，别读通过率：日期是注册日还是牌照日？名字是本人还是代理人？ABN 是这一行主体自己的吗？</p>
+  <div class='example'><h4>样例 1 · record <code>46910265671|The Dunoon Family Foundation</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>ABN: 46910265671
+Charity_Legal_Name: The Dunoon Family Foundation
+Other_Organisation_Names: 
+Address_Type: Business
+Address_Line_1: 8 Spike Bar Way
+Address_Line_2: 
+Address_Line_3: 
+Town_City: Moolap
+State: VIC
+Postcode: 3224
+Country: Australia
+Charity_Website: 
+Registration_Date: 23/06/2021
+Date_Organisation_Established: 23/06/2021
+Charity_Size: Small
+Number_of_Responsible_Persons: 4
+Financial_Year_End: 30-Jun
+Operates_in_ACT: 
+Operates_in_NSW: 
+Operates_in_NT: 
+Operates_in_QLD: 
+Operates_in_SA: 
+Operates_in_TAS: 
+Operates_in_VIC: Y
+Operates_in_WA: 
+Operating_Countries: AUS
+PBI: 
+HPC: 
+Preventing_or_relieving_suffering_of_animals: 
+Advancing_Culture: 
+Advancing_Education: 
+Advancing_Health: 
+Promote_or_oppose_a_change_to_law__government_poll_or_prac: 
+Advancing_natual_environment: 
+Promoting_or_protecting_human_rights: 
+Purposes_beneficial_to_ther_general_public_and_other_analogous: Y
+Promoting_reconciliation__mutual_respect_and_tolerance: 
+Advancing_Religion: 
+Advancing_social_or_public_welfare: 
+Advancing_security_or_safety_of_Australia_or_Australian_public: 
+Aboriginal_or_TSI: 
+Adults: 
+Aged_Persons: 
+Children: Y
+Communities_Overseas: 
+Early_Childhood: Y
+Ethnic_Groups: 
+Families: 
+Females: 
+Financially_Disadvantaged: 
+LGBTIQA+: 
+General_Community_in_Australia: 
+Males: 
+Migrants_Refugees_or_Asylum_Seekers: 
+Other_Beneficiaries: 
+Other_Charities: 
+People_at_risk_of_homelessness: Y
+People_with_Chronic_Illness: Y
+People_with_Disabilities: 
+Pre_Post_Release_Offenders: 
+Rural_Regional_Remote_Communities: 
+Unemployed_Person: 
+Veterans_or_their_families: 
+Victims_of_crime: 
+Victims_of_Disasters: 
+Youth: Y
+animals: 
+environment: 
+other_gender_identities: </pre></div><div><h5>标准化输出</h5><pre>entity.abn = &quot;46910265671&quot;   (conf 0.95)
+entity.legal_name = &quot;The Dunoon Family Foundation&quot;   (conf 0.95)
+address.full = &quot;8 Spike Bar Way&quot;   (conf 0.7)
+address.locality = &quot;Moolap&quot;   (conf 0.92)
+address.state = &quot;VIC&quot;   (conf 0.95)
+address.postcode = &quot;3224&quot;   (conf 0.93)
+address.country = &quot;Australia&quot;   (conf 0.92)
+entity.date_registered = &quot;2021-06-23&quot;   (conf 0.9)</pre></div></div></div>
+<div class='example'><h4>样例 2 · record <code>48638482514|MEDICAL AID AUSTRALIA LTD.</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>ABN: 48638482514
+Charity_Legal_Name: MEDICAL AID AUSTRALIA LTD.
+Other_Organisation_Names: 
+Address_Type: Business
+Address_Line_1: 6 Gunya ST  St
+Address_Line_2: 
+Address_Line_3: 
+Town_City: Regents Park
+State: NSW
+Postcode: 2143
+Country: Australia
+Charity_Website: www.medaid.org.au
+Registration_Date: 11/10/2021
+Date_Organisation_Established: 26/02/2020
+Charity_Size: Small
+Number_of_Responsible_Persons: 4
+Financial_Year_End: 30-Jun
+Operates_in_ACT: 
+Operates_in_NSW: 
+Operates_in_NT: 
+Operates_in_QLD: 
+Operates_in_SA: 
+Operates_in_TAS: 
+Operates_in_VIC: 
+Operates_in_WA: 
+Operating_Countries: 
+PBI: 
+HPC: 
+Preventing_or_relieving_suffering_of_animals: 
+Advancing_Culture: 
+Advancing_Education: 
+Advancing_Health: Y
+Promote_or_oppose_a_change_to_law__government_poll_or_prac: 
+Advancing_natual_environment: 
+Promoting_or_protecting_human_rights: 
+Purposes_beneficial_to_ther_general_public_and_other_analogous: 
+Promoting_reconciliation__mutual_respect_and_tolerance: 
+Advancing_Religion: 
+Advancing_social_or_public_welfare: 
+Advancing_security_or_safety_of_Australia_or_Australian_public: 
+Aboriginal_or_TSI: 
+Adults: 
+Aged_Persons: 
+Children: 
+Communities_Overseas: 
+Early_Childhood: 
+Ethnic_Groups: 
+Families: 
+Females: 
+Financially_Disadvantaged: 
+LGBTIQA+: 
+General_Community_in_Australia: 
+Males: 
+Migrants_Refugees_or_Asylum_Seekers: 
+Other_Beneficiaries: 
+Other_Charities: 
+People_at_risk_of_homelessness: 
+People_with_Chronic_Illness: 
+People_with_Disabilities: 
+Pre_Post_Release_Offenders: 
+Rural_Regional_Remote_Communities: 
+Unemployed_Person: 
+Veterans_or_their_families: 
+Victims_of_crime: 
+Victims_of_Disasters: 
+Youth: 
+animals: 
+environment: 
+other_gender_identities: </pre></div><div><h5>标准化输出</h5><pre>entity.abn = &quot;48638482514&quot;   (conf 0.95)
+entity.legal_name = &quot;MEDICAL AID AUSTRALIA LTD.&quot;   (conf 0.95)
+address.full = &quot;6 Gunya ST St&quot;   (conf 0.7)
+address.locality = &quot;Regents Park&quot;   (conf 0.92)
+address.state = &quot;NSW&quot;   (conf 0.95)
+address.postcode = &quot;2143&quot;   (conf 0.93)
+address.country = &quot;Australia&quot;   (conf 0.92)
+entity.website = &quot;http://www.medaid.org.au&quot;   (conf 0.9)
+entity.date_registered = &quot;2021-10-11&quot;   (conf 0.9)</pre></div></div></div>
+<div class='example'><h4>样例 3 · record <code>92635761527|THE AUSTRALASIAN SOCIETY FOR PHYSICAL ACTIVITY LTD</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>ABN: 92635761527
+Charity_Legal_Name: THE AUSTRALASIAN SOCIETY FOR PHYSICAL ACTIVITY LTD
+Other_Organisation_Names: 
+Address_Type: Business
+Address_Line_1: Deakin University Burwood
+Address_Line_2: 
+Address_Line_3: 
+Town_City: Burwood
+State: VIC
+Postcode: 3125
+Country: Australia
+Charity_Website: www.aspactivity.org
+Registration_Date: 22/10/2019
+Date_Organisation_Established: 22/10/2019
+Charity_Size: Small
+Number_of_Responsible_Persons: 9
+Financial_Year_End: 30-Jun
+Operates_in_ACT: 
+Operates_in_NSW: 
+Operates_in_NT: 
+Operates_in_QLD: 
+Operates_in_SA: 
+Operates_in_TAS: 
+Operates_in_VIC: 
+Operates_in_WA: 
+Operating_Countries: AUS
+PBI: 
+HPC: Y
+Preventing_or_relieving_suffering_of_animals: 
+Advancing_Culture: 
+Advancing_Education: Y
+Advancing_Health: Y
+Promote_or_oppose_a_change_to_law__government_poll_or_prac: 
+Advancing_natual_environment: 
+Promoting_or_protecting_human_rights: 
+Purposes_beneficial_to_ther_general_public_and_other_analogous: 
+Promoting_reconciliation__mutual_respect_and_tolerance: 
+Advancing_Religion: 
+Advancing_social_or_public_welfare: 
+Advancing_security_or_safety_of_Australia_or_Australian_public: 
+Aboriginal_or_TSI: Y
+Adults: Y
+Aged_Persons: Y
+Children: Y
+Communities_Overseas: Y
+Early_Childhood: Y
+Ethnic_Groups: Y
+Families: Y
+Females: Y
+Financially_Disadvantaged: 
+LGBTIQA+: 
+General_Community_in_Australia: Y
+Males: Y
+Migrants_Refugees_or_Asylum_Seekers: 
+Other_Beneficiaries: 
+Other_Charities: 
+People_at_risk_of_homelessness: 
+People_with_Chronic_Illness: 
+People_with_Disabilities: Y
+Pre_Post_Release_Offenders: 
+Rural_Regional_Remote_Communities: Y
+Unemployed_Person: 
+Veterans_or_their_families: 
+Victims_of_crime: 
+Victims_of_Disasters: 
+Youth: Y
+animals: 
+environment: 
+other_gender_identities: Y</pre></div><div><h5>标准化输出</h5><pre>entity.abn = &quot;92635761527&quot;   (conf 0.95)
+entity.legal_name = &quot;THE AUSTRALASIAN SOCIETY FOR PHYSICAL ACTIVITY LTD&quot;   (conf 0.95)
+address.full = &quot;Deakin University Burwood&quot;   (conf 0.7)
+address.locality = &quot;Burwood&quot;   (conf 0.92)
+address.state = &quot;VIC&quot;   (conf 0.95)
+address.postcode = &quot;3125&quot;   (conf 0.93)
+address.country = &quot;Australia&quot;   (conf 0.92)
+entity.website = &quot;http://www.aspactivity.org&quot;   (conf 0.9)
+entity.date_registered = &quot;2019-10-22&quot;   (conf 0.9)</pre></div></div></div>
+<div class='example'><h4>样例 4 · record <code>66230988037|VALOP Australia Charitable Trust</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>ABN: 66230988037
+Charity_Legal_Name: VALOP Australia Charitable Trust
+Other_Organisation_Names: 
+Address_Type: Business
+Address_Line_1: Se 211 430 Little Collins St
+Address_Line_2: 
+Address_Line_3: 
+Town_City: Melbourne
+State: VIC
+Postcode: 3000
+Country: Australia
+Charity_Website: 
+Registration_Date: 10/09/2020
+Date_Organisation_Established: 26/06/2020
+Charity_Size: Small
+Number_of_Responsible_Persons: 2
+Financial_Year_End: 30-Jun
+Operates_in_ACT: 
+Operates_in_NSW: 
+Operates_in_NT: 
+Operates_in_QLD: 
+Operates_in_SA: 
+Operates_in_TAS: 
+Operates_in_VIC: 
+Operates_in_WA: 
+Operating_Countries: 
+PBI: 
+HPC: 
+Preventing_or_relieving_suffering_of_animals: 
+Advancing_Culture: 
+Advancing_Education: Y
+Advancing_Health: Y
+Promote_or_oppose_a_change_to_law__government_poll_or_prac: 
+Advancing_natual_environment: 
+Promoting_or_protecting_human_rights: 
+Purposes_beneficial_to_ther_general_public_and_other_analogous: 
+Promoting_reconciliation__mutual_respect_and_tolerance: 
+Advancing_Religion: Y
+Advancing_social_or_public_welfare: 
+Advancing_security_or_safety_of_Australia_or_Australian_public: 
+Aboriginal_or_TSI: 
+Adults: 
+Aged_Persons: 
+Children: 
+Communities_Overseas: 
+Early_Childhood: 
+Ethnic_Groups: 
+Families: 
+Females: 
+Financially_Disadvantaged: 
+LGBTIQA+: 
+General_Community_in_Australia: 
+Males: 
+Migrants_Refugees_or_Asylum_Seekers: 
+Other_Beneficiaries: 
+Other_Charities: 
+People_at_risk_of_homelessness: 
+People_with_Chronic_Illness: 
+People_with_Disabilities: 
+Pre_Post_Release_Offenders: 
+Rural_Regional_Remote_Communities: 
+Unemployed_Person: 
+Veterans_or_their_families: 
+Victims_of_crime: 
+Victims_of_Disasters: 
+Youth: 
+animals: 
+environment: 
+other_gender_identities: </pre></div><div><h5>标准化输出</h5><pre>entity.abn = &quot;66230988037&quot;   (conf 0.95)
+entity.legal_name = &quot;VALOP Australia Charitable Trust&quot;   (conf 0.95)
+address.full = &quot;Se 211 430 Little Collins St&quot;   (conf 0.7)
+address.locality = &quot;Melbourne&quot;   (conf 0.92)
+address.state = &quot;VIC&quot;   (conf 0.95)
+address.postcode = &quot;3000&quot;   (conf 0.93)
+address.country = &quot;Australia&quot;   (conf 0.92)
+entity.date_registered = &quot;2020-09-10&quot;   (conf 0.9)</pre></div></div></div>
+<div class='example'><h4>样例 5 · record <code>64670918279|SVETOCH LTD</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>ABN: 64670918279
+Charity_Legal_Name: SVETOCH LTD
+Other_Organisation_Names: 
+Address_Type: Business
+Address_Line_1: 17 Mexicali Court
+Address_Line_2: 
+Address_Line_3: 
+Town_City: Broadbeach Waters
+State: QLD
+Postcode: 4218
+Country: Australia
+Charity_Website: https://svetoch.pro/
+Registration_Date: 30/08/2023
+Date_Organisation_Established: 30/08/2023
+Charity_Size: Small
+Number_of_Responsible_Persons: 4
+Financial_Year_End: 30-Jun
+Operates_in_ACT: 
+Operates_in_NSW: 
+Operates_in_NT: 
+Operates_in_QLD: Y
+Operates_in_SA: 
+Operates_in_TAS: 
+Operates_in_VIC: 
+Operates_in_WA: 
+Operating_Countries: AUS
+PBI: 
+HPC: 
+Preventing_or_relieving_suffering_of_animals: 
+Advancing_Culture: Y
+Advancing_Education: 
+Advancing_Health: 
+Promote_or_oppose_a_change_to_law__government_poll_or_prac: 
+Advancing_natual_environment: 
+Promoting_or_protecting_human_rights: 
+Purposes_beneficial_to_ther_general_public_and_other_analogous: 
+Promoting_reconciliation__mutual_respect_and_tolerance: 
+Advancing_Religion: 
+Advancing_social_or_public_welfare: 
+Advancing_security_or_safety_of_Australia_or_Australian_public: 
+Aboriginal_or_TSI: 
+Adults: Y
+Aged_Persons: Y
+Children: Y
+Communities_Overseas: Y
+Early_Childhood: Y
+Ethnic_Groups: 
+Families: 
+Females: 
+Financially_Disadvantaged: 
+LGBTIQA+: 
+General_Community_in_Australia: Y
+Males: 
+Migrants_Refugees_or_Asylum_Seekers: 
+Other_Beneficiaries: 
+Other_Charities: 
+People_at_risk_of_homelessness: 
+People_with_Chronic_Illness: 
+People_with_Disabilities: 
+Pre_Post_Release_Offenders: 
+Rural_Regional_Remote_Communities: 
+Unemployed_Person: 
+Veterans_or_their_families: 
+Victims_of_crime: 
+Victims_of_Disasters: 
+Youth: Y
+animals: 
+environment: 
+other_gender_identities: </pre></div><div><h5>标准化输出</h5><pre>entity.abn = &quot;64670918279&quot;   (conf 0.95)
+entity.legal_name = &quot;SVETOCH LTD&quot;   (conf 0.95)
+address.full = &quot;17 Mexicali Court&quot;   (conf 0.7)
+address.locality = &quot;Broadbeach Waters&quot;   (conf 0.92)
+address.state = &quot;QLD&quot;   (conf 0.95)
+address.postcode = &quot;4218&quot;   (conf 0.93)
+address.country = &quot;Australia&quot;   (conf 0.92)
+entity.website = &quot;https://svetoch.pro/&quot;   (conf 0.9)
+entity.date_registered = &quot;2023-08-30&quot;   (conf 0.9)</pre></div></div></div>
+</section>
+
+<section class="decision">
+  <h2>你的决定（在终端运行其一）</h2>
+  <pre>uv run firm onboard acnc-register --decide "approve"</pre>
+  <pre>uv run firm onboard acnc-register --decide "reject: &lt;哪里不对、应该用哪个列/含义&gt;"</pre>
+  <pre>uv run firm onboard acnc-register --decide "abandon"</pre>
+  <p class="muted">reject 的意见会原文交给 agent 的 revise 节点，它自己改完会再生成一份新的审核材料。</p>
+</section>
+</main>

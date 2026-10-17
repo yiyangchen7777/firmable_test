@@ -30,6 +30,7 @@ class AgentState(TypedDict, total=False):
     """One channel per key; a node updates only the keys it returns."""
 
     dataset_id: str
+    resource_hint: str | None
     meta: dict
     data_path: str
     reader: dict
@@ -47,6 +48,7 @@ class AgentState(TypedDict, total=False):
     suspicious: list
     status: str
     decision: str
+    approval_note: str
     human_comment: str
     changes: list
     emitted: str
@@ -93,9 +95,21 @@ def build_graph():
     return graph
 
 
-def run_onboard(dataset_id: str, decide: str | None = None) -> None:
+def run_onboard(
+    dataset_id: str,
+    decide: str | None = None,
+    resource: str | None = None,
+    fresh: bool = False,
+) -> None:
     OUTPUTS.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(CHECKPOINT_DB, check_same_thread=False)
+    if fresh:  # throw away this dataset's previous run and start over
+        for table in ("checkpoints", "writes"):
+            try:
+                conn.execute(f"DELETE FROM {table} WHERE thread_id = ?", (dataset_id,))
+            except sqlite3.OperationalError:
+                pass  # table does not exist yet
+        conn.commit()
     saver = SqliteSaver(conn)
     app = build_graph().compile(checkpointer=saver)
     config = {"configurable": {"thread_id": dataset_id}}
@@ -108,7 +122,10 @@ def run_onboard(dataset_id: str, decide: str | None = None) -> None:
             graph_input = None  # crashed mid-run: resume from the last checkpoint
             print(f"resuming {dataset_id} from checkpoint (next: {snapshot.next})")
         else:
-            graph_input = {"dataset_id": dataset_id, "steps": [], "revisions": 0, "human_comment": ""}
+            graph_input = {
+                "dataset_id": dataset_id, "steps": [], "revisions": 0,
+                "human_comment": "", "resource_hint": resource,
+            }
 
     result = app.invoke(graph_input, config)
 

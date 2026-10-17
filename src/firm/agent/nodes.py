@@ -189,14 +189,28 @@ def fetch_meta(state: dict) -> dict:
     pkg = package_show(dataset_id)
 
     chosen = None
-    for wanted in RESOURCE_PREFERENCE:
+    hint = state.get("resource_hint")
+    if hint:
+        # The human names WHICH file of a multi-resource dataset to onboard
+        # (choosing the file is a human call, like choosing the dataset;
+        # mapping it is the agent's job).
         for res in pkg.get("resources", []):
-            fmt = (res.get("format") or "").upper().replace("EXCEL (.XLSX)", "XLSX")
-            if fmt == wanted:
+            text = f"{res.get('name', '')} {res.get('url', '')}".lower()
+            if hint.lower() in text:
                 chosen = res
                 break
-        if chosen is not None:
-            break
+        if chosen is None:
+            names = [r.get("name") or r.get("url", "")[-40:] for r in pkg.get("resources", [])]
+            raise RuntimeError(f"{dataset_id}: no resource matches {hint!r}; resources: {names}")
+    else:
+        for wanted in RESOURCE_PREFERENCE:
+            for res in pkg.get("resources", []):
+                fmt = (res.get("format") or "").upper().replace("EXCEL (.XLSX)", "XLSX")
+                if fmt == wanted:
+                    chosen = res
+                    break
+            if chosen is not None:
+                break
     if chosen is None:
         raise RuntimeError(f"{dataset_id}: no CSV/TSV/XLSX/ZIP resource to onboard")
 
@@ -430,9 +444,14 @@ def build_validation_report(obs: list[dict], rows: list[dict], cfg: MappingConfi
                     {"field": " / ".join(pair_fields), "flag": "identifier_unclassified (no claim emitted)", "raw": raw}
                 )
 
+    # A literally duplicated source row duplicates ANY honest record id; the
+    # engine suffixes it (#2) and flags it, so a trace survives. The check
+    # guards against a bad id choice (many rows per key), not against source
+    # dirt — hence a rate, not zero.
+    dup_rate = duplicate_ids / n if n else 0.0
     checks.append(
-        {"check": "record_id unique (full sample)", "threshold": "0 duplicates",
-         "result": f"{duplicate_ids} duplicates", "pass": duplicate_ids == 0}
+        {"check": "record_id effectively unique (full sample)", "threshold": "<= 0.5% duplicates",
+         "result": f"{duplicate_ids} duplicates ({dup_rate:.2%})", "pass": dup_rate <= 0.005}
     )
     useful = len(mapped.intersection(NAME_OR_ID_FIELDS)) > 0
     checks.append(
@@ -650,8 +669,16 @@ def review(state: dict) -> dict:
     decision_text = interrupt({"review_path": str(review_path), "status": state["status"]})
 
     decision_text = str(decision_text).strip()
-    if decision_text == "approve":
-        return {"decision": "approve", "steps": state["steps"] + ["review"]}
+    if decision_text == "approve" or decision_text.startswith("approve:"):
+        note = ""
+        if ":" in decision_text:
+            note = decision_text.split(":", 1)[1].strip()
+        if state["status"] != "PASSING" and state["status"] != "PASSING WITH FLAGS" and note == "":
+            raise ValueError(
+                'approving a NOT PASSING / NOT USEFUL config needs a recorded reason: '
+                '--decide "approve: <why this is acceptable>"'
+            )
+        return {"decision": "approve", "approval_note": note, "steps": state["steps"] + ["review"]}
     if decision_text == "abandon":
         return {"decision": "abandon", "steps": state["steps"] + ["review"]}
     if decision_text.startswith("reject"):
@@ -687,8 +714,11 @@ def emit(state: dict) -> dict:
     header = (
         f"# Mapping config written by the schema-inference agent (not by hand).\n"
         f"# dataset: {cfg['dataset_id']} | revisions used: {state['revisions']}/3\n"
+        f"# status at review: {state['status']}\n"
         f"# approved by a human reviewer at {datetime.now(timezone.utc).isoformat(timespec='seconds')}\n"
     )
+    if state.get("approval_note"):
+        header += f"# reviewer's note: {state['approval_note']}\n"
     config_path.write_text(header + yaml.safe_dump(cfg, sort_keys=False, allow_unicode=True))
 
     log = {
@@ -696,6 +726,7 @@ def emit(state: dict) -> dict:
         "steps": state["steps"] + ["emit"],
         "revisions": state["revisions"],
         "status_at_review": state["status"],
+        "approval_note": state.get("approval_note", ""),
         "acceptance_all_pass": acceptance["all_pass"] if acceptance else None,
         "config_path": str(config_path),
     }

@@ -1,0 +1,320 @@
+<title>映射审核 · business-discount-directory</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: single reading column, status-led; data tables full width */
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --fg: #1d2129; --muted: #6b7280;
+  --line: #e3e4e0; --accent: #1f6f54;
+  --ok-bg: #e4f2ea; --ok-fg: #19613f; --warn-bg: #fdf0d7; --warn-fg: #8a5a0a;
+  --bad-bg: #fbe5e3; --bad-fg: #a02c21; --code-bg: #f0f0ed;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97;
+  --ok-bg: #173527; --ok-fg: #7fd7ab; --warn-bg: #3a2d10; --warn-fg: #ecbf63;
+  --bad-bg: #40201d; --bad-fg: #f1988e; --code-bg: #272b31; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #15171b; --panel: #1d2026; --fg: #e8e8e4; --muted: #9aa1ab;
+  --line: #31353c; --accent: #5cbf97;
+  --ok-bg: #173527; --ok-fg: #7fd7ab; --warn-bg: #3a2d10; --warn-fg: #ecbf63;
+  --bad-bg: #40201d; --bad-fg: #f1988e; --code-bg: #272b31; color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--fg);
+  font: 15px/1.6 -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+main { max-width: 980px; margin: 0 auto; display: grid; gap: 28px; }
+h1 { font-size: 1.45rem; margin: 0; text-wrap: balance; }
+h2 { font-size: 1.05rem; margin: 0 0 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+h4, h5 { margin: 0 0 6px; }
+section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; letter-spacing: 0.02em; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tablewrap { overflow-x: auto; }
+code { background: var(--code-bg); border-radius: 4px; padding: 1px 5px; font-size: 0.85em; }
+pre { background: var(--code-bg); border-radius: 6px; padding: 10px 12px; overflow-x: auto; font-size: 0.8rem; line-height: 1.5; margin: 0; }
+.pill { border-radius: 99px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+.pill.ok, .ok { background: var(--ok-bg); color: var(--ok-fg); }
+.pill.warn, .warn { background: var(--warn-bg); color: var(--warn-fg); }
+.pill.bad, .bad { background: var(--bad-bg); color: var(--bad-fg); }
+.status { display: inline-block; border-radius: 6px; padding: 4px 14px; font-weight: 700; }
+.chip { background: var(--code-bg); border-radius: 99px; padding: 1px 8px; font-size: 0.75rem; }
+.muted { color: var(--muted); }
+.evidence { min-width: 260px; }
+.metagrid { display: grid; grid-template-columns: 9em 1fr; gap: 4px 14px; font-size: 0.9rem; }
+.metagrid dt { color: var(--muted); } .metagrid dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.guide ol { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pair > div { min-width: 0; }
+@media (max-width: 720px) { .pair { grid-template-columns: 1fr; } }
+.example { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+.example:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+.decision pre { user-select: all; }
+details summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
+</style>
+<main>
+<header>
+  <h1>映射审核 · business-discount-directory</h1>
+  <p><span class="status warn">PASSING WITH FLAGS</span>
+     <span class="muted">修订 0/3 · 流程步数 5 · 审核材料同步存于 review.md</span></p>
+</header>
+
+<section class="guide">
+  <h2>怎么审（约 5 分钟）</h2>
+  <ol>
+    <li><strong>看硬指标</strong>（<a href="#checks">校验结果</a>）：有没有 ❌。校验位、枚举、唯一性是代码算的，不会说谎。</li>
+    <li><strong>看语义疑点</strong>（<a href="#flags">语义抽检</a>）：这是最需要人的部分——模型挑出「解析没错但含义可能错」的字段，你判断同不同意。</li>
+    <li><strong>抽看对照样例</strong>（<a href="#examples">原始 vs 输出</a>）：随手挑两条，问自己「左边这列的意思，真的是右边那个字段吗？」</li>
+    <li><strong>扫一眼未映射清单</strong>（<a href="#unmapped">unmapped</a>）：理由是否诚实，有没有本该映射却被偷懒放弃的列。</li>
+  </ol>
+  <p class="muted">你只有三个动作：approve / reject + 意见 / abandon。你不能直接改配置文件——人一改，配置就成了「手写的」，作业的核心主张（agent 独立完成映射）就不成立了。</p>
+</section>
+
+<section>
+  <h2>来源与关键决定</h2>
+  <dl class="metagrid">
+    <dt>数据集</dt><dd>Business Discount Directory（business-discount-directory）</dd>
+    <dt>发布方 / 许可</dt><dd>Customer Services, Open Data and Small and Family Business / CC-BY-4.0</dd>
+    <dt>读取方式</dt><dd><code>{&quot;format&quot;: &quot;csv&quot;, &quot;delimiter&quot;: &quot;,&quot;, &quot;encoding&quot;: &quot;utf-8-sig&quot;, &quot;header_row&quot;: 0, &quot;sheet&quot;: null}</code></dd>
+    <dt>source_reliability</dt><dd>0.6 — A state government directory of businesses that self-register for the discount schemes: official and curated, but the contact and business details are supplied by the businesses themselves and not verified against a register, and it carries no ABN or ACN.</dd>
+    <dt>record_id</dt><dd><code>row_hash []</code> — The source has no record key, and no ABN or ACN either. Trading Name has 84 distinct values and Outlet Name 109 across 200 rows, so neither is unique. Telephone Number has 172 distinct values, and Outlet Address has 161 distinct values with 11% nulls, so neither is unique either. No plausible composite is shown to be unique over the full sample, so row_hash is the safe choice.</dd>
+    <dt>observed_at</dt><dd><code>dataset_modified</code>（basis: proxy，值 2026-09-24）— The file has no per-record extract or last-updated date column. The only dated information is the catalogue modified date, so dataset_modified is used as a weak proxy.</dd>
+  </dl>
+</section>
+
+<section id="checks">
+  <h2>校验结果 · 350 行留存数据（循环集；最终验收在批准后跑一次）</h2>
+  <div class="tablewrap"><table>
+    <tr><th>检查</th><th>阈值</th><th>结果</th><th></th></tr>
+    <tr><td>null drift (entity.trading_name ← Trading Name)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (entity.website ← Website)</td><td class='num'>&lt;= +2pp</td><td class='num'>-0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.full ← Outlet Address)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.locality ← Outlet Suburb)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>null drift (address.postcode ← Outlet Postcode)</td><td class='num'>&lt;= +2pp</td><td class='num'>+0.0%</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>record_id effectively unique (full sample)</td><td class='num'>&lt;= 0.5% duplicates</td><td class='num'>1 duplicates (0.29%)</td><td><span class="pill ok">通过</span></td></tr>
+<tr><td>minimum useful (a name or an identifier mapped)</td><td class='num'>required</td><td class='num'>yes</td><td><span class="pill ok">通过</span></td></tr>
+  </table></div>
+  <h4 style="margin-top:14px">未通过/弃权的例子</h4>
+  <p class='muted'>无</p>
+</section>
+
+<section id="flags">
+  <h2>语义抽检 · 10 条留存记录：41 ok / 7 suspicious</h2>
+  <div class="tablewrap"><table>
+    <tr><th>record</th><th>字段</th><th>为什么可疑</th></tr>
+    <tr><td><code>a8ad7ecfb0ece669</code></td><td><code>entity.website</code></td><td>The source URL is malformed (&#x27;http://https://...&#x27;) and the canonical value ends &#x27;...AUORG1PKAVT6A00&#x27;, which does not match the raw cell, so the value was altered or truncated and carries a tracking query string.</td></tr>
+<tr><td><code>3373db45d8d72436</code></td><td><code>address.full</code></td><td>&#x27;Castletown Shp Cnt&#x27; is a shopping centre name, not a street address, and it is mapped to address.full.</td></tr>
+<tr><td><code>414de081d51ecd99</code></td><td><code>address.full</code></td><td>&#x27;Central Highlands Market Place&#x27; is a centre or venue name, not a street address.</td></tr>
+<tr><td><code>8797e54e37a80189</code></td><td><code>entity.trading_name</code></td><td>&#x27;ADPA Ltd&#x27; carries a company suffix and looks like a legal or organisation name, while the outlet name is &#x27;ADPAQ&#x27;, so the party type is uncertain.</td></tr>
+<tr><td><code>86f9d51258089cb6</code></td><td><code>entity.trading_name</code></td><td>&#x27;Ali Baba Lebanese Cuisine Pty Ltd&#x27; includes &#x27;Pty Ltd&#x27;, so it is a registered company name placed in trading_name; it probably belongs in legal_name.</td></tr>
+<tr><td><code>86f9d51258089cb6</code></td><td><code>address.full</code></td><td>&#x27;Sunshine Plaza&#x27; is a shopping centre name, not a street address.</td></tr>
+<tr><td><code>7655e30afe549885</code></td><td><code>address.full</code></td><td>&#x27;Caneland Central Shp Cnt&#x27; is a shopping centre name, not a street address.</td></tr>
+  </table></div>
+  <details><summary>展开 41 条「ok」判定</summary>
+  <div class="tablewrap"><table>
+    <tr><th>record</th><th>字段</th><th>理由</th></tr>
+    <tr><td><code>a8ad7ecfb0ece669</code></td><td><code>entity.trading_name</code></td><td>&#x27;Amplifon&#x27; is the brand name from the Trading Name column and is not a registered legal name.</td></tr>
+<tr><td><code>a8ad7ecfb0ece669</code></td><td><code>address.full</code></td><td>&#x27;U 4, 107-111 Queen St&#x27; is a genuine street line for the Cleveland outlet, but it has no suburb, state or postcode, so it is a partial address.</td></tr>
+<tr><td><code>a8ad7ecfb0ece669</code></td><td><code>address.locality</code></td><td>&#x27;CLEVELAND&#x27; is the outlet suburb and fits postcode 4163.</td></tr>
+<tr><td><code>a8ad7ecfb0ece669</code></td><td><code>address.postcode</code></td><td>4163 is a valid Cleveland QLD postcode and matches the Outlet Postcode column.</td></tr>
+<tr><td><code>3373db45d8d72436</code></td><td><code>entity.trading_name</code></td><td>&#x27;Angus &amp; Coote&#x27; is the brand name and matches the Outlet Name.</td></tr>
+<tr><td><code>3373db45d8d72436</code></td><td><code>entity.website</code></td><td>It is a clean brand website URL copied from the Website column.</td></tr>
+<tr><td><code>3373db45d8d72436</code></td><td><code>address.locality</code></td><td>&#x27;HYDE PARK&#x27; is the outlet suburb (Townsville) and is consistent with postcode 4812.</td></tr>
+<tr><td><code>3373db45d8d72436</code></td><td><code>address.postcode</code></td><td>4812 matches Hyde Park QLD.</td></tr>
+<tr><td><code>414de081d51ecd99</code></td><td><code>entity.trading_name</code></td><td>It is the brand name from the Trading Name column.</td></tr>
+<tr><td><code>414de081d51ecd99</code></td><td><code>entity.website</code></td><td>It is a valid brand website URL.</td></tr>
+<tr><td><code>414de081d51ecd99</code></td><td><code>address.locality</code></td><td>&#x27;EMERALD&#x27; is the outlet suburb and fits postcode 4720.</td></tr>
+<tr><td><code>414de081d51ecd99</code></td><td><code>address.postcode</code></td><td>4720 matches Emerald QLD.</td></tr>
+<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>entity.trading_name</code></td><td>It is a trading name for the brand, though the outlet-level name is &#x27;Andersens Carpets&#x27;, so the brand-level value was chosen over the outlet-specific one.</td></tr>
+<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>entity.website</code></td><td>It is a valid brand website URL.</td></tr>
+<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>address.full</code></td><td>&#x27;36 Duke St&#x27; is a real street address for the Gympie outlet.</td></tr>
+<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>address.locality</code></td><td>&#x27;GYMPIE&#x27; is the outlet suburb.</td></tr>
+<tr><td><code>f8f6df06cafb6d3b</code></td><td><code>address.postcode</code></td><td>4570 matches Gympie.</td></tr>
+<tr><td><code>9bf76a92aa7e1a75</code></td><td><code>entity.trading_name</code></td><td>&#x27;Aksa Home Decor&#x27; is the trading name and also matches the Outlet Name.</td></tr>
+<tr><td><code>9bf76a92aa7e1a75</code></td><td><code>entity.website</code></td><td>It is a valid website URL for an online-capable business.</td></tr>
+<tr><td><code>9bf76a92aa7e1a75</code></td><td><code>address.locality</code></td><td>&#x27;KILLARA&#x27; is the outlet suburb.</td></tr>
+<tr><td><code>9bf76a92aa7e1a75</code></td><td><code>address.postcode</code></td><td>2071 matches Killara NSW.</td></tr>
+<tr><td><code>f9aad4867a42037c</code></td><td><code>entity.trading_name</code></td><td>It is the brand-level trading name, while the outlet name is &#x27;Andersens Carpets&#x27;.</td></tr>
+<tr><td><code>f9aad4867a42037c</code></td><td><code>entity.website</code></td><td>It is a valid brand website URL.</td></tr>
+<tr><td><code>f9aad4867a42037c</code></td><td><code>address.full</code></td><td>&#x27;Shop 4 1 Greenway Dr&#x27; is a street address, with a double space collapsed.</td></tr>
+<tr><td><code>f9aad4867a42037c</code></td><td><code>address.locality</code></td><td>&#x27;TWEED HEADS&#x27; is the outlet suburb.</td></tr>
+<tr><td><code>f9aad4867a42037c</code></td><td><code>address.postcode</code></td><td>2485 matches Tweed Heads.</td></tr>
+<tr><td><code>ab772061675d9a9d</code></td><td><code>entity.trading_name</code></td><td>&#x27;Arthurs Autoglass&#x27; is the brand trading name, while the outlet trades as &#x27;Morayfield Discount Autoglass&#x27;, so it is acceptable but not outlet-specific.</td></tr>
+<tr><td><code>ab772061675d9a9d</code></td><td><code>entity.website</code></td><td>It is an outlet-specific website URL and is a valid web address.</td></tr>
+<tr><td><code>ab772061675d9a9d</code></td><td><code>address.full</code></td><td>&#x27;125 Morayfield Rd&#x27; is a street address.</td></tr>
+<tr><td><code>ab772061675d9a9d</code></td><td><code>address.locality</code></td><td>&#x27;CABOOLTURE SOUTH&#x27; is the outlet suburb.</td></tr>
+<tr><td><code>ab772061675d9a9d</code></td><td><code>address.postcode</code></td><td>4510 is consistent with Caboolture South.</td></tr>
+<tr><td><code>8797e54e37a80189</code></td><td><code>entity.website</code></td><td>It is a valid website URL.</td></tr>
+<tr><td><code>8797e54e37a80189</code></td><td><code>address.full</code></td><td>&#x27;Shop 109 137 Laver Dr&#x27; is a street address.</td></tr>
+<tr><td><code>8797e54e37a80189</code></td><td><code>address.locality</code></td><td>&#x27;ROBINA&#x27; is the outlet suburb.</td></tr>
+<tr><td><code>8797e54e37a80189</code></td><td><code>address.postcode</code></td><td>4226 matches Robina QLD.</td></tr>
+<tr><td><code>86f9d51258089cb6</code></td><td><code>address.locality</code></td><td>&#x27;MAROOCHYDORE&#x27; is the outlet suburb.</td></tr>
+<tr><td><code>86f9d51258089cb6</code></td><td><code>address.postcode</code></td><td>4558 matches Maroochydore.</td></tr>
+<tr><td><code>7655e30afe549885</code></td><td><code>entity.trading_name</code></td><td>It is the brand trading name and matches the Outlet Name.</td></tr>
+<tr><td><code>7655e30afe549885</code></td><td><code>entity.website</code></td><td>It is a valid brand website URL.</td></tr>
+<tr><td><code>7655e30afe549885</code></td><td><code>address.locality</code></td><td>&#x27;MACKAY&#x27; is the outlet suburb.</td></tr>
+<tr><td><code>7655e30afe549885</code></td><td><code>address.postcode</code></td><td>4740 matches Mackay.</td></tr>
+  </table></div></details>
+</section>
+
+<section id="mapping">
+  <h2>字段映射 · 5 条（共 18 个源列）</h2>
+  <div class="tablewrap"><table>
+    <tr><th>canonical</th><th>← 源列</th><th>transforms</th><th>conf.</th><th></th><th>语义证据</th></tr>
+    <tr><td><code>entity.trading_name</code></td><td><code>Trading Name</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.9</td><td></td><td class='evidence'>Column &#x27;Trading Name&#x27; holds values like &#x27;Amplifon&#x27;, &#x27;Andersens Floor Coverings&#x27; and &#x27;Access Dental Services Pty Ltd&#x27;. These are the names the businesses trade under in the discount directory, repeated across their outlets. It is not entity.legal_name because it is not labelled as a registered name and no register confirms it. &#x27;Outlet Name&#x27; is the nearer outlet-level label and is left unmapped.</td></tr>
+<tr><td><code>entity.website</code></td><td><code>Website</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;url_normalize&quot;]</code></td><td class='num'>0.8</td><td></td><td class='evidence'>Column &#x27;Website&#x27; holds values like &#x27;http://www.andersens.com.au&#x27;, &#x27;http://adpa.com.au&#x27; and &#x27;https://andrewsairportpark.com.au&#x27;. They are the business&#x27;s web address. Some are malformed at source, e.g. &#x27;http://https://www.amplifon.com/au/&#x27;. Blank for about 8.5% of rows, which empty_to_null turns into no claim.</td></tr>
+<tr><td><code>address.full</code></td><td><code>Outlet Address</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.7</td><td></td><td class='evidence'>Column &#x27;Outlet Address&#x27; holds values like &#x27;10 Herberton St&#x27;, &#x27;179 Nicklin Way&#x27; and &#x27;Shop 124, Mount Pleasant Shopping Centre&#x27;. It is the street-level address of the outlet, so it is the physical address and not a postal or head-office address. It excludes suburb, state and postcode, which are in separate columns. A few values are not street addresses, e.g. &#x27;A1 Exhausts &amp; Mechanical Petrie&#x27;, hence the lower confidence. Blank in about 11% of rows.</td></tr>
+<tr><td><code>address.locality</code></td><td><code>Outlet Suburb</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;]</code></td><td class='num'>0.92</td><td></td><td class='evidence'>Column &#x27;Outlet Suburb&#x27; holds values like &#x27;MACKAY&#x27;, &#x27;TWEED HEADS SOUTH&#x27; and &#x27;MAROOCHYDORE&#x27;. These are suburb or town names of the outlet, so address.locality. The rest of the address is in separate columns.</td></tr>
+<tr><td><code>address.postcode</code></td><td><code>Outlet Postcode</code></td><td><code class='small'>[&quot;trim&quot;, &quot;empty_to_null&quot;, &quot;postcode_normalize&quot;]</code></td><td class='num'>0.93</td><td></td><td class='evidence'>Column &#x27;Outlet Postcode&#x27; holds values like &#x27;4740&#x27;, &#x27;2486&#x27; and &#x27;3216&#x27;. They are all 4-digit Australian postcodes of the outlet. postcode_normalize zero-pads any that lost a leading zero.</td></tr>
+  </table></div>
+</section>
+
+<section id="unmapped">
+  <h2>未映射的列 · 13</h2>
+  <div class="tablewrap"><table>
+    <tr><th>源列</th><th>理由</th></tr>
+    <tr><td><code>Outlet Name</code></td><td>Outlet-level label such as &#x27;Amplifon Mackay&#x27;, &#x27;ADPAQ&#x27; or &#x27;Allcracft Sewing Machines&#x27; (a typo of the trading name). It is neither the registered legal name nor clearly a trading name, so it is not mapped.</td></tr>
+<tr><td><code>Telephone Number</code></td><td>No telephone field in the ontology.</td></tr>
+<tr><td><code>Online Mail Order Flag</code></td><td>Scheme attribute (Yes/No) with no ontology field.</td></tr>
+<tr><td><code>Australia Wide Flag</code></td><td>Scheme attribute (Yes/No) describing offer coverage, with no ontology field.</td></tr>
+<tr><td><code>Overseas Flag</code></td><td>Scheme attribute (Yes/No) with no ontology field.</td></tr>
+<tr><td><code>Senior Scheme Flag</code></td><td>Scheme-participation flag with no ontology field. It is &#x27;Yes&#x27; on every profiled row.</td></tr>
+<tr><td><code>Carer Scheme Flag</code></td><td>Scheme-participation flag with no ontology field.</td></tr>
+<tr><td><code>Business Category</code></td><td>Directory-specific category such as &#x27;Dentists&#x27; or &#x27;Pharmacies&#x27;, not an ANZSIC code, so it should not go in entity.industry_code.</td></tr>
+<tr><td><code>Discount</code></td><td>Free-text description of the discount offer, with no ontology field. It is also truncated at about 60 characters in the profile.</td></tr>
+<tr><td><code>Latitude</code></td><td>Geocoordinate with no ontology field. It holds 0 as a placeholder for unknown on some rows.</td></tr>
+<tr><td><code>Longitude</code></td><td>Geocoordinate with no ontology field. It holds 0 as a placeholder for unknown on some rows.</td></tr>
+<tr><td><code>Mobile Business Flag</code></td><td>Scheme attribute (Yes/No) with no ontology field.</td></tr>
+<tr><td><code>Parent Business Category</code></td><td>Directory-specific top-level category such as &#x27;Health and Medical&#x27;, not an ANZSIC code or other ontology field.</td></tr>
+  </table></div>
+</section>
+
+<section id="examples">
+  <h2>对照样例 · 5 条原始行 vs 标准化输出</h2>
+  <p class="muted">读含义，别读通过率：日期是注册日还是牌照日？名字是本人还是代理人？ABN 是这一行主体自己的吗？</p>
+  <div class='example'><h4>样例 1 · record <code>9080de1440969eca</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Trading Name: Andersens Floor Coverings
+Outlet Name: Andersens Carpets
+Website: http://www.andersens.com.au
+Outlet Address: 36 Brisbane Rd
+Outlet Suburb: BUNDAMBA
+Outlet Postcode: 4305
+Telephone Number: (07) 3282 7000
+Online Mail Order Flag: No
+Australia Wide Flag: Yes
+Overseas Flag: Yes
+Senior Scheme Flag: Yes
+Carer Scheme Flag: Yes
+Business Category: Tile Products and Services
+Discount: 15% off ticketed price. Not valid with any other offer.
+Latitude: -27.60793
+Longitude: 152.81166
+Mobile Business Flag: No
+Parent Business Category: Trade Services</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;Andersens Floor Coverings&quot;   (conf 0.9)
+entity.website = &quot;http://www.andersens.com.au&quot;   (conf 0.8)
+address.full = &quot;36 Brisbane Rd&quot;   (conf 0.7)
+address.locality = &quot;BUNDAMBA&quot;   (conf 0.92)
+address.postcode = &quot;4305&quot;   (conf 0.93)</pre></div></div></div>
+<div class='example'><h4>样例 2 · record <code>b827ba0529931ac0</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Trading Name: Andersens Floor Coverings
+Outlet Name: Andersens Carpets
+Website: http://www.andersens.com.au
+Outlet Address: 17 Mabel St
+Outlet Suburb: ATHERTON
+Outlet Postcode: 4883
+Telephone Number: (07) 4091 3300
+Online Mail Order Flag: No
+Australia Wide Flag: Yes
+Overseas Flag: Yes
+Senior Scheme Flag: Yes
+Carer Scheme Flag: Yes
+Business Category: Blinds and Awnings
+Discount: 15% off ticketed price. Not valid with any other offer.
+Latitude: -17.26435
+Longitude: 145.47777
+Mobile Business Flag: No
+Parent Business Category: House and Home</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;Andersens Floor Coverings&quot;   (conf 0.9)
+entity.website = &quot;http://www.andersens.com.au&quot;   (conf 0.8)
+address.full = &quot;17 Mabel St&quot;   (conf 0.7)
+address.locality = &quot;ATHERTON&quot;   (conf 0.92)
+address.postcode = &quot;4883&quot;   (conf 0.93)</pre></div></div></div>
+<div class='example'><h4>样例 3 · record <code>c6645fe59dc7c286</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Trading Name: ADPA Ltd
+Outlet Name: ADPAQ
+Website: http://adpa.com.au
+Outlet Address: U 9  521 Beams Rd
+Outlet Suburb: CARSELDINE
+Outlet Postcode: 4034
+Telephone Number: (07) 3263 8632
+Online Mail Order Flag: No
+Australia Wide Flag: Yes
+Overseas Flag: No
+Senior Scheme Flag: Yes
+Carer Scheme Flag: Yes
+Business Category: Dental Prosthetists
+Discount: Complimentary consultation for denture assessment.
+Latitude: -27.34823
+Longitude: 153.02756
+Mobile Business Flag: No
+Parent Business Category: Health and Medical</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;ADPA Ltd&quot;   (conf 0.9)
+entity.website = &quot;http://adpa.com.au&quot;   (conf 0.8)
+address.full = &quot;U 9 521 Beams Rd&quot;   (conf 0.7)
+address.locality = &quot;CARSELDINE&quot;   (conf 0.92)
+address.postcode = &quot;4034&quot;   (conf 0.93)</pre></div></div></div>
+<div class='example'><h4>样例 4 · record <code>571a3fb647cda1d6</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Trading Name: ADPA Ltd
+Outlet Name: ADPAQ
+Website: http://adpa.com.au
+Outlet Address: 29 Mary St
+Outlet Suburb: GYMPIE
+Outlet Postcode: 4570
+Telephone Number: (07) 5482 2180
+Online Mail Order Flag: No
+Australia Wide Flag: Yes
+Overseas Flag: No
+Senior Scheme Flag: Yes
+Carer Scheme Flag: Yes
+Business Category: Dental Prosthetists
+Discount: Complimentary consultation for denture assessment.
+Latitude: -26.18987
+Longitude: 152.66159
+Mobile Business Flag: No
+Parent Business Category: Health and Medical</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;ADPA Ltd&quot;   (conf 0.9)
+entity.website = &quot;http://adpa.com.au&quot;   (conf 0.8)
+address.full = &quot;29 Mary St&quot;   (conf 0.7)
+address.locality = &quot;GYMPIE&quot;   (conf 0.92)
+address.postcode = &quot;4570&quot;   (conf 0.93)</pre></div></div></div>
+<div class='example'><h4>样例 5 · record <code>450af831b5c638df</code></h4><div class='pair'><div><h5>原始行（全部列）</h5><pre>Trading Name: Andersens Floor Coverings
+Outlet Name: Andersens Carpets
+Website: http://www.andersens.com.au
+Outlet Address: 60 Boat Harbour Dr
+Outlet Suburb: HERVEY BAY
+Outlet Postcode: 4655
+Telephone Number: (07) 4124 3700
+Online Mail Order Flag: No
+Australia Wide Flag: Yes
+Overseas Flag: Yes
+Senior Scheme Flag: Yes
+Carer Scheme Flag: Yes
+Business Category: Carpets and Floor Coverings
+Discount: 15% off ticketed price. Not valid with any other offer.
+Latitude: -25.28592
+Longitude: 152.82546
+Mobile Business Flag: No
+Parent Business Category: House and Home</pre></div><div><h5>标准化输出</h5><pre>entity.trading_name = &quot;Andersens Floor Coverings&quot;   (conf 0.9)
+entity.website = &quot;http://www.andersens.com.au&quot;   (conf 0.8)
+address.full = &quot;60 Boat Harbour Dr&quot;   (conf 0.7)
+address.locality = &quot;HERVEY BAY&quot;   (conf 0.92)
+address.postcode = &quot;4655&quot;   (conf 0.93)</pre></div></div></div>
+</section>
+
+<section class="decision">
+  <h2>你的决定（在终端运行其一）</h2>
+  <pre>uv run firm onboard business-discount-directory --decide "approve"</pre>
+  <pre>uv run firm onboard business-discount-directory --decide "reject: &lt;哪里不对、应该用哪个列/含义&gt;"</pre>
+  <pre>uv run firm onboard business-discount-directory --decide "abandon"</pre>
+  <p class="muted">reject 的意见会原文交给 agent 的 revise 节点，它自己改完会再生成一份新的审核材料。</p>
+</section>
+</main>
